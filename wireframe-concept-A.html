@@ -1,0 +1,1019 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Concept A - TravelCar | Đặt Xe Du Lịch</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            color: #1a1a2e;
+            background: #f8f9fc;
+            overflow-x: hidden
+        }
+
+        /* NAV */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 100;
+            padding: 16px 60px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: rgba(255, 255, 255, 0.92);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+            transition: .3s
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: #0d47a1;
+            letter-spacing: -0.5px
+        }
+
+        .logo span {
+            color: #ff6f00
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 32px;
+            align-items: center
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #444;
+            font-size: .9rem;
+            font-weight: 500;
+            transition: .2s
+        }
+
+        .nav-links a:hover {
+            color: #0d47a1
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #0d47a1, #1565c0);
+            color: #fff !important;
+            padding: 10px 24px;
+            border-radius: 50px;
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+            transition: .3s;
+            font-size: .9rem;
+            text-decoration: none
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(13, 71, 161, 0.3)
+        }
+
+        /* HERO */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, rgba(10, 22, 40, 0.88) 0%, rgba(13, 33, 55, 0.85) 40%, rgba(15, 52, 96, 0.82) 100%), url('https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?w=1920&q=80') center/cover no-repeat;
+            position: relative;
+            overflow: hidden;
+            padding: 100px 60px 80px
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            width: 600px;
+            height: 600px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(255, 111, 0, 0.15), transparent 70%);
+            top: -100px;
+            right: -100px
+        }
+
+        .hero::after {
+            content: '';
+            position: absolute;
+            width: 400px;
+            height: 400px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(21, 101, 192, 0.2), transparent 70%);
+            bottom: -50px;
+            left: -50px
+        }
+
+        .hero-content {
+            max-width: 1200px;
+            width: 100%;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            align-items: center;
+            position: relative;
+            z-index: 2
+        }
+
+        .hero-text h1 {
+            font-size: 3.2rem;
+            font-weight: 800;
+            color: #fff;
+            line-height: 1.2;
+            margin-bottom: 20px
+        }
+
+        .hero-text h1 span {
+            background: linear-gradient(135deg, #ff6f00, #ff9800);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent
+        }
+
+        .hero-text p {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 1.1rem;
+            line-height: 1.7;
+            margin-bottom: 32px
+        }
+
+        /* BOOKING FORM */
+        .booking-card {
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 24px;
+            padding: 36px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3)
+        }
+
+        .booking-card h3 {
+            color: #fff;
+            font-size: 1.2rem;
+            margin-bottom: 24px;
+            font-weight: 600
+        }
+
+        .form-group {
+            margin-bottom: 18px
+        }
+
+        .form-group label {
+            display: block;
+            color: rgba(255, 255, 255, 0.6);
+            font-size: .8rem;
+            margin-bottom: 6px;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: .5px
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 14px 16px;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            background: rgba(255, 255, 255, 0.06);
+            color: #fff;
+            font-size: .95rem;
+            font-family: 'Inter', sans-serif;
+            transition: .3s
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #ff6f00;
+            background: rgba(255, 255, 255, 0.1)
+        }
+
+        .form-group select option {
+            background: #1a1a2e;
+            color: #fff
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px
+        }
+
+        .btn-search {
+            width: 100%;
+            padding: 16px;
+            border-radius: 14px;
+            border: none;
+            background: linear-gradient(135deg, #ff6f00, #ff9800);
+            color: #fff;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: .3s;
+            margin-top: 8px;
+            font-family: 'Inter', sans-serif
+        }
+
+        .btn-search:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(255, 111, 0, 0.4)
+        }
+
+        /* TRUST BAR */
+        .trust-bar {
+            background: #fff;
+            padding: 40px 60px;
+            display: flex;
+            justify-content: center;
+            gap: 60px;
+            border-bottom: 1px solid #eee
+        }
+
+        .trust-item {
+            display: flex;
+            align-items: center;
+            gap: 14px
+        }
+
+        .trust-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem
+        }
+
+        .trust-icon.blue {
+            background: rgba(13, 71, 161, 0.1);
+            color: #0d47a1
+        }
+
+        .trust-icon.orange {
+            background: rgba(255, 111, 0, 0.1);
+            color: #ff6f00
+        }
+
+        .trust-icon.green {
+            background: rgba(46, 125, 50, 0.1);
+            color: #2e7d32
+        }
+
+        .trust-icon.purple {
+            background: rgba(106, 27, 154, 0.1);
+            color: #6a1b9a
+        }
+
+        .trust-item h4 {
+            font-size: .9rem;
+            font-weight: 600;
+            margin-bottom: 2px
+        }
+
+        .trust-item p {
+            font-size: .78rem;
+            color: #888
+        }
+
+        /* SECTIONS */
+        section {
+            padding: 80px 60px
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 50px
+        }
+
+        .section-header h2 {
+            font-size: 2.2rem;
+            font-weight: 800;
+            margin-bottom: 12px;
+            color: #1a1a2e
+        }
+
+        .section-header p {
+            color: #888;
+            font-size: 1rem;
+            max-width: 500px;
+            margin: 0 auto
+        }
+
+        /* VEHICLE CARDS */
+        .vehicle-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 24px;
+            max-width: 1200px;
+            margin: 0 auto
+        }
+
+        .vehicle-card {
+            background: #fff;
+            border-radius: 20px;
+            overflow: hidden;
+            border: 1px solid #eee;
+            transition: .3s;
+            cursor: pointer
+        }
+
+        .vehicle-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08)
+        }
+
+        .vehicle-img {
+            height: 180px;
+            background: #e3f2fd;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            color: #0d47a1;
+            position: relative;
+            overflow: hidden
+        }
+
+        .vehicle-img img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: .4s
+        }
+
+        .vehicle-card:hover .vehicle-img img {
+            transform: scale(1.08)
+        }
+
+        .vehicle-badge {
+            position: absolute;
+            top: 12px;
+            left: 12px;
+            background: linear-gradient(135deg, #ff6f00, #ff9800);
+            color: #fff;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: .7rem;
+            font-weight: 600
+        }
+
+        .vehicle-info {
+            padding: 20px
+        }
+
+        .vehicle-info h4 {
+            font-size: 1rem;
+            font-weight: 700;
+            margin-bottom: 6px
+        }
+
+        .vehicle-info .specs {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 12px
+        }
+
+        .vehicle-info .specs span {
+            font-size: .75rem;
+            color: #888;
+            display: flex;
+            align-items: center;
+            gap: 4px
+        }
+
+        .vehicle-info .price {
+            font-size: 1.2rem;
+            font-weight: 800;
+            color: #0d47a1
+        }
+
+        .vehicle-info .price small {
+            font-size: .75rem;
+            color: #888;
+            font-weight: 400
+        }
+
+        /* ROUTES */
+        .routes-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+            max-width: 1200px;
+            margin: 0 auto
+        }
+
+        .route-card {
+            background: #fff;
+            border-radius: 20px;
+            padding: 28px;
+            border: 1px solid #eee;
+            transition: .3s;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 20px
+        }
+
+        .route-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.06)
+        }
+
+        .route-icon {
+            width: 56px;
+            height: 56px;
+            border-radius: 16px;
+            background: linear-gradient(135deg, #e3f2fd, #bbdefb);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.4rem;
+            color: #0d47a1;
+            flex-shrink: 0
+        }
+
+        .route-card h4 {
+            font-size: .95rem;
+            font-weight: 600;
+            margin-bottom: 4px
+        }
+
+        .route-card p {
+            font-size: .8rem;
+            color: #888
+        }
+
+        .route-card .route-price {
+            font-size: .85rem;
+            font-weight: 700;
+            color: #ff6f00;
+            margin-top: 6px
+        }
+
+        /* STEPS */
+        .steps-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 40px;
+            max-width: 1000px;
+            margin: 0 auto
+        }
+
+        .step-card {
+            text-align: center;
+            padding: 30px
+        }
+
+        .step-num {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #0d47a1, #1565c0);
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.4rem;
+            font-weight: 800;
+            margin: 0 auto 20px
+        }
+
+        .step-card h4 {
+            font-size: 1rem;
+            font-weight: 700;
+            margin-bottom: 8px
+        }
+
+        .step-card p {
+            font-size: .85rem;
+            color: #888;
+            line-height: 1.6
+        }
+
+        /* TESTIMONIALS */
+        .testimonials {
+            background: linear-gradient(135deg, #0a1628, #0f3460);
+            padding: 80px 60px
+        }
+
+        .testimonials .section-header h2 {
+            color: #fff
+        }
+
+        .testimonials .section-header p {
+            color: rgba(255, 255, 255, 0.6)
+        }
+
+        .testimonial-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+            max-width: 1200px;
+            margin: 0 auto
+        }
+
+        .testimonial-card {
+            background: rgba(255, 255, 255, 0.06);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 28px
+        }
+
+        .stars {
+            color: #ff9800;
+            margin-bottom: 12px;
+            font-size: .9rem
+        }
+
+        .testimonial-card p {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: .9rem;
+            line-height: 1.7;
+            margin-bottom: 16px;
+            font-style: italic
+        }
+
+        .testimonial-author {
+            display: flex;
+            align-items: center;
+            gap: 12px
+        }
+
+        .author-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #ff6f00, #ff9800);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-weight: 700;
+            font-size: .85rem
+        }
+
+        .author-info h5 {
+            color: #fff;
+            font-size: .85rem;
+            font-weight: 600
+        }
+
+        .author-info span {
+            color: rgba(255, 255, 255, 0.5);
+            font-size: .75rem
+        }
+
+        /* CTA */
+        .cta {
+            background: linear-gradient(135deg, #ff6f00, #ff9800);
+            padding: 80px 60px;
+            text-align: center
+        }
+
+        .cta h2 {
+            color: #fff;
+            font-size: 2.2rem;
+            font-weight: 800;
+            margin-bottom: 16px
+        }
+
+        .cta p {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 1.05rem;
+            margin-bottom: 32px
+        }
+
+        .btn-cta {
+            background: #fff;
+            color: #ff6f00;
+            padding: 16px 40px;
+            border-radius: 50px;
+            border: none;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: .3s
+        }
+
+        .btn-cta:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2)
+        }
+
+        /* FOOTER */
+        footer {
+            background: #0a1628;
+            padding: 60px;
+            color: rgba(255, 255, 255, 0.6)
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr;
+            gap: 40px;
+            max-width: 1200px;
+            margin: 0 auto
+        }
+
+        .footer-brand h3 {
+            color: #fff;
+            font-size: 1.3rem;
+            margin-bottom: 12px
+        }
+
+        .footer-brand p {
+            font-size: .85rem;
+            line-height: 1.7
+        }
+
+        .footer-col h4 {
+            color: #fff;
+            font-size: .9rem;
+            margin-bottom: 16px;
+            font-weight: 600
+        }
+
+        .footer-col a {
+            display: block;
+            color: rgba(255, 255, 255, 0.6);
+            text-decoration: none;
+            font-size: .85rem;
+            margin-bottom: 10px;
+            transition: .2s
+        }
+
+        .footer-col a:hover {
+            color: #ff9800
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 40px;
+            margin-top: 40px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            font-size: .8rem
+        }
+
+        /* WIREFRAME LABEL */
+        .wireframe-label {
+            position: fixed;
+            top: 80px;
+            right: 20px;
+            background: #ff6f00;
+            color: #fff;
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-size: .75rem;
+            font-weight: 700;
+            z-index: 999;
+            letter-spacing: 1px
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="wireframe-label">CONCEPT A — PREMIUM DARK</div>
+
+    <!-- NAV -->
+    <nav>
+        <div class="logo">Travel<span>Car</span></div>
+        <div class="nav-links">
+            <a href="#">Trang chủ</a>
+            <a href="#">Dịch vụ</a>
+            <a href="#">Tuyến đường</a>
+            <a href="#">Bảng giá</a>
+            <a href="#">Liên hệ</a>
+            <a href="#" class="btn-primary">Đặt xe ngay</a>
+        </div>
+    </nav>
+
+    <!-- HERO -->
+    <section class="hero">
+        <div class="hero-content">
+            <div class="hero-text">
+                <h1>Đặt Xe Du Lịch<br><span>Nhanh Chóng & An Toàn</span></h1>
+                <p>Dịch vụ cho thuê xe du lịch chuyên nghiệp hàng đầu. Đa dạng loại xe từ 4 đến 45 chỗ, tài xế kinh
+                    nghiệm, giá cả minh bạch — cam kết mang đến trải nghiệm tuyệt vời nhất.</p>
+                <div style="display:flex;gap:16px;align-items:center">
+                    <div style="display:flex;align-items:center;gap:8px;color:rgba(255,255,255,0.7);font-size:.85rem">
+                        <i class="fas fa-star" style="color:#ff9800"></i> 4.9/5 từ 12,000+ đánh giá
+                    </div>
+                    <div style="display:flex;align-items:center;gap:8px;color:rgba(255,255,255,0.7);font-size:.85rem">
+                        <i class="fas fa-users" style="color:#4fc3f7"></i> 500,000+ khách hàng
+                    </div>
+                </div>
+            </div>
+            <!-- BOOKING FORM -->
+            <div class="booking-card">
+                <h3><i class="fas fa-car-side" style="margin-right:8px;color:#ff9800"></i> Đặt xe nhanh</h3>
+                <div class="form-group">
+                    <label>Điểm đón</label>
+                    <input type="text" placeholder="Nhập địa chỉ đón...">
+                </div>
+                <div class="form-group">
+                    <label>Điểm đến</label>
+                    <input type="text" placeholder="Nhập điểm đến...">
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Ngày đi</label>
+                        <input type="date">
+                    </div>
+                    <div class="form-group">
+                        <label>Ngày về</label>
+                        <input type="date">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Loại xe</label>
+                        <select>
+                            <option>Xe 4 chỗ</option>
+                            <option>Xe 7 chỗ</option>
+                            <option>Xe 16 chỗ</option>
+                            <option>Xe 29 chỗ</option>
+                            <option>Xe 45 chỗ</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Số khách</label>
+                        <select>
+                            <option>1-4 người</option>
+                            <option>5-7 người</option>
+                            <option>8-16 người</option>
+                            <option>17-29 người</option>
+                            <option>30-45 người</option>
+                        </select>
+                    </div>
+                </div>
+                <button class="btn-search"><i class="fas fa-search" style="margin-right:8px"></i>Tìm xe ngay</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- TRUST BAR -->
+    <div class="trust-bar">
+        <div class="trust-item">
+            <div class="trust-icon blue"><i class="fas fa-shield-halved"></i></div>
+            <div>
+                <h4>An toàn tuyệt đối</h4>
+                <p>Bảo hiểm toàn diện</p>
+            </div>
+        </div>
+        <div class="trust-item">
+            <div class="trust-icon orange"><i class="fas fa-tags"></i></div>
+            <div>
+                <h4>Giá minh bạch</h4>
+                <p>Không phát sinh phí ẩn</p>
+            </div>
+        </div>
+        <div class="trust-item">
+            <div class="trust-icon green"><i class="fas fa-headset"></i></div>
+            <div>
+                <h4>Hỗ trợ 24/7</h4>
+                <p>Luôn sẵn sàng phục vụ</p>
+            </div>
+        </div>
+        <div class="trust-item">
+            <div class="trust-icon purple"><i class="fas fa-car"></i></div>
+            <div>
+                <h4>Xe đời mới</h4>
+                <p>Đa dạng 4-45 chỗ</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- VEHICLES -->
+    <section>
+        <div class="section-header">
+            <h2>Chọn Loại Xe Phù Hợp</h2>
+            <p>Đa dạng các dòng xe đời mới, sạch sẽ, đầy đủ tiện nghi</p>
+        </div>
+        <div class="vehicle-grid">
+            <div class="vehicle-card">
+                <div class="vehicle-img">
+                    <div class="vehicle-badge">Phổ biến</div><img
+                        src="https://images.unsplash.com/photo-1621007947382-bb3c3994e3fb?w=500&q=80"
+                        alt="Xe 4 chỗ Sedan">
+                </div>
+                <div class="vehicle-info">
+                    <h4>Xe 4 Chỗ Sedan</h4>
+                    <div class="specs"><span><i class="fas fa-user"></i> 4 chỗ</span><span><i
+                                class="fas fa-suitcase"></i> 2 vali</span></div>
+                    <div class="price">850.000đ <small>/ngày</small></div>
+                </div>
+            </div>
+            <div class="vehicle-card">
+                <div class="vehicle-img">
+                    <div class="vehicle-badge">Hot</div><img
+                        src="https://images.unsplash.com/photo-1519641471654-76ce0107ad1b?w=500&q=80"
+                        alt="Xe 7 chỗ SUV">
+                </div>
+                <div class="vehicle-info">
+                    <h4>Xe 7 Chỗ SUV</h4>
+                    <div class="specs"><span><i class="fas fa-user"></i> 7 chỗ</span><span><i
+                                class="fas fa-suitcase"></i> 4 vali</span></div>
+                    <div class="price">1.200.000đ <small>/ngày</small></div>
+                </div>
+            </div>
+            <div class="vehicle-card">
+                <div class="vehicle-img"><img
+                        src="https://images.unsplash.com/photo-1570125909232-eb263c188f7e?w=500&q=80" alt="Xe 16 chỗ">
+                </div>
+                <div class="vehicle-info">
+                    <h4>Xe 16 Chỗ</h4>
+                    <div class="specs"><span><i class="fas fa-user"></i> 16 chỗ</span><span><i
+                                class="fas fa-suitcase"></i> 8 vali</span></div>
+                    <div class="price">1.800.000đ <small>/ngày</small></div>
+                </div>
+            </div>
+            <div class="vehicle-card">
+                <div class="vehicle-img"><img src="https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?w=500&q=80"
+                        alt="Xe 45 chỗ"></div>
+                <div class="vehicle-info">
+                    <h4>Xe 45 Chỗ</h4>
+                    <div class="specs"><span><i class="fas fa-user"></i> 45 chỗ</span><span><i
+                                class="fas fa-suitcase"></i> 20 vali</span></div>
+                    <div class="price">3.500.000đ <small>/ngày</small></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- POPULAR ROUTES -->
+    <section style="background:#f0f4ff">
+        <div class="section-header">
+            <h2>Tuyến Đường Phổ Biến</h2>
+            <p>Những tuyến đường được khách hàng yêu thích nhất</p>
+        </div>
+        <div class="routes-grid">
+            <div class="route-card">
+                <div class="route-icon"><i class="fas fa-location-dot"></i></div>
+                <div>
+                    <h4>HCM → Đà Lạt</h4>
+                    <p>~300km · 7 tiếng</p>
+                    <div class="route-price">Từ 3.500.000đ</div>
+                </div>
+            </div>
+            <div class="route-card">
+                <div class="route-icon"><i class="fas fa-location-dot"></i></div>
+                <div>
+                    <h4>HCM → Vũng Tàu</h4>
+                    <p>~125km · 2.5 tiếng</p>
+                    <div class="route-price">Từ 1.800.000đ</div>
+                </div>
+            </div>
+            <div class="route-card">
+                <div class="route-icon"><i class="fas fa-location-dot"></i></div>
+                <div>
+                    <h4>HCM → Phan Thiết</h4>
+                    <p>~200km · 4 tiếng</p>
+                    <div class="route-price">Từ 2.800.000đ</div>
+                </div>
+            </div>
+            <div class="route-card">
+                <div class="route-icon"><i class="fas fa-location-dot"></i></div>
+                <div>
+                    <h4>Hà Nội → Hạ Long</h4>
+                    <p>~170km · 3.5 tiếng</p>
+                    <div class="route-price">Từ 2.500.000đ</div>
+                </div>
+            </div>
+            <div class="route-card">
+                <div class="route-icon"><i class="fas fa-location-dot"></i></div>
+                <div>
+                    <h4>Hà Nội → Sapa</h4>
+                    <p>~320km · 6 tiếng</p>
+                    <div class="route-price">Từ 4.000.000đ</div>
+                </div>
+            </div>
+            <div class="route-card">
+                <div class="route-icon"><i class="fas fa-location-dot"></i></div>
+                <div>
+                    <h4>Đà Nẵng → Hội An</h4>
+                    <p>~30km · 40 phút</p>
+                    <div class="route-price">Từ 500.000đ</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- HOW IT WORKS -->
+    <section>
+        <div class="section-header">
+            <h2>Đặt Xe Chỉ 3 Bước</h2>
+            <p>Quy trình đơn giản, nhanh chóng, tiện lợi</p>
+        </div>
+        <div class="steps-grid">
+            <div class="step-card">
+                <div class="step-num">1</div>
+                <h4>Chọn tuyến & loại xe</h4>
+                <p>Nhập điểm đón, điểm đến, ngày giờ và loại xe mong muốn</p>
+            </div>
+            <div class="step-card">
+                <div class="step-num">2</div>
+                <h4>Xác nhận & thanh toán</h4>
+                <p>Xem báo giá chi tiết, chọn phương thức thanh toán phù hợp</p>
+            </div>
+            <div class="step-card">
+                <div class="step-num">3</div>
+                <h4>Tận hưởng chuyến đi</h4>
+                <p>Tài xế đón đúng giờ, xe sạch sẽ, chuyến đi an toàn thoải mái</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- TESTIMONIALS -->
+    <section class="testimonials">
+        <div class="section-header">
+            <h2>Khách Hàng Nói Gì?</h2>
+            <p>Hơn 12,000 đánh giá 5 sao từ khách hàng</p>
+        </div>
+        <div class="testimonial-grid">
+            <div class="testimonial-card">
+                <div class="stars">★★★★★</div>
+                <p>"Dịch vụ rất chuyên nghiệp, tài xế lịch sự, xe sạch sẽ. Gia đình tôi rất hài lòng với chuyến đi Đà
+                    Lạt."</p>
+                <div class="testimonial-author">
+                    <div class="author-avatar">TH</div>
+                    <div class="author-info">
+                        <h5>Trần Hương</h5><span>HCM → Đà Lạt</span>
+                    </div>
+                </div>
+            </div>
+            <div class="testimonial-card">
+                <div class="stars">★★★★★</div>
+                <p>"Đặt xe nhanh, giá rõ ràng không phát sinh. Chắc chắn sẽ quay lại sử dụng dịch vụ lần sau."</p>
+                <div class="testimonial-author">
+                    <div class="author-avatar">NV</div>
+                    <div class="author-info">
+                        <h5>Nguyễn Văn</h5><span>Hà Nội → Hạ Long</span>
+                    </div>
+                </div>
+            </div>
+            <div class="testimonial-card">
+                <div class="stars">★★★★★</div>
+                <p>"Xe 16 chỗ rộng rãi, máy lạnh mát, tài xế am hiểu đường. Rất recommend cho đoàn đi Vũng Tàu!"</p>
+                <div class="testimonial-author">
+                    <div class="author-avatar">LP</div>
+                    <div class="author-info">
+                        <h5>Lê Phát</h5><span>HCM → Vũng Tàu</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="cta">
+        <h2>Sẵn Sàng Cho Chuyến Đi Tiếp Theo?</h2>
+        <p>Liên hệ ngay để nhận báo giá tốt nhất — Hotline: 1900 xxxx</p>
+        <button class="btn-cta"><i class="fas fa-phone" style="margin-right:8px"></i>Gọi đặt xe ngay</button>
+    </section>
+
+    <!-- FOOTER -->
+    <footer>
+        <div class="footer-grid">
+            <div class="footer-brand">
+                <h3>Travel<span style="color:#ff9800">Car</span></h3>
+                <p>Dịch vụ cho thuê xe du lịch chuyên nghiệp, uy tín hàng đầu Việt Nam. Đồng hành cùng bạn trên mọi nẻo
+                    đường.</p>
+            </div>
+            <div class="footer-col">
+                <h4>Dịch vụ</h4>
+                <a href="#">Xe 4 chỗ</a><a href="#">Xe 7 chỗ</a><a href="#">Xe 16 chỗ</a><a href="#">Xe 29-45 chỗ</a>
+            </div>
+            <div class="footer-col">
+                <h4>Tuyến phổ biến</h4>
+                <a href="#">HCM - Đà Lạt</a><a href="#">HCM - Vũng Tàu</a><a href="#">Hà Nội - Hạ Long</a><a href="#">Đà
+                    Nẵng - Hội An</a>
+            </div>
+            <div class="footer-col">
+                <h4>Hỗ trợ</h4>
+                <a href="#">Hướng dẫn đặt xe</a><a href="#">Chính sách hoàn tiền</a><a href="#">FAQ</a><a href="#">Liên
+                    hệ</a>
+            </div>
+        </div>
+        <div class="footer-bottom">© 2025 TravelCar. All rights reserved.</div>
+    </footer>
+
+</body>
+
+</html>

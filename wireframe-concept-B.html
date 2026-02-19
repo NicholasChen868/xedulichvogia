@@ -1,0 +1,989 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Concept B - GoXe | Đặt Xe Du Lịch</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            color: #1e293b;
+            background: #fff
+        }
+
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 100;
+            padding: 14px 60px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: #fff;
+            border-bottom: 1px solid #e2e8f0
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: #059669
+        }
+
+        .logo span {
+            color: #1e293b
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 28px;
+            align-items: center
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #64748b;
+            font-size: .88rem;
+            font-weight: 500;
+            transition: .2s
+        }
+
+        .nav-links a:hover {
+            color: #059669
+        }
+
+        .btn-nav {
+            background: #059669;
+            color: #fff !important;
+            padding: 10px 24px;
+            border-radius: 10px;
+            font-weight: 600;
+            text-decoration: none;
+            font-size: .88rem;
+            transition: .3s
+        }
+
+        .btn-nav:hover {
+            background: #047857;
+            transform: translateY(-1px)
+        }
+
+        .hotline {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #059669;
+            font-weight: 600;
+            font-size: .88rem
+        }
+
+        /* HERO - LIGHT CLEAN */
+        .hero {
+            padding: 120px 60px 60px;
+            background: linear-gradient(180deg, #ecfdf5 0%, #fff 100%);
+            min-height: 90vh;
+            display: flex;
+            align-items: center;
+            position: relative
+        }
+
+        .hero::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 45%;
+            height: 100%;
+            background: url('https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?w=900&q=80') center/cover no-repeat;
+            mask-image: linear-gradient(to left, rgba(0, 0, 0, 0.15), transparent);
+            -webkit-mask-image: linear-gradient(to left, rgba(0, 0, 0, 0.15), transparent);
+            pointer-events: none;
+            z-index: 0
+        }
+
+        .hero-inner {
+            max-width: 1200px;
+            margin: 0 auto;
+            width: 100%;
+            text-align: center
+        }
+
+        .hero h1 {
+            font-size: 3.4rem;
+            font-weight: 800;
+            line-height: 1.2;
+            margin-bottom: 16px;
+            color: #0f172a
+        }
+
+        .hero h1 span {
+            color: #059669
+        }
+
+        .hero p {
+            color: #64748b;
+            font-size: 1.1rem;
+            max-width: 600px;
+            margin: 0 auto 40px
+        }
+
+        /* SEARCH BAR - HORIZONTAL like Booking.com */
+        .search-bar {
+            background: #fff;
+            border-radius: 16px;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.08);
+            padding: 8px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            max-width: 1000px;
+            margin: 0 auto
+        }
+
+        .search-field {
+            flex: 1;
+            padding: 16px 20px;
+            border: 2px solid transparent;
+            border-radius: 12px;
+            transition: .2s;
+            cursor: pointer
+        }
+
+        .search-field:hover {
+            background: #f8fafc
+        }
+
+        .search-field:focus-within {
+            border-color: #059669;
+            background: #fff
+        }
+
+        .search-field label {
+            display: block;
+            font-size: .7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: .5px;
+            color: #94a3b8;
+            margin-bottom: 4px
+        }
+
+        .search-field input,
+        .search-field select {
+            width: 100%;
+            border: none;
+            outline: none;
+            font-size: .92rem;
+            font-family: 'Inter';
+            color: #1e293b;
+            background: transparent
+        }
+
+        .search-divider {
+            width: 1px;
+            height: 40px;
+            background: #e2e8f0;
+            flex-shrink: 0
+        }
+
+        .btn-search {
+            background: #059669;
+            color: #fff;
+            border: none;
+            padding: 16px 32px;
+            border-radius: 12px;
+            font-size: .95rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: .3s;
+            font-family: 'Inter';
+            white-space: nowrap;
+            display: flex;
+            align-items: center;
+            gap: 8px
+        }
+
+        .btn-search:hover {
+            background: #047857;
+            transform: scale(1.02)
+        }
+
+        /* STATS */
+        .stats {
+            display: flex;
+            justify-content: center;
+            gap: 60px;
+            padding: 50px 60px;
+            max-width: 900px;
+            margin: 0 auto
+        }
+
+        .stat {
+            text-align: center
+        }
+
+        .stat h3 {
+            font-size: 2rem;
+            font-weight: 800;
+            color: #059669
+        }
+
+        .stat p {
+            font-size: .8rem;
+            color: #94a3b8;
+            margin-top: 4px
+        }
+
+        /* SECTIONS */
+        section {
+            padding: 70px 60px
+        }
+
+        .section-head {
+            text-align: center;
+            margin-bottom: 48px
+        }
+
+        .section-head h2 {
+            font-size: 2rem;
+            font-weight: 800;
+            margin-bottom: 10px
+        }
+
+        .section-head p {
+            color: #94a3b8;
+            font-size: .95rem
+        }
+
+        .tag {
+            display: inline-block;
+            background: #ecfdf5;
+            color: #059669;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: .75rem;
+            font-weight: 600;
+            margin-bottom: 12px
+        }
+
+        /* VEHICLE TYPE TABS */
+        .vehicle-tabs {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            margin-bottom: 36px;
+            flex-wrap: wrap
+        }
+
+        .vtab {
+            padding: 10px 24px;
+            border-radius: 10px;
+            border: 2px solid #e2e8f0;
+            background: #fff;
+            font-size: .85rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: .2s;
+            color: #64748b
+        }
+
+        .vtab:hover,
+        .vtab.active {
+            border-color: #059669;
+            color: #059669;
+            background: #ecfdf5
+        }
+
+        /* VEHICLE CARDS - MINIMAL */
+        .v-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            max-width: 1200px;
+            margin: 0 auto
+        }
+
+        .v-card {
+            background: #fff;
+            border: 1px solid #e2e8f0;
+            border-radius: 16px;
+            overflow: hidden;
+            transition: .3s;
+            cursor: pointer
+        }
+
+        .v-card:hover {
+            border-color: #059669;
+            box-shadow: 0 8px 30px rgba(5, 150, 105, 0.1);
+            transform: translateY(-4px)
+        }
+
+        .v-img {
+            height: 160px;
+            background: #f8fafc;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.8rem;
+            color: #059669;
+            overflow: hidden
+        }
+
+        .v-img img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: .4s
+        }
+
+        .v-card:hover .v-img img {
+            transform: scale(1.06)
+        }
+
+        .v-body {
+            padding: 20px
+        }
+
+        .v-body h4 {
+            font-size: .95rem;
+            font-weight: 700;
+            margin-bottom: 8px
+        }
+
+        .v-meta {
+            display: flex;
+            gap: 16px;
+            margin-bottom: 14px
+        }
+
+        .v-meta span {
+            font-size: .78rem;
+            color: #94a3b8;
+            display: flex;
+            align-items: center;
+            gap: 4px
+        }
+
+        .v-price-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center
+        }
+
+        .v-price {
+            font-size: 1.15rem;
+            font-weight: 800;
+            color: #059669
+        }
+
+        .v-price small {
+            font-size: .72rem;
+            color: #94a3b8;
+            font-weight: 400
+        }
+
+        .v-book {
+            background: #ecfdf5;
+            color: #059669;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-size: .78rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: .2s
+        }
+
+        .v-book:hover {
+            background: #059669;
+            color: #fff
+        }
+
+        /* ROUTES - HORIZONTAL CARDS */
+        .r-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+            max-width: 1000px;
+            margin: 0 auto
+        }
+
+        .r-card {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 14px;
+            padding: 20px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            transition: .2s;
+            cursor: pointer
+        }
+
+        .r-card:hover {
+            border-color: #059669;
+            background: #ecfdf5
+        }
+
+        .r-left {
+            display: flex;
+            align-items: center;
+            gap: 16px
+        }
+
+        .r-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #059669
+        }
+
+        .r-card h4 {
+            font-size: .9rem;
+            font-weight: 600
+        }
+
+        .r-card span {
+            font-size: .78rem;
+            color: #94a3b8
+        }
+
+        .r-price {
+            font-weight: 700;
+            color: #059669;
+            font-size: .9rem;
+            white-space: nowrap
+        }
+
+        /* STEPS - HORIZONTAL TIMELINE */
+        .steps {
+            display: flex;
+            justify-content: center;
+            gap: 0;
+            max-width: 900px;
+            margin: 0 auto;
+            position: relative
+        }
+
+        .step {
+            flex: 1;
+            text-align: center;
+            position: relative;
+            padding: 0 20px
+        }
+
+        .step::before {
+            content: '';
+            position: absolute;
+            top: 24px;
+            left: 50%;
+            right: -50%;
+            height: 2px;
+            background: #e2e8f0;
+            z-index: 0
+        }
+
+        .step:last-child::before {
+            display: none
+        }
+
+        .step-circle {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: #059669;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 1.1rem;
+            margin: 0 auto 16px;
+            position: relative;
+            z-index: 1
+        }
+
+        .step h4 {
+            font-size: .88rem;
+            font-weight: 700;
+            margin-bottom: 6px
+        }
+
+        .step p {
+            font-size: .78rem;
+            color: #94a3b8;
+            line-height: 1.5
+        }
+
+        /* TESTIMONIALS */
+        .t-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            max-width: 1100px;
+            margin: 0 auto
+        }
+
+        .t-card {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 16px;
+            padding: 24px
+        }
+
+        .t-stars {
+            color: #f59e0b;
+            font-size: .85rem;
+            margin-bottom: 10px
+        }
+
+        .t-card p {
+            font-size: .88rem;
+            color: #475569;
+            line-height: 1.7;
+            margin-bottom: 14px
+        }
+
+        .t-author {
+            display: flex;
+            align-items: center;
+            gap: 10px
+        }
+
+        .t-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: #059669;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: .78rem
+        }
+
+        .t-name {
+            font-size: .82rem;
+            font-weight: 600
+        }
+
+        .t-route {
+            font-size: .72rem;
+            color: #94a3b8
+        }
+
+        /* CTA */
+        .cta {
+            background: #059669;
+            padding: 60px;
+            text-align: center;
+            border-radius: 24px;
+            max-width: 1100px;
+            margin: 0 auto 60px
+        }
+
+        .cta h2 {
+            color: #fff;
+            font-size: 2rem;
+            font-weight: 800;
+            margin-bottom: 12px
+        }
+
+        .cta p {
+            color: rgba(255, 255, 255, 0.85);
+            margin-bottom: 28px
+        }
+
+        .btn-cta {
+            background: #fff;
+            color: #059669;
+            padding: 14px 36px;
+            border-radius: 10px;
+            border: none;
+            font-size: .95rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: .3s
+        }
+
+        .btn-cta:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15)
+        }
+
+        /* FOOTER */
+        footer {
+            background: #0f172a;
+            padding: 50px 60px;
+            color: #94a3b8
+        }
+
+        .f-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr;
+            gap: 36px;
+            max-width: 1200px;
+            margin: 0 auto
+        }
+
+        footer h4 {
+            color: #fff;
+            font-size: .88rem;
+            margin-bottom: 14px
+        }
+
+        footer p {
+            font-size: .82rem;
+            line-height: 1.7
+        }
+
+        footer a {
+            display: block;
+            color: #94a3b8;
+            text-decoration: none;
+            font-size: .82rem;
+            margin-bottom: 8px;
+            transition: .2s
+        }
+
+        footer a:hover {
+            color: #059669
+        }
+
+        .f-bottom {
+            text-align: center;
+            padding-top: 30px;
+            margin-top: 30px;
+            border-top: 1px solid #1e293b;
+            font-size: .78rem
+        }
+
+        .wireframe-label {
+            position: fixed;
+            top: 80px;
+            right: 20px;
+            background: #059669;
+            color: #fff;
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-size: .75rem;
+            font-weight: 700;
+            z-index: 999;
+            letter-spacing: 1px
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="wireframe-label">CONCEPT B — CLEAN MINIMAL</div>
+
+    <nav>
+        <div class="logo"><span>Go</span>Xe</div>
+        <div class="nav-links">
+            <a href="#">Trang chủ</a>
+            <a href="#">Loại xe</a>
+            <a href="#">Tuyến đường</a>
+            <a href="#">Bảng giá</a>
+            <a href="#">Blog</a>
+            <div class="hotline"><i class="fas fa-phone"></i> 1900 xxxx</div>
+            <a href="#" class="btn-nav">Đặt xe</a>
+        </div>
+    </nav>
+
+    <section class="hero">
+        <div class="hero-inner">
+            <div class="tag">🚗 Dịch vụ xe du lịch #1 Việt Nam</div>
+            <h1>Đặt Xe Du Lịch<br><span>Dễ Dàng · Minh Bạch · An Toàn</span></h1>
+            <p>Chỉ cần 30 giây để đặt xe. Giá niêm yết rõ ràng, không phí ẩn, xe đời mới, tài xế chuyên nghiệp.</p>
+
+            <div class="search-bar">
+                <div class="search-field">
+                    <label>Điểm đón</label>
+                    <input type="text" placeholder="VD: Sân bay Tân Sơn Nhất">
+                </div>
+                <div class="search-divider"></div>
+                <div class="search-field">
+                    <label>Điểm đến</label>
+                    <input type="text" placeholder="VD: Đà Lạt">
+                </div>
+                <div class="search-divider"></div>
+                <div class="search-field">
+                    <label>Ngày đi</label>
+                    <input type="date">
+                </div>
+                <div class="search-divider"></div>
+                <div class="search-field">
+                    <label>Loại xe</label>
+                    <select>
+                        <option>4 chỗ</option>
+                        <option>7 chỗ</option>
+                        <option>16 chỗ</option>
+                        <option>29 chỗ</option>
+                        <option>45 chỗ</option>
+                    </select>
+                </div>
+                <button class="btn-search"><i class="fas fa-search"></i> Tìm xe</button>
+            </div>
+
+            <div class="stats">
+                <div class="stat">
+                    <h3>500K+</h3>
+                    <p>Khách hàng</p>
+                </div>
+                <div class="stat">
+                    <h3>50K+</h3>
+                    <p>Chuyến đi</p>
+                </div>
+                <div class="stat">
+                    <h3>4.9★</h3>
+                    <p>Đánh giá</p>
+                </div>
+                <div class="stat">
+                    <h3>200+</h3>
+                    <p>Xe đời mới</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section>
+        <div class="section-head">
+            <div class="tag">Đội xe</div>
+            <h2>Chọn Xe Phù Hợp Nhu Cầu</h2>
+            <p>Đa dạng từ xe sedan đến xe khách lớn, tất cả đều đời mới</p>
+        </div>
+        <div class="vehicle-tabs">
+            <div class="vtab active">Tất cả</div>
+            <div class="vtab">4 chỗ</div>
+            <div class="vtab">7 chỗ</div>
+            <div class="vtab">16 chỗ</div>
+            <div class="vtab">29-45 chỗ</div>
+        </div>
+        <div class="v-grid">
+            <div class="v-card">
+                <div class="v-img"><img src="https://images.unsplash.com/photo-1621007947382-bb3c3994e3fb?w=500&q=80"
+                        alt="Toyota Camry"></div>
+                <div class="v-body">
+                    <h4>Toyota Camry</h4>
+                    <div class="v-meta"><span><i class="fas fa-user"></i> 4</span><span><i class="fas fa-suitcase"></i>
+                            2</span><span><i class="fas fa-snowflake"></i> A/C</span></div>
+                    <div class="v-price-row">
+                        <div class="v-price">850K<small>/ngày</small></div><button class="v-book">Đặt ngay</button>
+                    </div>
+                </div>
+            </div>
+            <div class="v-card">
+                <div class="v-img"><img src="https://images.unsplash.com/photo-1519641471654-76ce0107ad1b?w=500&q=80"
+                        alt="Ford Everest"></div>
+                <div class="v-body">
+                    <h4>Ford Everest</h4>
+                    <div class="v-meta"><span><i class="fas fa-user"></i> 7</span><span><i class="fas fa-suitcase"></i>
+                            4</span><span><i class="fas fa-snowflake"></i> A/C</span></div>
+                    <div class="v-price-row">
+                        <div class="v-price">1.2M<small>/ngày</small></div><button class="v-book">Đặt ngay</button>
+                    </div>
+                </div>
+            </div>
+            <div class="v-card">
+                <div class="v-img"><img src="https://images.unsplash.com/photo-1570125909232-eb263c188f7e?w=500&q=80"
+                        alt="Ford Transit"></div>
+                <div class="v-body">
+                    <h4>Ford Transit</h4>
+                    <div class="v-meta"><span><i class="fas fa-user"></i> 16</span><span><i class="fas fa-suitcase"></i>
+                            8</span><span><i class="fas fa-snowflake"></i> A/C</span></div>
+                    <div class="v-price-row">
+                        <div class="v-price">1.8M<small>/ngày</small></div><button class="v-book">Đặt ngay</button>
+                    </div>
+                </div>
+            </div>
+            <div class="v-card">
+                <div class="v-img"><img src="https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?w=500&q=80"
+                        alt="Hyundai Universe"></div>
+                <div class="v-body">
+                    <h4>Hyundai Universe</h4>
+                    <div class="v-meta"><span><i class="fas fa-user"></i> 45</span><span><i class="fas fa-suitcase"></i>
+                            20</span><span><i class="fas fa-snowflake"></i> A/C</span></div>
+                    <div class="v-price-row">
+                        <div class="v-price">3.5M<small>/ngày</small></div><button class="v-book">Đặt ngay</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section style="background:#f8fafc">
+        <div class="section-head">
+            <div class="tag">Tuyến phổ biến</div>
+            <h2>Tuyến Đường Được Yêu Thích</h2>
+            <p>Những cung đường hot nhất mà khách hàng thường đặt</p>
+        </div>
+        <div class="r-grid">
+            <div class="r-card">
+                <div class="r-left">
+                    <div class="r-dot"></div>
+                    <div>
+                        <h4>TP.HCM → Đà Lạt</h4><span>300km · 7h</span>
+                    </div>
+                </div>
+                <div class="r-price">Từ 3.5M</div>
+            </div>
+            <div class="r-card">
+                <div class="r-left">
+                    <div class="r-dot"></div>
+                    <div>
+                        <h4>TP.HCM → Vũng Tàu</h4><span>125km · 2.5h</span>
+                    </div>
+                </div>
+                <div class="r-price">Từ 1.8M</div>
+            </div>
+            <div class="r-card">
+                <div class="r-left">
+                    <div class="r-dot"></div>
+                    <div>
+                        <h4>TP.HCM → Phan Thiết</h4><span>200km · 4h</span>
+                    </div>
+                </div>
+                <div class="r-price">Từ 2.8M</div>
+            </div>
+            <div class="r-card">
+                <div class="r-left">
+                    <div class="r-dot"></div>
+                    <div>
+                        <h4>Hà Nội → Hạ Long</h4><span>170km · 3.5h</span>
+                    </div>
+                </div>
+                <div class="r-price">Từ 2.5M</div>
+            </div>
+            <div class="r-card">
+                <div class="r-left">
+                    <div class="r-dot"></div>
+                    <div>
+                        <h4>Hà Nội → Sapa</h4><span>320km · 6h</span>
+                    </div>
+                </div>
+                <div class="r-price">Từ 4M</div>
+            </div>
+            <div class="r-card">
+                <div class="r-left">
+                    <div class="r-dot"></div>
+                    <div>
+                        <h4>Đà Nẵng → Hội An</h4><span>30km · 40p</span>
+                    </div>
+                </div>
+                <div class="r-price">Từ 500K</div>
+            </div>
+        </div>
+    </section>
+
+    <section>
+        <div class="section-head">
+            <div class="tag">Quy trình</div>
+            <h2>3 Bước Đơn Giản</h2>
+            <p>Đặt xe chưa bao giờ dễ dàng đến thế</p>
+        </div>
+        <div class="steps">
+            <div class="step">
+                <div class="step-circle">1</div>
+                <h4>Nhập thông tin</h4>
+                <p>Điểm đón, điểm đến, ngày giờ và loại xe</p>
+            </div>
+            <div class="step">
+                <div class="step-circle">2</div>
+                <h4>Xem giá & xác nhận</h4>
+                <p>Nhận báo giá ngay, thanh toán tiện lợi</p>
+            </div>
+            <div class="step">
+                <div class="step-circle">3</div>
+                <h4>Lên xe & đi</h4>
+                <p>Tài xế đón đúng giờ, tận hưởng chuyến đi</p>
+            </div>
+        </div>
+    </section>
+
+    <section style="background:#f8fafc">
+        <div class="section-head">
+            <div class="tag">Đánh giá</div>
+            <h2>Khách Hàng Nói Gì?</h2>
+        </div>
+        <div class="t-grid">
+            <div class="t-card">
+                <div class="t-stars">★★★★★</div>
+                <p>"Đặt xe nhanh, giá hợp lý, tài xế rất thân thiện. Chắc chắn sẽ dùng lại!"</p>
+                <div class="t-author">
+                    <div class="t-avatar">TH</div>
+                    <div>
+                        <div class="t-name">Trần Hương</div>
+                        <div class="t-route">HCM → Đà Lạt</div>
+                    </div>
+                </div>
+            </div>
+            <div class="t-card">
+                <div class="t-stars">★★★★★</div>
+                <p>"Xe mới, sạch sẽ, máy lạnh mát. Gia đình tôi rất hài lòng với chuyến đi."</p>
+                <div class="t-author">
+                    <div class="t-avatar">NV</div>
+                    <div>
+                        <div class="t-name">Nguyễn Văn</div>
+                        <div class="t-route">Hà Nội → Hạ Long</div>
+                    </div>
+                </div>
+            </div>
+            <div class="t-card">
+                <div class="t-stars">★★★★★</div>
+                <p>"Giá niêm yết rõ ràng, không phát sinh phụ phí. Website rất dễ sử dụng!"</p>
+                <div class="t-author">
+                    <div class="t-avatar">LP</div>
+                    <div>
+                        <div class="t-name">Lê Phát</div>
+                        <div class="t-route">HCM → Vũng Tàu</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section>
+        <div class="cta">
+            <h2>Sẵn sàng đặt xe?</h2>
+            <p>Liên hệ ngay để nhận báo giá tốt nhất cho chuyến đi của bạn</p>
+            <button class="btn-cta"><i class="fas fa-phone" style="margin-right:8px"></i>Hotline: 1900 xxxx</button>
+        </div>
+    </section>
+
+    <footer>
+        <div class="f-grid">
+            <div>
+                <h4 style="font-size:1.3rem">Go<span style="color:#059669">Xe</span></h4>
+                <p>Dịch vụ đặt xe du lịch chuyên nghiệp. Đồng hành cùng mọi chuyến đi của bạn trên khắp Việt Nam.</p>
+            </div>
+            <div>
+                <h4>Dịch vụ</h4><a href="#">Xe 4 chỗ</a><a href="#">Xe 7 chỗ</a><a href="#">Xe 16 chỗ</a><a href="#">Xe
+                    29-45 chỗ</a>
+            </div>
+            <div>
+                <h4>Tuyến đường</h4><a href="#">HCM - Đà Lạt</a><a href="#">HCM - Vũng Tàu</a><a href="#">Hà Nội - Hạ
+                    Long</a><a href="#">Đà Nẵng - Hội An</a>
+            </div>
+            <div>
+                <h4>Hỗ trợ</h4><a href="#">Hướng dẫn đặt xe</a><a href="#">Chính sách</a><a href="#">FAQ</a><a
+                    href="#">Liên hệ</a>
+            </div>
+        </div>
+        <div class="f-bottom">© 2025 GoXe. All rights reserved.</div>
+    </footer>
+
+</body>
+
+</html>
