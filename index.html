@@ -294,23 +294,101 @@
             background: rgba(99, 102, 241, 0.15)
         }
 
+        /* ===== TABLET ===== */
         @media(max-width:900px) {
+            .container {
+                padding: 48px 24px
+            }
+
+            header {
+                margin-bottom: 40px
+            }
+
+            header h1 {
+                font-size: 2.2rem
+            }
+
             .grid {
-                grid-template-columns: 1fr
+                grid-template-columns: 1fr;
+                gap: 20px
             }
 
             .card-img {
                 height: 200px
             }
+
+            .card-body {
+                padding: 20px
+            }
         }
 
-        @media(max-width:600px) {
-            header h1 {
-                font-size: 1.8rem
+        /* ===== MOBILE ===== */
+        @media(max-width:480px) {
+            .container {
+                padding: 32px 16px
             }
 
-            .container {
-                padding: 40px 20px
+            header {
+                margin-bottom: 32px
+            }
+
+            header h1 {
+                font-size: 1.6rem
+            }
+
+            header p {
+                font-size: .9rem
+            }
+
+            .badge {
+                font-size: .72rem;
+                padding: 6px 16px
+            }
+
+            .grid {
+                gap: 16px;
+                margin-bottom: 32px
+            }
+
+            .card {
+                border-radius: 16px
+            }
+
+            .card:hover {
+                transform: translateY(-4px)
+            }
+
+            .card-img {
+                height: 160px
+            }
+
+            .card-body {
+                padding: 16px
+            }
+
+            .card-body h3 {
+                font-size: 1rem
+            }
+
+            .card-body p {
+                font-size: .82rem;
+                margin-bottom: 12px
+            }
+
+            .tag {
+                font-size: .65rem
+            }
+
+            .card-arrow {
+                bottom: 16px;
+                right: 16px;
+                width: 30px;
+                height: 30px
+            }
+
+            .footer-note {
+                font-size: .78rem;
+                padding: 20px 0
             }
         }
     </style>

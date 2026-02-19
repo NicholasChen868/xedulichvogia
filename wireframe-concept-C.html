@@ -717,6 +717,283 @@
             z-index: 999;
             letter-spacing: 1px
         }
+
+        /* HAMBURGER MENU */
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            gap: 5px;
+            cursor: pointer;
+            padding: 8px;
+            z-index: 101;
+            background: none;
+            border: none
+        }
+
+        .hamburger span {
+            width: 24px;
+            height: 2.5px;
+            background: #1e293b;
+            border-radius: 2px;
+            transition: .3s
+        }
+
+        .nav-links.open {
+            display: flex !important
+        }
+
+        /* ===== TABLET ===== */
+        @media (max-width: 900px) {
+            nav {
+                padding: 14px 24px
+            }
+
+            .hamburger {
+                display: flex
+            }
+
+            .nav-links {
+                display: none;
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background: rgba(255, 255, 255, 0.98);
+                backdrop-filter: blur(16px);
+                -webkit-backdrop-filter: blur(16px);
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                gap: 24px;
+                z-index: 100
+            }
+
+            .nav-links a {
+                font-size: 1.1rem
+            }
+
+            .hero {
+                padding: 90px 24px 50px;
+                min-height: auto
+            }
+
+            .hero-inner {
+                grid-template-columns: 1fr;
+                gap: 32px
+            }
+
+            .hero-left h1 {
+                font-size: 2.2rem
+            }
+
+            .hero-badges {
+                flex-wrap: wrap;
+                gap: 10px
+            }
+
+            .booking-float {
+                padding: 28px
+            }
+
+            .trust {
+                grid-template-columns: repeat(2, 1fr);
+                margin-top: -20px;
+                padding: 0 24px
+            }
+
+            section {
+                padding: 60px 24px
+            }
+
+            .sh h2 {
+                font-size: 1.7rem
+            }
+
+            .vg {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 16px
+            }
+
+            .rg {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 12px
+            }
+
+            .sg {
+                grid-template-columns: repeat(3, 1fr);
+                gap: 20px
+            }
+
+            .tg {
+                grid-template-columns: 1fr;
+                gap: 16px
+            }
+
+            .cta-section {
+                padding: 24px
+            }
+
+            .cta-box {
+                padding: 48px 24px
+            }
+
+            .cta-box h2 {
+                font-size: 1.6rem
+            }
+
+            footer {
+                padding: 40px 24px
+            }
+
+            .fg2 {
+                grid-template-columns: 1fr 1fr;
+                gap: 28px
+            }
+
+            .wireframe-label {
+                top: auto;
+                bottom: 16px;
+                right: 16px;
+                font-size: .65rem;
+                padding: 6px 12px
+            }
+        }
+
+        /* ===== MOBILE ===== */
+        @media (max-width: 480px) {
+            nav {
+                padding: 12px 16px
+            }
+
+            .logo {
+                font-size: 1.25rem
+            }
+
+            .hero {
+                padding: 80px 16px 40px
+            }
+
+            .hero-left h1 {
+                font-size: 1.75rem
+            }
+
+            .hero-left p {
+                font-size: .92rem
+            }
+
+            .hero-badges {
+                flex-direction: column;
+                gap: 8px
+            }
+
+            .badge {
+                justify-content: center
+            }
+
+            .booking-float {
+                padding: 20px;
+                border-radius: 18px
+            }
+
+            .booking-float h3 {
+                font-size: 1rem
+            }
+
+            .fg-row {
+                grid-template-columns: 1fr
+            }
+
+            .fg input,
+            .fg select {
+                padding: 12px 14px;
+                font-size: .9rem
+            }
+
+            .trust {
+                grid-template-columns: 1fr 1fr;
+                margin-top: 0;
+                padding: 24px 16px;
+                gap: 12px
+            }
+
+            .trust-card {
+                padding: 16px
+            }
+
+            .trust-card i {
+                font-size: 1.2rem
+            }
+
+            .trust-card h4 {
+                font-size: .8rem
+            }
+
+            section {
+                padding: 48px 16px
+            }
+
+            .sh h2 {
+                font-size: 1.4rem
+            }
+
+            .sh p {
+                font-size: .85rem
+            }
+
+            .vg {
+                grid-template-columns: 1fr;
+                gap: 16px
+            }
+
+            .vc-img {
+                height: 180px
+            }
+
+            .rg {
+                grid-template-columns: 1fr
+            }
+
+            .rc {
+                padding: 16px
+            }
+
+            .sg {
+                grid-template-columns: 1fr;
+                gap: 16px
+            }
+
+            .tg {
+                grid-template-columns: 1fr
+            }
+
+            .cta-section {
+                padding: 16px
+            }
+
+            .cta-box {
+                padding: 40px 20px;
+                border-radius: 18px
+            }
+
+            .cta-box h2 {
+                font-size: 1.3rem
+            }
+
+            .btn-cta {
+                padding: 12px 28px;
+                font-size: .9rem
+            }
+
+            footer {
+                padding: 32px 16px
+            }
+
+            .fg2 {
+                grid-template-columns: 1fr;
+                gap: 24px
+            }
+        }
     </style>
 </head>
 
@@ -726,10 +1003,17 @@
 
     <nav>
         <div class="logo">XeViệt</div>
+        <button class="hamburger" onclick="document.querySelector('.nav-links').classList.toggle('open')"
+            aria-label="Menu">
+            <span></span><span></span><span></span>
+        </button>
         <div class="nav-links">
-            <a href="#">Trang chủ</a><a href="#">Dịch vụ</a><a href="#">Tuyến đường</a><a href="#">Bảng giá</a><a
-                href="#">Liên hệ</a>
-            <a href="#" class="btn-nav">Đặt xe ngay</a>
+            <a href="#" onclick="this.parentElement.classList.remove('open')">Trang chủ</a><a href="#"
+                onclick="this.parentElement.classList.remove('open')">Dịch vụ</a><a href="#"
+                onclick="this.parentElement.classList.remove('open')">Tuyến đường</a><a href="#"
+                onclick="this.parentElement.classList.remove('open')">Bảng giá</a><a href="#"
+                onclick="this.parentElement.classList.remove('open')">Liên hệ</a>
+            <a href="#" class="btn-nav" onclick="this.parentElement.classList.remove('open')">Đặt xe ngay</a>
         </div>
     </nav>
 

@@ -682,6 +682,260 @@
             z-index: 999;
             letter-spacing: 1px
         }
+
+        /* HAMBURGER MENU */
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            gap: 5px;
+            cursor: pointer;
+            padding: 8px;
+            z-index: 101;
+            background: none;
+            border: none
+        }
+
+        .hamburger span {
+            width: 24px;
+            height: 2.5px;
+            background: #1e293b;
+            border-radius: 2px;
+            transition: .3s
+        }
+
+        .nav-links.open {
+            display: flex !important
+        }
+
+        /* ===== TABLET ===== */
+        @media (max-width: 900px) {
+            nav {
+                padding: 14px 24px
+            }
+
+            .hamburger {
+                display: flex
+            }
+
+            .nav-links {
+                display: none;
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background: rgba(255, 255, 255, 0.98);
+                backdrop-filter: blur(16px);
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                gap: 24px;
+                z-index: 100
+            }
+
+            .nav-links a {
+                font-size: 1.1rem
+            }
+
+            .hotline {
+                font-size: 1rem
+            }
+
+            .hero {
+                padding: 100px 24px 50px;
+                min-height: auto
+            }
+
+            .hero h1 {
+                font-size: 2.4rem
+            }
+
+            .search-bar {
+                flex-direction: column;
+                padding: 16px;
+                gap: 0
+            }
+
+            .search-field {
+                padding: 14px 16px;
+                width: 100%
+            }
+
+            .search-divider {
+                width: 100%;
+                height: 1px;
+                flex-shrink: 0
+            }
+
+            .btn-search {
+                width: 100%;
+                justify-content: center;
+                margin-top: 8px;
+                padding: 14px
+            }
+
+            .stats {
+                padding: 40px 24px;
+                gap: 32px;
+                flex-wrap: wrap
+            }
+
+            section {
+                padding: 60px 24px
+            }
+
+            .section-head h2 {
+                font-size: 1.7rem
+            }
+
+            .v-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 16px
+            }
+
+            .r-grid {
+                grid-template-columns: 1fr;
+                gap: 12px
+            }
+
+            .steps {
+                flex-direction: column;
+                gap: 24px;
+                align-items: center
+            }
+
+            .step::before {
+                display: none
+            }
+
+            .step {
+                max-width: 280px
+            }
+
+            .t-grid {
+                grid-template-columns: 1fr;
+                gap: 16px
+            }
+
+            .cta {
+                padding: 48px 24px;
+                margin: 0 16px 40px;
+                border-radius: 18px
+            }
+
+            .cta h2 {
+                font-size: 1.6rem
+            }
+
+            footer {
+                padding: 40px 24px
+            }
+
+            .f-grid {
+                grid-template-columns: 1fr 1fr;
+                gap: 28px
+            }
+
+            .wireframe-label {
+                top: auto;
+                bottom: 16px;
+                right: 16px;
+                font-size: .65rem;
+                padding: 6px 12px
+            }
+        }
+
+        /* ===== MOBILE ===== */
+        @media (max-width: 480px) {
+            nav {
+                padding: 12px 16px
+            }
+
+            .logo {
+                font-size: 1.25rem
+            }
+
+            .hero {
+                padding: 90px 16px 40px
+            }
+
+            .hero h1 {
+                font-size: 1.8rem
+            }
+
+            .hero p {
+                font-size: .92rem
+            }
+
+            .search-bar {
+                border-radius: 14px
+            }
+
+            .stats {
+                padding: 30px 16px;
+                gap: 20px
+            }
+
+            .stat h3 {
+                font-size: 1.5rem
+            }
+
+            section {
+                padding: 48px 16px
+            }
+
+            .section-head h2 {
+                font-size: 1.4rem
+            }
+
+            .v-grid {
+                grid-template-columns: 1fr;
+                gap: 16px
+            }
+
+            .v-img {
+                height: 180px
+            }
+
+            .vtab {
+                padding: 8px 16px;
+                font-size: .78rem
+            }
+
+            .r-card {
+                padding: 16px 18px;
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 8px
+            }
+
+            .r-price {
+                align-self: flex-end
+            }
+
+            .cta {
+                margin: 0 8px 32px;
+                padding: 40px 20px
+            }
+
+            .cta h2 {
+                font-size: 1.3rem
+            }
+
+            .btn-cta {
+                padding: 12px 28px;
+                font-size: .9rem
+            }
+
+            footer {
+                padding: 32px 16px
+            }
+
+            .f-grid {
+                grid-template-columns: 1fr;
+                gap: 24px
+            }
+        }
     </style>
 </head>
 
@@ -691,14 +945,18 @@
 
     <nav>
         <div class="logo"><span>Go</span>Xe</div>
+        <button class="hamburger" onclick="document.querySelector('.nav-links').classList.toggle('open')"
+            aria-label="Menu">
+            <span></span><span></span><span></span>
+        </button>
         <div class="nav-links">
-            <a href="#">Trang chủ</a>
-            <a href="#">Loại xe</a>
-            <a href="#">Tuyến đường</a>
-            <a href="#">Bảng giá</a>
-            <a href="#">Blog</a>
+            <a href="#" onclick="this.parentElement.classList.remove('open')">Trang chủ</a>
+            <a href="#" onclick="this.parentElement.classList.remove('open')">Loại xe</a>
+            <a href="#" onclick="this.parentElement.classList.remove('open')">Tuyến đường</a>
+            <a href="#" onclick="this.parentElement.classList.remove('open')">Bảng giá</a>
+            <a href="#" onclick="this.parentElement.classList.remove('open')">Blog</a>
             <div class="hotline"><i class="fas fa-phone"></i> 1900 xxxx</div>
-            <a href="#" class="btn-nav">Đặt xe</a>
+            <a href="#" class="btn-nav" onclick="this.parentElement.classList.remove('open')">Đặt xe</a>
         </div>
     </nav>
 
