@@ -736,6 +736,16 @@
     <script src="js/pricing.js"></script>
     <script src="js/supabase.js"></script>
     <script>
+        function escapeHtml(str) {
+            if (str == null) return '';
+            return String(str)
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#039;');
+        }
+
         let currentBookingFilter = 'all';
         let currentDriverFilter = 'all';
 
@@ -914,11 +924,11 @@
 
                 return `<tr>
                     <td>${time}</td>
-                    <td><strong>${b.pickup_location || '—'}</strong> → ${b.dropoff_location || '—'}</td>
+                    <td><strong>${escapeHtml(b.pickup_location) || '—'}</strong> → ${escapeHtml(b.dropoff_location) || '—'}</td>
                     <td>${vehicle}</td>
                     <td>${b.distance_km || '—'}</td>
                     <td><strong>${fare}</strong></td>
-                    <td>${b.customer_phone || '—'}</td>
+                    <td>${escapeHtml(b.customer_phone) || '—'}</td>
                     <td><span class="badge ${b.status}">${getStatusLabel(b.status)}</span></td>
                     <td>${b.driver_id ? '<i class="fas fa-user-check" style="color:#66bb6a"></i>' : '—'}</td>
                     <td>${actions}</td>
@@ -936,7 +946,7 @@
         async function doMatch(bookingId) {
             const result = await adminManualMatch(bookingId);
             if (result.data?.success) {
-                showNotif(`Matched tài xế: ${result.data.driver_name}`);
+                showNotif(`Matched tài xế: ${escapeHtml(result.data.driver_name)}`);
             } else {
                 showNotif(result.data?.message || 'Không tìm thấy tài xế phù hợp');
             }
@@ -978,10 +988,10 @@
                 }
 
                 return `<tr>
-                    <td><strong>${d.full_name}</strong></td>
-                    <td>${d.phone}</td>
+                    <td><strong>${escapeHtml(d.full_name)}</strong></td>
+                    <td>${escapeHtml(d.phone)}</td>
                     <td>${vehicle}</td>
-                    <td>${d.license_plate || '—'}</td>
+                    <td>${escapeHtml(d.license_plate) || '—'}</td>
                     <td>${areas}</td>
                     <td>${online}</td>
                     <td>${d.total_trips || 0}</td>
@@ -1021,7 +1031,10 @@
         function showNotif(msg) {
             const n = document.createElement('div');
             n.className = 'notification';
-            n.innerHTML = `<i class="fas fa-check-circle"></i> ${msg}`;
+            const icon = document.createElement('i');
+            icon.className = 'fas fa-check-circle';
+            n.appendChild(icon);
+            n.appendChild(document.createTextNode(' ' + msg));
             document.body.appendChild(n);
             setTimeout(() => n.classList.add('show'), 10);
             setTimeout(() => { n.classList.remove('show'); setTimeout(() => n.remove(), 300); }, 3000);

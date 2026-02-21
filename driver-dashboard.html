@@ -869,6 +869,16 @@
     <script src="js/pricing.js"></script>
     <script src="js/supabase.js"></script>
     <script>
+        function escapeHtml(str) {
+            if (str == null) return '';
+            return String(str)
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#039;');
+        }
+
         let currentDriver = null;
         let currentTab = 'pending';
         let realtimeSubscription = null;
@@ -1220,7 +1230,7 @@
                 const fare = ride.estimated_fare ? formatVND(ride.estimated_fare) : '—';
                 const time = ride.created_at ? new Date(ride.created_at).toLocaleString('vi-VN') : '';
 
-                const customerName = ride.customer_name ? `<div class="ride-customer-name">${ride.customer_name}</div>` : '';
+                const customerName = ride.customer_name ? `<div class="ride-customer-name">${escapeHtml(ride.customer_name)}</div>` : '';
 
                 let actions = '';
                 if (ride.status === 'matched') {
@@ -1258,12 +1268,12 @@
                         ${customerName}
                         <div class="ride-route">
                             <div class="ride-route-text">
-                                <h4>${ride.pickup_location} → ${ride.dropoff_location}</h4>
+                                <h4>${escapeHtml(ride.pickup_location)} → ${escapeHtml(ride.dropoff_location)}</h4>
                                 <span>${ride.distance_km ? ride.distance_km + ' km' : ''} · Ngày đi: ${ride.date_go || '—'}</span>
                             </div>
                         </div>
                         <div class="ride-details">
-                            <div class="ride-detail"><strong>C/KH:</strong> ${ride.customer_phone}</div>
+                            <div class="ride-detail"><strong>C/KH:</strong> ${escapeHtml(ride.customer_phone)}</div>
                             <div class="ride-detail"><strong>Loại xe:</strong> ${(typeof VEHICLE_TYPES !== 'undefined' && VEHICLE_TYPES.find(v => v.id === ride.vehicle_type)) ? VEHICLE_TYPES.find(v => v.id === ride.vehicle_type).name : (ride.vehicle_type || '—')}</div>
                             <div class="ride-fare">${fare}</div>
                         </div>
@@ -1382,7 +1392,7 @@
                             </div>
                             <div class="ride-route">
                                 <div class="ride-route-text">
-                                    <h4>${r.pickup_location} → ${r.dropoff_location}</h4>
+                                    <h4>${escapeHtml(r.pickup_location)} → ${escapeHtml(r.dropoff_location)}</h4>
                                     <span>${r.distance_km ? r.distance_km + ' km' : ''}</span>
                                 </div>
                             </div>
@@ -1412,7 +1422,10 @@
         function showNotification(message) {
             const notif = document.createElement('div');
             notif.className = 'notification';
-            notif.innerHTML = `<i class="fas fa-check-circle"></i> ${message}`;
+            const icon = document.createElement('i');
+            icon.className = 'fas fa-check-circle';
+            notif.appendChild(icon);
+            notif.appendChild(document.createTextNode(' ' + message));
             document.body.appendChild(notif);
             setTimeout(() => notif.classList.add('show'), 10);
             setTimeout(() => {

@@ -6,6 +6,17 @@
  * Falls back to config.js if DB unavailable.
  */
 
+/** SECURITY: Escape HTML to prevent XSS when interpolating user/DB data */
+function escapeHtml(str) {
+    if (str == null) return '';
+    return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+}
+
 document.addEventListener('DOMContentLoaded', async () => {
     // Khởi tạo Supabase
     initSupabase();
@@ -417,8 +428,8 @@ function showBookingConfirmation(bookingData, result) {
             <div class="modal-driver-card">
                 <div class="modal-driver-icon"><i class="fas fa-user-check"></i></div>
                 <div class="modal-driver-info">
-                    <h4>${match.driver_name}</h4>
-                    <p><i class="fas fa-phone"></i> ${match.driver_phone} · <i class="fas fa-car"></i> ${match.driver_vehicle}</p>
+                    <h4>${escapeHtml(match.driver_name)}</h4>
+                    <p><i class="fas fa-phone"></i> ${escapeHtml(match.driver_phone)} · <i class="fas fa-car"></i> ${escapeHtml(match.driver_vehicle)}</p>
                 </div>
             </div>`;
     } else {
@@ -432,12 +443,12 @@ function showBookingConfirmation(bookingData, result) {
     content.innerHTML = `
         <div class="modal-success-icon"><i class="fas fa-check"></i></div>
         <div class="modal-title">Đặt Xe Thành Công!</div>
-        <div class="modal-subtitle">Cảm ơn ${bookingData.customer_name || 'Quý khách'}. Đơn của bạn đã được ghi nhận.</div>
+        <div class="modal-subtitle">Cảm ơn ${escapeHtml(bookingData.customer_name || 'Quý khách')}. Đơn của bạn đã được ghi nhận.</div>
 
         <div class="modal-info-grid">
             <div class="modal-info-item full">
                 <div class="mii-label">Tuyến đường</div>
-                <div class="mii-value">${bookingData.pickup || ''} → ${bookingData.dropoff || ''}</div>
+                <div class="mii-value">${escapeHtml(bookingData.pickup || '')} → ${escapeHtml(bookingData.dropoff || '')}</div>
             </div>
             <div class="modal-info-item">
                 <div class="mii-label">Ngày đi</div>
@@ -553,8 +564,8 @@ function renderLookupResults(bookings) {
                 <div class="brc-driver">
                     <div class="brc-driver-avatar"><i class="fas fa-user"></i></div>
                     <div class="brc-driver-info">
-                        <strong>${b._driver.full_name}</strong>
-                        <small>${b._driver.license_plate || ''} · ⭐ ${b._driver.average_rating || '5.0'}</small>
+                        <strong>${escapeHtml(b._driver.full_name)}</strong>
+                        <small>${escapeHtml(b._driver.license_plate || '')} · ⭐ ${escapeHtml(b._driver.average_rating || '5.0')}</small>
                     </div>
                 </div>`;
         }
@@ -562,17 +573,17 @@ function renderLookupResults(bookings) {
         let ratingInfo = '';
         if (b.status === 'completed') {
             if (!b.rating) {
-                ratingInfo = `<button class="btn-rate-driver" onclick="openRatingModal('${b.id}', '${b.pickup_location}', '${b.dropoff_location}')"><i class="fas fa-star"></i> Đánh giá chuyến đi</button>`;
+                ratingInfo = `<button class="btn-rate-driver" onclick="openRatingModal('${escapeHtml(b.id)}', '${escapeHtml(b.pickup_location)}', '${escapeHtml(b.dropoff_location)}')"><i class="fas fa-star"></i> Đánh giá chuyến đi</button>`;
             } else {
-                ratingInfo = `<div class="btn-rated"><i class="fas fa-check-circle"></i> Đã đánh giá ${b.rating} sao</div>`;
+                ratingInfo = `<div class="btn-rated"><i class="fas fa-check-circle"></i> Đã đánh giá ${parseInt(b.rating) || 0} sao</div>`;
             }
         }
 
         return `
             <div class="booking-result-card">
                 <div class="brc-header">
-                    <div class="brc-route">${b.pickup_location || '—'} <i class="fas fa-arrow-right"></i> ${b.dropoff_location || '—'}</div>
-                    <span class="brc-status ${b.status}">${statusLabels[b.status] || b.status}</span>
+                    <div class="brc-route">${escapeHtml(b.pickup_location || '—')} <i class="fas fa-arrow-right"></i> ${escapeHtml(b.dropoff_location || '—')}</div>
+                    <span class="brc-status ${escapeHtml(b.status)}">${escapeHtml(statusLabels[b.status] || b.status)}</span>
                 </div>
                 <div class="brc-details">
                     <div class="brc-detail">Ngày đặt<span>${time}</span></div>
@@ -739,7 +750,10 @@ function fillRoute(from, to, distance) {
 function showNotification(message) {
     const notif = document.createElement('div');
     notif.className = 'notification';
-    notif.innerHTML = `<i class="fas fa-check-circle"></i> ${message}`;
+    const icon = document.createElement('i');
+    icon.className = 'fas fa-check-circle';
+    notif.appendChild(icon);
+    notif.appendChild(document.createTextNode(' ' + message));
     document.body.appendChild(notif);
     setTimeout(() => notif.classList.add('show'), 10);
     setTimeout(() => {
