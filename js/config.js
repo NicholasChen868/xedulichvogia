@@ -14,6 +14,10 @@ const APP_CONFIG = {
     address: 'TP. Hồ Chí Minh, Việt Nam'
 };
 
+// Cloudflare Turnstile CAPTCHA
+// Replace with your actual site key from https://dash.cloudflare.com/turnstile
+const TURNSTILE_SITE_KEY = '0x4AAAAAAA_REPLACE_WITH_REAL_KEY';
+
 /**
  * PRICING TIERS
  * Cơ cấu giá theo cự ly (VND/km)

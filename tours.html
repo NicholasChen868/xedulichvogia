@@ -61,11 +61,13 @@
                 <label>Yêu cầu chi tiết</label>
                 <textarea name="details" rows="4" required placeholder="Bạn muốn đi đâu, mấy ngày, số lượng người..."></textarea>
             </div>
+            <div class="cf-turnstile" data-sitekey="" id="captcha-tour"></div>
             <button type="submit" class="btn-book" style="width:100%"><i class="fas fa-paper-plane"></i> Gửi Yêu Cầu</button>
         </form>
     </div>
 
     <!-- SCRIPTS -->
+    <script src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit" defer></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="js/config.js"></script>
     <script src="js/supabase.js"></script>
@@ -168,7 +170,13 @@
             }
         });
 
-        window.onload = loadTours;
+        window.onload = function() {
+            loadTours();
+            // Init Turnstile CAPTCHA
+            if (typeof turnstile !== 'undefined' && TURNSTILE_SITE_KEY && !TURNSTILE_SITE_KEY.includes('REPLACE')) {
+                turnstile.render('#captcha-tour', { sitekey: TURNSTILE_SITE_KEY, theme: 'dark' });
+            }
+        };
     </script>
 </body>
 </html>

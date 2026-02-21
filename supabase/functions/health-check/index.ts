@@ -1,5 +1,6 @@
 // Health Check Edge Function
 // Endpoint: /functions/v1/health-check
+// SECURITY: Requires admin API key or service_role to access
 // Dùng cho UptimeRobot, Pingdom, hoặc CI/CD verify
 
 import { serve } from "https://deno.land/std@0.177.0/http/server.ts";
@@ -10,92 +11,59 @@ const corsHeaders = {
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
 };
 
+// Simple API key for health check access (set via: supabase secrets set HEALTH_CHECK_KEY=xxx)
+const HEALTH_CHECK_KEY = Deno.env.get("HEALTH_CHECK_KEY") || "";
+
 serve(async (req: Request) => {
   if (req.method === "OPTIONS") {
     return new Response("ok", { headers: corsHeaders });
   }
 
+  // SECURITY: Require auth — either health check key or service_role JWT
+  const authHeader = req.headers.get("authorization") || "";
+  const apiKey = req.headers.get("x-health-key") || new URL(req.url).searchParams.get("key") || "";
+  const serviceRoleKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") || "";
+
+  const isServiceRole = authHeader === `Bearer ${serviceRoleKey}`;
+  const isValidKey = HEALTH_CHECK_KEY && apiKey === HEALTH_CHECK_KEY;
+
+  if (!isServiceRole && !isValidKey) {
+    return new Response(
+      JSON.stringify({ status: "unauthorized" }),
+      { status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+    );
+  }
+
   const startTime = Date.now();
-  const checks: Record<string, unknown> = {};
   let overallStatus = "healthy";
 
   try {
     const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
-    const supabaseKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
-    const db = createClient(supabaseUrl, supabaseKey);
+    const db = createClient(supabaseUrl, serviceRoleKey);
 
-    // 1. Database connection check
+    // 1. Database connection check (generic — no error details)
     try {
-      const { data, error } = await db
+      const { error } = await db
         .from("bookings")
         .select("id", { count: "exact", head: true });
 
-      checks["database"] = {
-        status: error ? "error" : "ok",
-        error: error?.message || null,
-      };
       if (error) overallStatus = "degraded";
-    } catch (e) {
-      checks["database"] = { status: "error", error: (e as Error).message };
+    } catch {
       overallStatus = "unhealthy";
     }
 
-    // 2. Tables existence check
+    // 2. Tables existence check (ok/error only, no error messages)
     const requiredTables = ["bookings", "drivers", "payments", "vehicle_types", "pricing_tiers"];
-    const tableChecks: Record<string, string> = {};
+    let tablesOk = 0;
 
     for (const table of requiredTables) {
       try {
         const { error } = await db.from(table).select("id", { head: true });
-        tableChecks[table] = error ? "missing" : "ok";
-        if (error) overallStatus = "degraded";
+        if (!error) tablesOk++;
+        else overallStatus = "degraded";
       } catch {
-        tableChecks[table] = "error";
         overallStatus = "degraded";
       }
-    }
-    checks["tables"] = tableChecks;
-
-    // 3. System health (from SQL function)
-    try {
-      const { data, error } = await db.rpc("system_health_check");
-      checks["system_health"] = error
-        ? { status: "error", error: error.message }
-        : data;
-      if (data?.status === "warning") overallStatus = "degraded";
-    } catch {
-      checks["system_health"] = { status: "unavailable" };
-    }
-
-    // 4. Edge Functions runtime check
-    checks["edge_functions"] = {
-      status: "ok",
-      runtime: "deno",
-      version: Deno.version.deno,
-    };
-
-    // 5. Recent activity stats
-    try {
-      const now = new Date();
-      const oneDayAgo = new Date(now.getTime() - 24 * 60 * 60 * 1000);
-
-      const { count: bookings24h } = await db
-        .from("bookings")
-        .select("id", { count: "exact", head: true })
-        .gte("created_at", oneDayAgo.toISOString());
-
-      const { count: driversActive } = await db
-        .from("drivers")
-        .select("id", { count: "exact", head: true })
-        .eq("status", "approved")
-        .eq("is_available", true);
-
-      checks["activity"] = {
-        bookings_24h: bookings24h || 0,
-        drivers_online: driversActive || 0,
-      };
-    } catch {
-      checks["activity"] = { status: "unavailable" };
     }
 
     const responseTime = Date.now() - startTime;
@@ -106,7 +74,11 @@ serve(async (req: Request) => {
         timestamp: new Date().toISOString(),
         response_time_ms: responseTime,
         version: "1.0.0",
-        checks,
+        checks: {
+          database: overallStatus !== "unhealthy" ? "ok" : "error",
+          tables: `${tablesOk}/${requiredTables.length}`,
+          runtime: "ok",
+        },
       }),
       {
         status: overallStatus === "unhealthy" ? 503 : 200,
@@ -114,12 +86,12 @@ serve(async (req: Request) => {
       }
     );
   } catch (error) {
+    console.error("[health-check] Error:", error);
     return new Response(
       JSON.stringify({
         status: "unhealthy",
         timestamp: new Date().toISOString(),
         response_time_ms: Date.now() - startTime,
-        error: (error as Error).message,
       }),
       {
         status: 503,

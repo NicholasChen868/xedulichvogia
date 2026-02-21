@@ -74,13 +74,13 @@ Deno.serve(async (req) => {
       })
 
       if (matchError) {
-        console.error(`[auto-reassign] Re-match failed for ${booking.id}:`, matchError.message)
-        results.push({ booking_id: booking.id, result: `failed: ${matchError.message}` })
+        console.error(`[auto-reassign] Re-match failed for ${booking.id.slice(0, 8)}...`)
+        results.push({ booking_id: booking.id, result: "failed" })
       } else if (matchResult?.success) {
-        console.log(`[auto-reassign] Re-matched ${booking.id} -> driver ${matchResult.driver_id}`)
-        results.push({ booking_id: booking.id, result: `re-matched to ${matchResult.driver_name}` })
+        console.log(`[auto-reassign] Re-matched ${booking.id.slice(0, 8)}...`)
+        results.push({ booking_id: booking.id, result: "re-matched" })
       } else {
-        console.log(`[auto-reassign] No driver available for ${booking.id}`)
+        console.log(`[auto-reassign] No driver available for ${booking.id.slice(0, 8)}...`)
         results.push({ booking_id: booking.id, result: "no driver available" })
       }
     }
@@ -97,7 +97,7 @@ Deno.serve(async (req) => {
   } catch (error) {
     console.error("[auto-reassign] Error:", error)
     return new Response(
-      JSON.stringify({ success: false, error: error.message }),
+      JSON.stringify({ success: false, error: "Lỗi hệ thống. Vui lòng thử lại." }),
       { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
     )
   }

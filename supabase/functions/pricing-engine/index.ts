@@ -141,7 +141,7 @@ Deno.serve(async (req) => {
   } catch (error) {
     console.error("[pricing-engine] Error:", error)
     return new Response(
-      JSON.stringify({ success: false, error: error.message }),
+      JSON.stringify({ success: false, error: "Lỗi tính giá. Vui lòng thử lại." }),
       { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
     )
   }

@@ -307,6 +307,16 @@ function initBookingForm() {
     form.addEventListener('submit', async (e) => {
         e.preventDefault();
 
+        // Validate CAPTCHA if Turnstile is active
+        if (typeof turnstile !== 'undefined' && typeof TURNSTILE_SITE_KEY !== 'undefined' && TURNSTILE_SITE_KEY && !TURNSTILE_SITE_KEY.includes('REPLACE')) {
+            const captchaEl = document.querySelector('#captcha-booking');
+            const token = captchaEl ? turnstile.getResponse(captchaEl) : null;
+            if (!token) {
+                showNotification('Vui lòng xác minh CAPTCHA trước khi đặt xe', 'error');
+                return;
+            }
+        }
+
         // Validate
         if (!validateBookingForm(form)) return;
 

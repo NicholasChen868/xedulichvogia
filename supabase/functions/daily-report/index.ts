@@ -122,7 +122,7 @@ TAI XE:
   } catch (error) {
     console.error("[daily-report] Error:", error)
     return new Response(
-      JSON.stringify({ success: false, error: error.message }),
+      JSON.stringify({ success: false, error: "Lỗi tạo báo cáo. Vui lòng thử lại." }),
       { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
     )
   }

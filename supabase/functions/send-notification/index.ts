@@ -129,9 +129,7 @@ Deno.serve(async (req) => {
       JSON.stringify({
         success: true,
         type: data.type,
-        phone: data.phone,
-        sms: smsResult,
-        message_preview: message.substring(0, 100) + "...",
+        sms_sent: smsResult.success,
       }),
       { headers: { ...corsHeaders, "Content-Type": "application/json" } }
     )

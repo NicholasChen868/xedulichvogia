@@ -44,7 +44,7 @@ Deno.serve(async (req) => {
     const payload: WebhookPayload = await req.json()
     const { type, record, old_record } = payload
 
-    console.log(`[booking-webhook] ${type} | Booking ${record.id} | Status: ${old_record?.status} -> ${record.status}`)
+    console.log(`[booking-webhook] ${type} | Booking ${record.id.slice(0, 8)}... | Status: ${old_record?.status} -> ${record.status}`)
 
     const db = createClient(supabaseUrl, serviceRoleKey)
 
@@ -52,7 +52,7 @@ Deno.serve(async (req) => {
     switch (record.status) {
       case "matched": {
         // Booking vừa được match với tài xế
-        console.log(`[booking-webhook] Matched: ${record.id} -> driver ${record.driver_id}`)
+        console.log(`[booking-webhook] Matched: ${record.id.slice(0, 8)}...`)
 
         // Gọi send-notification để thông báo cho khách
         if (record.customer_phone) {
@@ -81,13 +81,13 @@ Deno.serve(async (req) => {
 
       case "confirmed": {
         // Tài xế đã nhận cuốc
-        console.log(`[booking-webhook] Confirmed: ${record.id}`)
+        console.log(`[booking-webhook] Confirmed: ${record.id.slice(0, 8)}...`)
         break
       }
 
       case "completed": {
         // Chuyến đi hoàn thành
-        console.log(`[booking-webhook] Completed: ${record.id} | Fare: ${record.estimated_fare}`)
+        console.log(`[booking-webhook] Completed: ${record.id.slice(0, 8)}...`)
 
         // Tính hoa hồng 10% platform
         if (record.estimated_fare && record.driver_id) {
@@ -105,7 +105,7 @@ Deno.serve(async (req) => {
 
       case "cancelled": {
         // Đơn bị hủy — giải phóng tài xế
-        console.log(`[booking-webhook] Cancelled: ${record.id}`)
+        console.log(`[booking-webhook] Cancelled: ${record.id.slice(0, 8)}...`)
         if (record.driver_id && old_record?.status !== "cancelled") {
           await db
             .from("drivers")
@@ -129,7 +129,7 @@ Deno.serve(async (req) => {
   } catch (error) {
     console.error("[booking-webhook] Error:", error)
     return new Response(
-      JSON.stringify({ success: false, error: error.message }),
+      JSON.stringify({ success: false, error: "Webhook processing error" }),
       { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
     )
   }

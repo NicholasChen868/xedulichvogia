@@ -18,12 +18,13 @@ const serviceRoleKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!
 const MOMO_PARTNER_CODE = Deno.env.get("MOMO_PARTNER_CODE") || ""
 const MOMO_ACCESS_KEY = Deno.env.get("MOMO_ACCESS_KEY") || ""
 const MOMO_SECRET_KEY = Deno.env.get("MOMO_SECRET_KEY") || ""
-const MOMO_ENDPOINT = "https://test-payment.momo.vn/v2/gateway/api/create"
+// Payment URLs: production by default, override with env vars for testing
+const MOMO_ENDPOINT = Deno.env.get("MOMO_ENDPOINT") || "https://payment.momo.vn/v2/gateway/api/create"
 
 // VNPay config
 const VNPAY_TMN_CODE = Deno.env.get("VNPAY_TMN_CODE") || ""
 const VNPAY_HASH_SECRET = Deno.env.get("VNPAY_HASH_SECRET") || ""
-const VNPAY_URL = "https://sandbox.vnpayment.vn/paymentv2/vpcpay.html"
+const VNPAY_URL = Deno.env.get("VNPAY_URL") || "https://pay.vnpay.vn/vpcpay.html"
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "https://travelcar.vn",
@@ -221,7 +222,7 @@ Deno.serve(async (req) => {
       .update({ deposit_status: "pending", updated_at: new Date().toISOString() })
       .eq("id", booking_id)
 
-    console.log(`[create-payment] ${provider} | Booking: ${booking_id} | Deposit: ${depositAmount}đ`)
+    console.log(`[create-payment] ${provider} | Booking: ${booking_id.slice(0, 8)}... | Deposit: ${depositAmount}đ`)
 
     return new Response(
       JSON.stringify({
@@ -237,7 +238,7 @@ Deno.serve(async (req) => {
   } catch (error) {
     console.error("[create-payment] Error:", error)
     return new Response(
-      JSON.stringify({ success: false, error: error.message }),
+      JSON.stringify({ success: false, error: "Lỗi hệ thống thanh toán. Vui lòng thử lại." }),
       { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
     )
   }

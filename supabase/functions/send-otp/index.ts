@@ -10,6 +10,22 @@ const serviceRoleKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!
 const ESMS_API_KEY = Deno.env.get("ESMS_API_KEY") || ""
 const ESMS_SECRET_KEY = Deno.env.get("ESMS_SECRET_KEY") || ""
 const ESMS_BRAND_NAME = Deno.env.get("ESMS_BRAND_NAME") || "TravelCar"
+const TURNSTILE_SECRET_KEY = Deno.env.get("TURNSTILE_SECRET_KEY") || ""
+
+async function verifyCaptcha(token: string): Promise<boolean> {
+  if (!TURNSTILE_SECRET_KEY || !token) return false
+  try {
+    const res = await fetch("https://challenges.cloudflare.com/turnstile/v0/siteverify", {
+      method: "POST",
+      headers: { "Content-Type": "application/x-www-form-urlencoded" },
+      body: `secret=${encodeURIComponent(TURNSTILE_SECRET_KEY)}&response=${encodeURIComponent(token)}`,
+    })
+    const data = await res.json()
+    return data.success === true
+  } catch {
+    return false
+  }
+}
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "https://travelcar.vn",
@@ -45,7 +61,18 @@ Deno.serve(async (req) => {
   }
 
   try {
-    const { phone, action = "driver_register" } = await req.json()
+    const { phone, action = "driver_register", captcha_token } = await req.json()
+
+    // SECURITY: Verify CAPTCHA if configured
+    if (TURNSTILE_SECRET_KEY && captcha_token) {
+      const captchaValid = await verifyCaptcha(captcha_token)
+      if (!captchaValid) {
+        return new Response(
+          JSON.stringify({ success: false, error: "CAPTCHA verification failed" }),
+          { status: 403, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+        )
+      }
+    }
 
     if (!phone) {
       return new Response(
