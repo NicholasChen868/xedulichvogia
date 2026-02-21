@@ -596,35 +596,83 @@
 
         /* Mobile */
         @media (max-width: 600px) {
+            .dashboard-container {
+                padding: 80px 16px 30px;
+            }
+
             .dash-header {
                 flex-direction: column;
                 align-items: flex-start;
+                gap: 16px;
             }
 
             .dash-stats {
-                grid-template-columns: repeat(3, 1fr);
-                gap: 8px;
+                grid-template-columns: 1fr 1fr;
+                gap: 12px;
             }
 
             .dash-stat {
-                padding: 14px 10px;
+                padding: 16px 12px;
+            }
+
+            .dash-stat:last-child {
+                grid-column: 1 / -1;
             }
 
             .dash-stat .stat-value {
-                font-size: 1.1rem;
+                font-size: 1.4rem;
+            }
+
+            .dash-stat .stat-label {
+                font-size: 0.75rem;
             }
 
             .ride-details {
-                flex-wrap: wrap;
-                gap: 12px;
+                flex-direction: column;
+                gap: 8px;
+                padding: 14px 0;
+            }
+
+            .ride-detail {
+                font-size: 0.85rem;
+            }
+
+            .ride-card {
+                padding: 16px;
+            }
+
+            .ride-route {
+                align-items: flex-start;
+            }
+
+            .ride-route-text h4 {
+                font-size: 1rem;
+                line-height: 1.4;
             }
 
             .ride-actions {
                 flex-direction: column;
+                gap: 10px;
+            }
+
+            .ride-btn {
+                padding: 12px;
+                font-size: 0.9rem;
             }
 
             .earnings-cards {
                 grid-template-columns: 1fr 1fr;
+                gap: 12px;
+            }
+
+            .dash-tabs {
+                overflow-x: auto;
+                padding-bottom: 5px;
+            }
+
+            .dash-tab {
+                padding: 10px 12px;
+                font-size: 0.85rem;
             }
         }
     </style>
@@ -657,12 +705,11 @@
 
         <!-- ===== LOGIN SECTION ===== -->
         <div id="login-section" class="login-section">
-            <h2><i class="fas fa-steering-wheel"></i> Dashboard Tài Xế</h2>
+            <h2>Dashboard Tài Xế</h2>
             <p>Đăng nhập bằng số điện thoại đã đăng ký</p>
 
             <div class="login-card">
                 <div id="login-error" class="login-error">
-                    <i class="fas fa-exclamation-circle"></i>
                     <span id="login-error-msg">Số điện thoại không tìm thấy hoặc chưa được duyệt</span>
                 </div>
 
@@ -673,7 +720,7 @@
                         <input type="tel" id="login-phone" placeholder="VD: 0901 234 567" required>
                     </div>
                     <button type="submit" id="btn-send-otp" class="btn-book" style="width:100%">
-                        <i class="fas fa-paper-plane"></i> Gửi mã xác thực
+                        Gửi mã xác thực
                     </button>
                 </form>
 
@@ -681,14 +728,17 @@
                 <form id="otp-form" style="display:none">
                     <div class="form-group">
                         <label for="otp-code">Mã xác thực OTP</label>
-                        <input type="text" id="otp-code" placeholder="Nhập mã 6 số" maxlength="6" pattern="[0-9]{6}" inputmode="numeric" autocomplete="one-time-code" required>
+                        <input type="text" id="otp-code" placeholder="Nhập mã 6 số" maxlength="6" pattern="[0-9]{6}"
+                            inputmode="numeric" autocomplete="one-time-code" required>
                     </div>
-                    <p id="otp-timer" style="color:rgba(255,255,255,0.5);font-size:.82rem;margin-bottom:12px;text-align:left"></p>
+                    <p id="otp-timer"
+                        style="color:rgba(255,255,255,0.5);font-size:.82rem;margin-bottom:12px;text-align:left"></p>
                     <button type="submit" id="btn-verify-otp" class="btn-book" style="width:100%">
-                        <i class="fas fa-sign-in-alt"></i> Xác nhận đăng nhập
+                        Xác nhận đăng nhập
                     </button>
-                    <button type="button" onclick="backToPhone()" style="width:100%;margin-top:8px;background:transparent;border:1px solid rgba(255,255,255,0.15);color:rgba(255,255,255,0.6);padding:12px;border-radius:12px;cursor:pointer;font-size:.9rem">
-                        <i class="fas fa-arrow-left"></i> Đổi số điện thoại
+                    <button type="button" onclick="backToPhone()"
+                        style="width:100%;margin-top:8px;background:transparent;border:1px solid rgba(255,255,255,0.15);color:rgba(255,255,255,0.6);padding:12px;border-radius:12px;cursor:pointer;font-size:.9rem">
+                        Quay lại
                     </button>
                 </form>
             </div>
@@ -699,7 +749,7 @@
 
             <!-- Header -->
             <div class="dash-header">
-                <h2><i class="fas fa-gauge-high"></i> Dashboard</h2>
+                <h2>Dashboard</h2>
                 <div class="driver-info">
                     <div class="driver-name">
                         <strong id="dash-driver-name">—</strong>
@@ -709,7 +759,7 @@
                         <div class="toggle-switch" id="online-toggle"></div>
                         <span class="toggle-label" id="online-label">Offline</span>
                     </div>
-                    <button class="btn-logout" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Thoát</button>
+                    <button class="btn-logout" onclick="logout()">Thoát</button>
                 </div>
             </div>
 
@@ -732,26 +782,25 @@
             <!-- Tabs -->
             <div class="dash-tabs">
                 <button class="dash-tab active" data-tab="pending" onclick="switchTab('pending')">
-                    <i class="fas fa-bell"></i> Chờ xác nhận <span class="tab-count" id="count-pending">0</span>
+                    Chờ xác nhận <span class="tab-count" id="count-pending">0</span>
                 </button>
                 <button class="dash-tab" data-tab="active" onclick="switchTab('active')">
-                    <i class="fas fa-car"></i> Đang chạy <span class="tab-count" id="count-active">0</span>
+                    Đang chạy <span class="tab-count" id="count-active">0</span>
                 </button>
                 <button class="dash-tab" data-tab="history" onclick="switchTab('history')">
-                    <i class="fas fa-history"></i> Lịch sử
+                    Lịch sử
                 </button>
                 <button class="dash-tab" data-tab="earnings" onclick="switchTab('earnings')">
-                    <i class="fas fa-wallet"></i> Thu nhập
+                    Thu nhập
                 </button>
                 <button class="dash-tab" data-tab="feedback" onclick="switchTab('feedback')">
-                    <i class="fas fa-comment-dots"></i> Góp ý
+                    Góp ý
                 </button>
             </div>
 
             <!-- Rides List -->
             <div class="rides-list" id="rides-list">
                 <div class="empty-state">
-                    <i class="fas fa-inbox"></i>
                     <p>Chưa có cuốc xe nào</p>
                 </div>
             </div>
@@ -787,8 +836,7 @@
             <!-- Feedback Panel -->
             <div class="feedback-panel" id="feedback-panel">
                 <div class="feedback-form">
-                    <h3><i class="fas fa-paper-plane" style="color: #ff9800; margin-right: 8px;"></i>Gửi Góp Ý / Yêu Cầu
-                        Hỗ Trợ</h3>
+                    <h3>Gửi Góp Ý / Yêu Cầu Hỗ Trợ</h3>
                     <p style="color: #aaa; font-size: 0.9rem; margin-bottom: 24px;">Chúng tôi luôn lắng nghe để cải
                         thiện chất lượng ứng dụng và hỗ trợ bạn tốt nhất trên mỗi chuyến đi.</p>
                     <form id="driver-feedback-form">
@@ -1077,7 +1125,7 @@
         async function toggleOnline() {
             if (!currentDriver) return;
             const newStatus = !currentDriver.is_available;
-            const result = await toggleDriverAvailability(currentDriver.id, newStatus);
+            const result = await toggleDriverAvailability(currentDriver.id, newStatus, currentDriver.phone);
             if (!result.error) {
                 currentDriver.is_available = newStatus;
                 updateOnlineUI(newStatus);
@@ -1172,31 +1220,31 @@
                 const fare = ride.estimated_fare ? formatVND(ride.estimated_fare) : '—';
                 const time = ride.created_at ? new Date(ride.created_at).toLocaleString('vi-VN') : '';
 
-                const customerName = ride.customer_name ? `<div class="ride-customer-name"><i class="fas fa-user"></i> ${ride.customer_name}</div>` : '';
+                const customerName = ride.customer_name ? `<div class="ride-customer-name">${ride.customer_name}</div>` : '';
 
                 let actions = '';
                 if (ride.status === 'matched') {
                     actions = `
                         <div class="ride-actions">
                             <button class="ride-btn accept" onclick="acceptRide('${ride.id}')">
-                                <i class="fas fa-check"></i> Nhận cuốc
+                                Nhận cuốc
                             </button>
                             <button class="ride-btn reject" onclick="declineRide('${ride.id}')">
-                                <i class="fas fa-times"></i> Từ chối
+                                Từ chối
                             </button>
                         </div>`;
                 } else if (ride.status === 'confirmed') {
                     actions = `
                         <div class="ride-actions">
                             <button class="ride-btn pickup" onclick="reportPickup('${ride.id}')">
-                                <i class="fas fa-map-marker-alt"></i> Đã đón khách
+                                Đã đón khách
                             </button>
                         </div>`;
                 } else if (ride.status === 'in_progress') {
                     actions = `
                         <div class="ride-actions">
                             <button class="ride-btn dropoff" onclick="reportDropoff('${ride.id}')">
-                                <i class="fas fa-flag-checkered"></i> Đã trả khách
+                                Đã trả khách
                             </button>
                         </div>`;
                 }
@@ -1209,15 +1257,14 @@
                         </div>
                         ${customerName}
                         <div class="ride-route">
-                            <div class="ride-route-icon"><i class="fas fa-route"></i></div>
                             <div class="ride-route-text">
                                 <h4>${ride.pickup_location} → ${ride.dropoff_location}</h4>
                                 <span>${ride.distance_km ? ride.distance_km + ' km' : ''} · Ngày đi: ${ride.date_go || '—'}</span>
                             </div>
                         </div>
                         <div class="ride-details">
-                            <div class="ride-detail"><i class="fas fa-phone"></i> <strong>${ride.customer_phone}</strong></div>
-                            <div class="ride-detail"><i class="fas fa-car"></i> <strong>${(typeof VEHICLE_TYPES !== 'undefined' && VEHICLE_TYPES.find(v => v.id === ride.vehicle_type)) ? VEHICLE_TYPES.find(v => v.id === ride.vehicle_type).name : (ride.vehicle_type || '—')}</strong></div>
+                            <div class="ride-detail"><strong>C/KH:</strong> ${ride.customer_phone}</div>
+                            <div class="ride-detail"><strong>Loại xe:</strong> ${(typeof VEHICLE_TYPES !== 'undefined' && VEHICLE_TYPES.find(v => v.id === ride.vehicle_type)) ? VEHICLE_TYPES.find(v => v.id === ride.vehicle_type).name : (ride.vehicle_type || '—')}</div>
                             <div class="ride-fare">${fare}</div>
                         </div>
                         ${actions}
@@ -1258,11 +1305,22 @@
 
         async function reportPickup(bookingId) {
             if (!currentDriver) return;
-            const { error } = await db.from('bookings').update({ status: 'in_progress' }).eq('id', bookingId);
-            if (!error) {
-                showNotification('Đã báo đón khách thành công!');
-                loadRides();
+            // SECURITY: Dùng SECURITY DEFINER function để verify driver ownership
+            const { data, error } = await db.rpc('driver_report_pickup', {
+                p_booking_id: bookingId,
+                p_driver_id: currentDriver.id,
+                p_driver_phone: currentDriver.phone
+            });
+            if (error) {
+                showNotification('Lỗi khi báo đón khách');
+                return;
             }
+            if (data && !data.success) {
+                showNotification(data.error || 'Không thể báo đón khách');
+                return;
+            }
+            showNotification('Đã báo đón khách thành công!');
+            loadRides();
         }
 
         async function reportDropoff(bookingId) {
@@ -1323,7 +1381,6 @@
                                 <span class="ride-time">${date}</span>
                             </div>
                             <div class="ride-route">
-                                <div class="ride-route-icon"><i class="fas fa-route"></i></div>
                                 <div class="ride-route-text">
                                     <h4>${r.pickup_location} → ${r.dropoff_location}</h4>
                                     <span>${r.distance_km ? r.distance_km + ' km' : ''}</span>
@@ -1333,7 +1390,7 @@
                                 <div class="ride-fare">${fare}</div>
                             </div>
                         </div>`;
-                }).join('') || '<div class="empty-state"><i class="fas fa-inbox"></i><p>Chưa có chuyến hoàn thành</p></div>';
+                }).join('') || '<div class="empty-state"><p>Chưa có chuyến hoàn thành</p></div>';
             }
         }
 

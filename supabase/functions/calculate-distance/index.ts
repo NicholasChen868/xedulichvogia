@@ -8,7 +8,7 @@ import "@supabase/functions-js/edge-runtime.d.ts"
 const GOOGLE_MAPS_KEY = Deno.env.get("GOOGLE_MAPS_API_KEY") || ""
 
 const corsHeaders = {
-  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Origin": "https://travelcar.vn",
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
 }
 

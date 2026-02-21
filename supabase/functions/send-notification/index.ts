@@ -15,7 +15,7 @@ const ESMS_SECRET_KEY = Deno.env.get("ESMS_SECRET_KEY") || ""
 const ESMS_BRAND_NAME = Deno.env.get("ESMS_BRAND_NAME") || "TravelCar"
 
 const corsHeaders = {
-  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Origin": "https://travelcar.vn",
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
 }
 
@@ -58,12 +58,14 @@ function buildMessage(data: NotificationRequest, driverInfo?: Record<string, str
 
 async function sendSmsEsms(phone: string, message: string) {
   if (!ESMS_API_KEY || !ESMS_SECRET_KEY) {
-    console.log(`[send-notification] SMS not configured. TO: ${phone} | MSG: ${message}`)
+    // SECURITY: Mask phone, không log nội dung tin nhắn chứa PII
+    console.log(`[send-notification] SMS not configured. TO: ${phone.slice(0, 4)}***`)
     return { success: true, error: "SMS provider not configured - logged only" }
   }
 
   try {
-    const response = await fetch("http://rest.esms.vn/MainService.svc/json/SendMultipleMessage_V4_post_json/", {
+    // SECURITY: Sử dụng HTTPS để bảo vệ API credentials + nội dung SMS
+    const response = await fetch("https://rest.esms.vn/MainService.svc/json/SendMultipleMessage_V4_post_json/", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -78,7 +80,7 @@ async function sendSmsEsms(phone: string, message: string) {
 
     const result = await response.json()
     if (result.CodeResult === "100") {
-      console.log(`[send-notification] SMS sent to ${phone}`)
+      console.log(`[send-notification] SMS sent to ${phone.slice(0, 4)}***`)
       return { success: true }
     } else {
       console.error(`[send-notification] SMS failed: ${result.ErrorMessage}`)
@@ -121,7 +123,7 @@ Deno.serve(async (req) => {
     const message = buildMessage(data, driverInfo)
     const smsResult = await sendSmsEsms(data.phone, message)
 
-    console.log(`[send-notification] Type: ${data.type} | Phone: ${data.phone} | SMS: ${smsResult.success}`)
+    console.log(`[send-notification] Type: ${data.type} | Phone: ${data.phone.slice(0, 4)}*** | SMS: ${smsResult.success}`)
 
     return new Response(
       JSON.stringify({
@@ -136,7 +138,7 @@ Deno.serve(async (req) => {
   } catch (error) {
     console.error("[send-notification] Error:", error)
     return new Response(
-      JSON.stringify({ success: false, error: error.message }),
+      JSON.stringify({ success: false, error: "Internal server error" }),
       { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
     )
   }

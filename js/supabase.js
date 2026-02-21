@@ -298,15 +298,16 @@ async function completeRide(bookingId, driverId) {
 
 /**
  * Toggle trạng thái online/offline tài xế
+ * SECURITY: Dùng SECURITY DEFINER function với ownership verification
  */
-async function toggleDriverAvailability(driverId, isAvailable) {
+async function toggleDriverAvailability(driverId, isAvailable, driverPhone) {
     if (!db) return { error: 'Supabase not initialized' };
 
-    const { data, error } = await db
-        .from('drivers')
-        .update({ is_available: isAvailable, updated_at: new Date().toISOString() })
-        .eq('id', driverId)
-        .select();
+    const { data, error } = await db.rpc('toggle_driver_availability', {
+        p_driver_id: driverId,
+        p_phone: driverPhone,
+        p_is_available: isAvailable
+    });
 
     return { data, error };
 }

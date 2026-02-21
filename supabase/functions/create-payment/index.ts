@@ -26,7 +26,7 @@ const VNPAY_HASH_SECRET = Deno.env.get("VNPAY_HASH_SECRET") || ""
 const VNPAY_URL = "https://sandbox.vnpayment.vn/paymentv2/vpcpay.html"
 
 const corsHeaders = {
-  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Origin": "https://travelcar.vn",
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
 }
 

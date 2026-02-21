@@ -629,30 +629,43 @@ function closeRatingModal() {
 async function submitRating() {
     const bookingId = document.getElementById('rating-booking-id').value;
     const review = document.getElementById('rating-review').value.trim();
+    const phone = document.getElementById('lookup-phone').value.replace(/\s/g, '');
     const btn = document.getElementById('btn-submit-rating');
+
+    if (!phone) {
+        showNotification('Vui lòng tra cứu đơn trước khi đánh giá');
+        return;
+    }
 
     btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Đang gửi...';
     btn.classList.add('btn-loading');
 
-    const { error } = await db.from('bookings').update({
-        rating: currentRatingVal,
-        review_text: review
-    }).eq('id', bookingId);
+    // SECURITY: Dùng SECURITY DEFINER function với ownership verification
+    const { data, error } = await db.rpc('submit_customer_rating', {
+        p_booking_id: bookingId,
+        p_customer_phone: phone,
+        p_rating: currentRatingVal,
+        p_review_text: review
+    });
 
     btn.innerHTML = 'Gửi Đánh Giá';
     btn.classList.remove('btn-loading');
 
     if (error) {
-        showNotification('Lỗi khi gửi đánh giá: ' + error.message, 'error');
-    } else {
-        showNotification('Cảm ơn bạn đã đánh giá chuyến đi! 💛', 'success');
-        closeRatingModal();
+        showNotification('Lỗi khi gửi đánh giá');
+        return;
+    }
+    if (data && !data.success) {
+        showNotification(data.error || 'Không thể gửi đánh giá');
+        return;
+    }
 
-        // Refresh lookup results to show "Đã đánh giá"
-        const phone = document.getElementById('lookup-phone').value;
-        if (phone) {
-            document.getElementById('lookup-form').dispatchEvent(new Event('submit'));
-        }
+    showNotification('Cảm ơn bạn đã đánh giá chuyến đi!');
+    closeRatingModal();
+
+    // Refresh lookup results to show "Đã đánh giá"
+    if (phone) {
+        document.getElementById('lookup-form').dispatchEvent(new Event('submit'));
     }
 }
 

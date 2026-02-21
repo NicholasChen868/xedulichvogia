@@ -12,7 +12,7 @@ const ESMS_SECRET_KEY = Deno.env.get("ESMS_SECRET_KEY") || ""
 const ESMS_BRAND_NAME = Deno.env.get("ESMS_BRAND_NAME") || "TravelCar"
 
 const corsHeaders = {
-  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Origin": "https://travelcar.vn",
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
 }
 

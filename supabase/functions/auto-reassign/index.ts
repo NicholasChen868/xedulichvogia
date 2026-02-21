@@ -10,7 +10,7 @@ const serviceRoleKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!
 const TIMEOUT_MINUTES = 5
 
 const corsHeaders = {
-  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Origin": "https://travelcar.vn",
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
 }
 
