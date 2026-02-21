@@ -1,0 +1,860 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Tài Xế — TravelCar</title>
+    <meta name="description" content="Quản lý cuốc xe, nhận cuốc tự động, theo dõi thu nhập.">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        /* ===== DRIVER DASHBOARD ===== */
+        .dashboard-container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 90px 24px 40px;
+            min-height: 100vh;
+        }
+
+        /* Login Section */
+        .login-section {
+            max-width: 420px;
+            margin: 80px auto;
+            text-align: center;
+        }
+
+        .login-section h2 {
+            color: #fff;
+            font-size: 1.8rem;
+            margin-bottom: 8px;
+        }
+
+        .login-section p {
+            color: rgba(255, 255, 255, 0.5);
+            margin-bottom: 28px;
+            font-size: .9rem;
+        }
+
+        .login-card {
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 32px;
+            -webkit-backdrop-filter: blur(20px);
+            backdrop-filter: blur(20px);
+        }
+
+        .login-card .form-group {
+            margin-bottom: 16px;
+            text-align: left;
+        }
+
+        .login-card input {
+            width: 100%;
+            padding: 14px 16px;
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 12px;
+            color: #fff;
+            font-size: .95rem;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .login-card input::placeholder {
+            color: rgba(255, 255, 255, 0.3);
+        }
+
+        .login-card input:focus {
+            outline: none;
+            border-color: #ff9800;
+        }
+
+        .login-error {
+            background: rgba(244, 67, 54, 0.15);
+            border: 1px solid rgba(244, 67, 54, 0.3);
+            color: #ef5350;
+            padding: 10px 14px;
+            border-radius: 10px;
+            font-size: .82rem;
+            margin-bottom: 14px;
+            display: none;
+        }
+
+        .login-error.show {
+            display: block;
+        }
+
+        /* Dashboard Header */
+        .dash-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+
+        .dash-header h2 {
+            color: #fff;
+            font-size: 1.4rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .dash-header h2 i {
+            color: #ff9800;
+        }
+
+        .driver-info {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .driver-name {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: .85rem;
+        }
+
+        .driver-name strong {
+            display: block;
+            color: #fff;
+            font-size: .95rem;
+        }
+
+        /* Online/Offline Toggle */
+        .status-toggle {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+        }
+
+        .toggle-switch {
+            width: 50px;
+            height: 28px;
+            background: rgba(255, 255, 255, 0.12);
+            border-radius: 14px;
+            position: relative;
+            transition: .3s;
+        }
+
+        .toggle-switch.active {
+            background: linear-gradient(135deg, #ff9800, #f57c00);
+        }
+
+        .toggle-switch::after {
+            content: '';
+            width: 22px;
+            height: 22px;
+            background: #fff;
+            border-radius: 50%;
+            position: absolute;
+            top: 3px;
+            left: 3px;
+            transition: .3s;
+        }
+
+        .toggle-switch.active::after {
+            left: 25px;
+        }
+
+        .toggle-label {
+            font-size: .82rem;
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        .toggle-label.online {
+            color: #4caf50;
+        }
+
+        /* Stats Bar */
+        .dash-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 14px;
+            margin-bottom: 24px;
+        }
+
+        .dash-stat {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 14px;
+            padding: 18px 16px;
+            text-align: center;
+        }
+
+        .dash-stat .stat-value {
+            font-size: 1.4rem;
+            font-weight: 800;
+            color: #ff9800;
+        }
+
+        .dash-stat .stat-label {
+            font-size: .72rem;
+            color: rgba(255, 255, 255, 0.4);
+            margin-top: 4px;
+            text-transform: uppercase;
+            letter-spacing: .5px;
+        }
+
+        /* Tabs */
+        .dash-tabs {
+            display: flex;
+            gap: 4px;
+            margin-bottom: 18px;
+            background: rgba(255, 255, 255, 0.04);
+            border-radius: 12px;
+            padding: 4px;
+        }
+
+        .dash-tab {
+            flex: 1;
+            padding: 10px;
+            text-align: center;
+            font-size: .82rem;
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.4);
+            border-radius: 10px;
+            cursor: pointer;
+            transition: .2s;
+            border: none;
+            background: none;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .dash-tab.active {
+            background: rgba(255, 152, 0, 0.15);
+            color: #ff9800;
+        }
+
+        .dash-tab .tab-count {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: .72rem;
+            margin-left: 4px;
+        }
+
+        .dash-tab.active .tab-count {
+            background: rgba(255, 152, 0, 0.3);
+        }
+
+        /* Ride Cards */
+        .rides-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .ride-card {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 16px;
+            padding: 20px;
+            transition: .2s;
+        }
+
+        .ride-card:hover {
+            border-color: rgba(255, 152, 0, 0.2);
+        }
+
+        .ride-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .ride-status {
+            font-size: .72rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: .5px;
+            padding: 4px 12px;
+            border-radius: 20px;
+        }
+
+        .ride-status.matched {
+            background: rgba(255, 152, 0, 0.15);
+            color: #ff9800;
+        }
+
+        .ride-status.confirmed {
+            background: rgba(33, 150, 243, 0.15);
+            color: #42a5f5;
+        }
+
+        .ride-status.in_progress {
+            background: rgba(76, 175, 80, 0.15);
+            color: #66bb6a;
+        }
+
+        .ride-status.completed {
+            background: rgba(255, 255, 255, 0.08);
+            color: rgba(255, 255, 255, 0.4);
+        }
+
+        .ride-time {
+            font-size: .75rem;
+            color: rgba(255, 255, 255, 0.3);
+        }
+
+        .ride-route {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 14px;
+        }
+
+        .ride-route-icon {
+            width: 36px;
+            height: 36px;
+            background: rgba(255, 152, 0, 0.1);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #ff9800;
+            flex-shrink: 0;
+        }
+
+        .ride-route-text h4 {
+            color: #fff;
+            font-size: .9rem;
+            font-weight: 600;
+            margin: 0;
+        }
+
+        .ride-route-text span {
+            color: rgba(255, 255, 255, 0.4);
+            font-size: .78rem;
+        }
+
+        .ride-details {
+            display: flex;
+            gap: 20px;
+            padding: 10px 0;
+            border-top: 1px solid rgba(255, 255, 255, 0.06);
+            margin-bottom: 12px;
+        }
+
+        .ride-detail {
+            font-size: .78rem;
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        .ride-detail i {
+            color: #ff9800;
+            margin-right: 4px;
+        }
+
+        .ride-detail strong {
+            color: #fff;
+            font-weight: 600;
+        }
+
+        .ride-fare {
+            font-size: 1.1rem;
+            font-weight: 800;
+            color: #ff9800;
+        }
+
+        /* Ride Actions */
+        .ride-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .ride-btn {
+            flex: 1;
+            padding: 10px 16px;
+            border-radius: 10px;
+            border: none;
+            font-family: 'Inter', sans-serif;
+            font-size: .82rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: .2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+
+        .ride-btn.accept {
+            background: linear-gradient(135deg, #ff9800, #f57c00);
+            color: #fff;
+        }
+
+        .ride-btn.accept:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 15px rgba(255, 152, 0, 0.3);
+        }
+
+        .ride-btn.reject {
+            background: rgba(255, 255, 255, 0.06);
+            color: rgba(255, 255, 255, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .ride-btn.reject:hover {
+            border-color: rgba(244, 67, 54, 0.3);
+            color: #ef5350;
+        }
+
+        .ride-btn.complete {
+            background: linear-gradient(135deg, #4caf50, #388e3c);
+            color: #fff;
+        }
+
+        .ride-btn.complete:hover {
+            transform: translateY(-1px);
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 48px 20px;
+            color: rgba(255, 255, 255, 0.3);
+        }
+
+        .empty-state i {
+            font-size: 2.5rem;
+            margin-bottom: 12px;
+            opacity: .5;
+        }
+
+        .empty-state p {
+            font-size: .88rem;
+        }
+
+        /* Logout */
+        .btn-logout {
+            background: none;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: rgba(255, 255, 255, 0.4);
+            padding: 8px 16px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: .78rem;
+            font-family: 'Inter', sans-serif;
+            transition: .2s;
+        }
+
+        .btn-logout:hover {
+            border-color: rgba(244, 67, 54, 0.3);
+            color: #ef5350;
+        }
+
+        /* Mobile */
+        @media (max-width: 600px) {
+            .dash-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .dash-stats {
+                grid-template-columns: repeat(3, 1fr);
+                gap: 8px;
+            }
+
+            .dash-stat {
+                padding: 14px 10px;
+            }
+
+            .dash-stat .stat-value {
+                font-size: 1.1rem;
+            }
+
+            .ride-details {
+                flex-wrap: wrap;
+                gap: 12px;
+            }
+
+            .ride-actions {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- NAV -->
+    <nav>
+        <a href="index.html" class="logo" style="text-decoration:none">Travel<span>Car</span></a>
+        <button class="hamburger" aria-label="Menu">
+            <span></span><span></span><span></span>
+        </button>
+        <div class="nav-links">
+            <a href="index.html">Trang chủ</a>
+            <a href="index.html#pricing-section">Bảng giá</a>
+            <a href="driver-register.html">Đăng ký tài xế</a>
+            <a href="driver-dashboard.html" style="color:#ff9800">Dashboard</a>
+            <a href="index.html#booking-section" class="btn-primary">Đặt xe ngay</a>
+        </div>
+    </nav>
+
+    <div class="dashboard-container">
+
+        <!-- ===== LOGIN SECTION ===== -->
+        <div id="login-section" class="login-section">
+            <h2><i class="fas fa-steering-wheel"></i> Dashboard Tài Xế</h2>
+            <p>Đăng nhập bằng số điện thoại đã đăng ký</p>
+
+            <div class="login-card">
+                <div id="login-error" class="login-error">
+                    <i class="fas fa-exclamation-circle"></i>
+                    <span id="login-error-msg">Số điện thoại không tìm thấy hoặc chưa được duyệt</span>
+                </div>
+
+                <form id="login-form">
+                    <div class="form-group">
+                        <label for="login-phone">Số điện thoại</label>
+                        <input type="tel" id="login-phone" placeholder="VD: 0901 234 567" required>
+                    </div>
+                    <button type="submit" class="btn-book" style="width:100%">
+                        <i class="fas fa-sign-in-alt"></i> Đăng nhập
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <!-- ===== DASHBOARD SECTION (hidden until login) ===== -->
+        <div id="dashboard-section" style="display:none">
+
+            <!-- Header -->
+            <div class="dash-header">
+                <h2><i class="fas fa-gauge-high"></i> Dashboard</h2>
+                <div class="driver-info">
+                    <div class="driver-name">
+                        <strong id="dash-driver-name">—</strong>
+                        <span id="dash-driver-plate">—</span>
+                    </div>
+                    <div class="status-toggle" onclick="toggleOnline()">
+                        <div class="toggle-switch" id="online-toggle"></div>
+                        <span class="toggle-label" id="online-label">Offline</span>
+                    </div>
+                    <button class="btn-logout" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Thoát</button>
+                </div>
+            </div>
+
+            <!-- Stats -->
+            <div class="dash-stats">
+                <div class="dash-stat">
+                    <div class="stat-value" id="stat-today">0</div>
+                    <div class="stat-label">Hôm nay</div>
+                </div>
+                <div class="dash-stat">
+                    <div class="stat-value" id="stat-total">0</div>
+                    <div class="stat-label">Tổng chuyến</div>
+                </div>
+                <div class="dash-stat">
+                    <div class="stat-value" id="stat-rating">5.0</div>
+                    <div class="stat-label">Đánh giá</div>
+                </div>
+            </div>
+
+            <!-- Tabs -->
+            <div class="dash-tabs">
+                <button class="dash-tab active" data-tab="pending" onclick="switchTab('pending')">
+                    <i class="fas fa-bell"></i> Chờ xác nhận <span class="tab-count" id="count-pending">0</span>
+                </button>
+                <button class="dash-tab" data-tab="active" onclick="switchTab('active')">
+                    <i class="fas fa-car"></i> Đang chạy <span class="tab-count" id="count-active">0</span>
+                </button>
+                <button class="dash-tab" data-tab="history" onclick="switchTab('history')">
+                    <i class="fas fa-history"></i> Lịch sử
+                </button>
+            </div>
+
+            <!-- Rides List -->
+            <div class="rides-list" id="rides-list">
+                <div class="empty-state">
+                    <i class="fas fa-inbox"></i>
+                    <p>Chưa có cuốc xe nào</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- SCRIPTS -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/config.js"></script>
+    <script src="js/pricing.js"></script>
+    <script src="js/supabase.js"></script>
+    <script>
+        let currentDriver = null;
+        let currentTab = 'pending';
+        let realtimeSubscription = null;
+
+        document.addEventListener('DOMContentLoaded', () => {
+            initSupabase();
+            initNavigation();
+
+            // Auto-login nếu có lưu SĐT
+            const savedPhone = localStorage.getItem('driver_phone');
+            if (savedPhone) {
+                loginWithPhone(savedPhone);
+            }
+
+            // Login form
+            document.getElementById('login-form').addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const phone = document.getElementById('login-phone').value.replace(/\s/g, '');
+                await loginWithPhone(phone);
+            });
+        });
+
+        function initNavigation() {
+            const hamburger = document.querySelector('.hamburger');
+            const navLinks = document.querySelector('.nav-links');
+            if (hamburger && navLinks) {
+                hamburger.addEventListener('click', () => navLinks.classList.toggle('open'));
+                navLinks.querySelectorAll('a').forEach(a => {
+                    a.addEventListener('click', () => navLinks.classList.remove('open'));
+                });
+            }
+        }
+
+        // ===== LOGIN =====
+        async function loginWithPhone(phone) {
+            const errorEl = document.getElementById('login-error');
+            errorEl.classList.remove('show');
+
+            const result = await driverLogin(phone);
+            if (result.error || !result.data) {
+                errorEl.classList.add('show');
+                document.getElementById('login-error-msg').textContent =
+                    'Không tìm thấy tài xế hoặc tài khoản chưa được duyệt';
+                return;
+            }
+
+            currentDriver = result.data;
+            localStorage.setItem('driver_phone', phone);
+            showDashboard();
+        }
+
+        // ===== SHOW DASHBOARD =====
+        function showDashboard() {
+            document.getElementById('login-section').style.display = 'none';
+            document.getElementById('dashboard-section').style.display = 'block';
+
+            // Fill driver info
+            document.getElementById('dash-driver-name').textContent = currentDriver.full_name;
+            document.getElementById('dash-driver-plate').textContent = currentDriver.license_plate;
+            document.getElementById('stat-total').textContent = currentDriver.total_trips || 0;
+            document.getElementById('stat-rating').textContent = currentDriver.rating || '5.0';
+
+            // Set online toggle
+            updateOnlineUI(currentDriver.is_available);
+
+            // Load rides
+            loadRides();
+
+            // Subscribe realtime
+            realtimeSubscription = subscribeDriverRides(currentDriver.id, (payload) => {
+                console.log('Realtime update:', payload);
+                loadRides(); // Reload khi có thay đổi
+            });
+        }
+
+        // ===== TOGGLE ONLINE =====
+        async function toggleOnline() {
+            if (!currentDriver) return;
+            const newStatus = !currentDriver.is_available;
+            const result = await toggleDriverAvailability(currentDriver.id, newStatus);
+            if (!result.error) {
+                currentDriver.is_available = newStatus;
+                updateOnlineUI(newStatus);
+            }
+        }
+
+        function updateOnlineUI(isOnline) {
+            const toggle = document.getElementById('online-toggle');
+            const label = document.getElementById('online-label');
+            if (isOnline) {
+                toggle.classList.add('active');
+                label.textContent = 'Online';
+                label.className = 'toggle-label online';
+            } else {
+                toggle.classList.remove('active');
+                label.textContent = 'Offline';
+                label.className = 'toggle-label';
+            }
+        }
+
+        // ===== TABS =====
+        function switchTab(tab) {
+            currentTab = tab;
+            document.querySelectorAll('.dash-tab').forEach(t => t.classList.remove('active'));
+            document.querySelector(`[data-tab="${tab}"]`).classList.add('active');
+            loadRides();
+        }
+
+        // ===== LOAD RIDES =====
+        async function loadRides() {
+            if (!currentDriver) return;
+            const container = document.getElementById('rides-list');
+
+            let statusFilter = null;
+            if (currentTab === 'pending') statusFilter = 'matched';
+            else if (currentTab === 'active') statusFilter = 'confirmed';
+
+            const result = await getDriverRides(currentDriver.id, statusFilter);
+            const rides = result.data || [];
+
+            // Update counts
+            const allRides = await getDriverRides(currentDriver.id);
+            const allData = allRides.data || [];
+            document.getElementById('count-pending').textContent =
+                allData.filter(r => r.status === 'matched').length;
+            document.getElementById('count-active').textContent =
+                allData.filter(r => ['confirmed', 'in_progress'].includes(r.status)).length;
+
+            // Count today's rides
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('stat-today').textContent =
+                allData.filter(r => r.status === 'completed' && r.updated_at?.startsWith(today)).length;
+
+            if (currentTab === 'history') {
+                const historyRides = allData.filter(r => ['completed', 'cancelled'].includes(r.status)).slice(0, 20);
+                renderRides(container, historyRides);
+            } else {
+                renderRides(container, rides);
+            }
+        }
+
+        function renderRides(container, rides) {
+            if (rides.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-inbox"></i>
+                        <p>${currentTab === 'pending' ? 'Chưa có cuốc xe mới' :
+                        currentTab === 'active' ? 'Không có cuốc đang chạy' : 'Chưa có lịch sử'}</p>
+                    </div>`;
+                return;
+            }
+
+            container.innerHTML = rides.map(ride => {
+                const fare = ride.estimated_fare ? formatVND(ride.estimated_fare) : '—';
+                const time = ride.created_at ? new Date(ride.created_at).toLocaleString('vi-VN') : '';
+
+                let actions = '';
+                if (ride.status === 'matched') {
+                    actions = `
+                        <div class="ride-actions">
+                            <button class="ride-btn accept" onclick="acceptRide('${ride.id}')">
+                                <i class="fas fa-check"></i> Nhận cuốc
+                            </button>
+                            <button class="ride-btn reject" onclick="declineRide('${ride.id}')">
+                                <i class="fas fa-times"></i> Từ chối
+                            </button>
+                        </div>`;
+                } else if (ride.status === 'confirmed') {
+                    actions = `
+                        <div class="ride-actions">
+                            <button class="ride-btn complete" onclick="finishRide('${ride.id}')">
+                                <i class="fas fa-flag-checkered"></i> Hoàn thành
+                            </button>
+                        </div>`;
+                }
+
+                return `
+                    <div class="ride-card">
+                        <div class="ride-card-header">
+                            <span class="ride-status ${ride.status}">${getStatusText(ride.status)}</span>
+                            <span class="ride-time">${time}</span>
+                        </div>
+                        <div class="ride-route">
+                            <div class="ride-route-icon"><i class="fas fa-route"></i></div>
+                            <div class="ride-route-text">
+                                <h4>${ride.pickup_location} → ${ride.dropoff_location}</h4>
+                                <span>${ride.distance_km ? ride.distance_km + ' km' : ''} · Ngày đi: ${ride.date_go || '—'}</span>
+                            </div>
+                        </div>
+                        <div class="ride-details">
+                            <div class="ride-detail"><i class="fas fa-phone"></i> <strong>${ride.customer_phone}</strong></div>
+                            <div class="ride-detail"><i class="fas fa-car"></i> <strong>${ride.vehicle_type === 'sedan-4' ? '4 chỗ' : '7 chỗ'}</strong></div>
+                            <div class="ride-fare">${fare}</div>
+                        </div>
+                        ${actions}
+                    </div>`;
+            }).join('');
+        }
+
+        function getStatusText(status) {
+            const map = {
+                'pending': 'Chờ match',
+                'matched': 'Chờ xác nhận',
+                'confirmed': 'Đã nhận',
+                'in_progress': 'Đang chạy',
+                'completed': 'Hoàn thành',
+                'cancelled': 'Đã hủy'
+            };
+            return map[status] || status;
+        }
+
+        // ===== RIDE ACTIONS =====
+        async function acceptRide(bookingId) {
+            if (!currentDriver) return;
+            const result = await confirmRide(bookingId, currentDriver.id);
+            if (!result.error) {
+                showNotification('Đã nhận cuốc xe thành công!');
+                loadRides();
+            }
+        }
+
+        async function declineRide(bookingId) {
+            if (!currentDriver) return;
+            const result = await rejectRide(bookingId, currentDriver.id);
+            if (!result.error) {
+                showNotification('Đã từ chối cuốc xe');
+                loadRides();
+            }
+        }
+
+        async function finishRide(bookingId) {
+            if (!currentDriver) return;
+            const result = await completeRide(bookingId, currentDriver.id);
+            if (!result.error) {
+                currentDriver.total_trips = (currentDriver.total_trips || 0) + 1;
+                document.getElementById('stat-total').textContent = currentDriver.total_trips;
+                showNotification('Cuốc xe hoàn thành! Cảm ơn bạn.');
+                loadRides();
+            }
+        }
+
+        // ===== LOGOUT =====
+        function logout() {
+            currentDriver = null;
+            localStorage.removeItem('driver_phone');
+            if (realtimeSubscription) {
+                realtimeSubscription.unsubscribe();
+            }
+            document.getElementById('login-section').style.display = 'block';
+            document.getElementById('dashboard-section').style.display = 'none';
+        }
+
+        function showNotification(message) {
+            const notif = document.createElement('div');
+            notif.className = 'notification';
+            notif.innerHTML = `<i class="fas fa-check-circle"></i> ${message}`;
+            document.body.appendChild(notif);
+            setTimeout(() => notif.classList.add('show'), 10);
+            setTimeout(() => {
+                notif.classList.remove('show');
+                setTimeout(() => notif.remove(), 300);
+            }, 4000);
+        }
+    </script>
+
+</body>
+
+</html>

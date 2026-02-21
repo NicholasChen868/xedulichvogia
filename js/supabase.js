@@ -143,3 +143,182 @@ async function fetchPopularRoutes() {
         icon: route.icon
     }));
 }
+
+// ===== MATCHING SYSTEM =====
+
+/**
+ * Gọi hàm match_driver trong PostgreSQL
+ * Tìm tài xế phù hợp nhất cho booking
+ */
+async function matchDriver(bookingId) {
+    if (!db) return { error: 'Supabase not initialized' };
+
+    const { data, error } = await db.rpc('match_driver', {
+        p_booking_id: bookingId
+    });
+
+    return { data, error };
+}
+
+/**
+ * Submit booking VÀ tự động match tài xế
+ */
+async function submitBookingWithMatch(bookingData) {
+    const bookingResult = await submitBooking(bookingData);
+    if (bookingResult.error || !bookingResult.data?.[0]) {
+        return bookingResult;
+    }
+
+    const bookingId = bookingResult.data[0].id;
+    const matchResult = await matchDriver(bookingId);
+
+    return {
+        booking: bookingResult.data[0],
+        match: matchResult.data || { success: false, message: 'Match pending' },
+        error: null
+    };
+}
+
+// ===== DRIVER DASHBOARD =====
+
+/**
+ * Đăng nhập tài xế bằng số điện thoại
+ */
+async function driverLogin(phone) {
+    if (!db) return { data: null, error: 'Supabase not initialized' };
+
+    const { data, error } = await db
+        .from('drivers')
+        .select('*')
+        .eq('phone', phone)
+        .eq('status', 'active')
+        .single();
+
+    return { data, error };
+}
+
+/**
+ * Lấy cuốc xe được gán cho tài xế
+ */
+async function getDriverRides(driverId, status) {
+    if (!db) return { data: [], error: null };
+
+    let query = db
+        .from('bookings')
+        .select('*')
+        .eq('driver_id', driverId)
+        .order('created_at', { ascending: false });
+
+    if (status) {
+        query = query.eq('status', status);
+    }
+
+    const { data, error } = await query;
+    return { data: data || [], error };
+}
+
+/**
+ * Tài xế xác nhận cuốc xe
+ */
+async function confirmRide(bookingId, driverId) {
+    if (!db) return { error: 'Supabase not initialized' };
+
+    const { data, error } = await db
+        .from('bookings')
+        .update({ status: 'confirmed', updated_at: new Date().toISOString() })
+        .eq('id', bookingId)
+        .eq('driver_id', driverId)
+        .select();
+
+    return { data, error };
+}
+
+/**
+ * Tài xế từ chối cuốc xe → trả lại pool
+ */
+async function rejectRide(bookingId, driverId) {
+    if (!db) return { error: 'Supabase not initialized' };
+
+    // Trả booking về pending, bỏ driver_id
+    const { error: bookingErr } = await db
+        .from('bookings')
+        .update({
+            status: 'pending',
+            driver_id: null,
+            matched_at: null,
+            updated_at: new Date().toISOString()
+        })
+        .eq('id', bookingId)
+        .eq('driver_id', driverId);
+
+    // Tài xế available lại
+    await db
+        .from('drivers')
+        .update({ is_available: true, updated_at: new Date().toISOString() })
+        .eq('id', driverId);
+
+    return { error: bookingErr };
+}
+
+/**
+ * Hoàn thành cuốc xe
+ */
+async function completeRide(bookingId, driverId) {
+    if (!db) return { error: 'Supabase not initialized' };
+
+    const { data, error } = await db
+        .from('bookings')
+        .update({ status: 'completed', updated_at: new Date().toISOString() })
+        .eq('id', bookingId)
+        .eq('driver_id', driverId)
+        .select();
+
+    // Tài xế available lại + tăng trip count
+    if (!error) {
+        await db.rpc('increment_driver_trips', { p_driver_id: driverId }).catch(() => { });
+        await db
+            .from('drivers')
+            .update({
+                is_available: true,
+                total_trips: db.raw ? undefined : undefined, // handled by rpc above
+                updated_at: new Date().toISOString()
+            })
+            .eq('id', driverId);
+    }
+
+    return { data, error };
+}
+
+/**
+ * Toggle trạng thái online/offline tài xế
+ */
+async function toggleDriverAvailability(driverId, isAvailable) {
+    if (!db) return { error: 'Supabase not initialized' };
+
+    const { data, error } = await db
+        .from('drivers')
+        .update({ is_available: isAvailable, updated_at: new Date().toISOString() })
+        .eq('id', driverId)
+        .select();
+
+    return { data, error };
+}
+
+/**
+ * Theo dõi cuốc xe realtime cho tài xế
+ */
+function subscribeDriverRides(driverId, callback) {
+    if (!db) return null;
+
+    return db
+        .channel('driver-rides-' + driverId)
+        .on('postgres_changes', {
+            event: '*',
+            schema: 'public',
+            table: 'bookings',
+            filter: 'driver_id=eq.' + driverId
+        }, payload => {
+            callback(payload);
+        })
+        .subscribe();
+}

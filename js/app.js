@@ -168,13 +168,17 @@ function initBookingForm() {
             data.estimated_fare = calculateFare(km, data.vehicle_type).total;
         }
 
-        // Gửi lên Supabase
-        const result = await submitBooking(data);
+        // Gửi lên Supabase + auto-match tài xế
+        const result = await submitBookingWithMatch(data);
         if (result.error) {
             console.error('Booking error:', result.error);
             showNotification('Yêu cầu đặt xe đã được ghi nhận!');
         } else {
-            showNotification('Đặt xe thành công! Chúng tôi sẽ liên hệ bạn sớm nhất.');
+            if (result.match?.success) {
+                showNotification(`Đặt xe thành công! Tài xế ${result.match.driver_name} (${result.match.driver_vehicle}) sẽ liên hệ bạn.`);
+            } else {
+                showNotification('Đặt xe thành công! Hệ thống đang tìm tài xế phù hợp.');
+            }
             form.reset();
             document.getElementById('price-estimate')?.classList.remove('visible');
         }
