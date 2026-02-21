@@ -1,0 +1,58 @@
+name: Deploy Frontend to Vercel
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '*.html'
+      - 'css/**'
+      - 'js/**'
+      - 'vercel.json'
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    name: Deploy to Vercel Production
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install Vercel CLI
+        run: npm install -g vercel@latest
+
+      - name: Pull Vercel Environment
+        run: vercel pull --yes --environment=production --token=${{ secrets.VERCEL_TOKEN }}
+
+      - name: Build Project
+        run: vercel build --prod --token=${{ secrets.VERCEL_TOKEN }}
+
+      - name: Deploy to Vercel
+        id: deploy
+        run: |
+          URL=$(vercel deploy --prebuilt --prod --token=${{ secrets.VERCEL_TOKEN }})
+          echo "deploy_url=$URL" >> $GITHUB_OUTPUT
+
+      - name: Verify Security Headers
+        run: |
+          sleep 10
+          echo "Checking security headers..."
+          HEADERS=$(curl -sI "${{ steps.deploy.outputs.deploy_url }}" 2>/dev/null)
+          echo "$HEADERS"
+
+          # Verify critical headers
+          echo "$HEADERS" | grep -qi "x-frame-options" && echo "✅ X-Frame-Options" || echo "⚠️ Missing X-Frame-Options"
+          echo "$HEADERS" | grep -qi "x-content-type-options" && echo "✅ X-Content-Type-Options" || echo "⚠️ Missing X-Content-Type-Options"
+          echo "$HEADERS" | grep -qi "strict-transport-security" && echo "✅ HSTS" || echo "⚠️ Missing HSTS"
+          echo "$HEADERS" | grep -qi "content-security-policy" && echo "✅ CSP" || echo "⚠️ Missing CSP"
+
+      - name: Post Deploy Summary
+        run: |
+          echo "### ✅ Frontend Deployed" >> $GITHUB_STEP_SUMMARY
+          echo "**URL:** ${{ steps.deploy.outputs.deploy_url }}" >> $GITHUB_STEP_SUMMARY
+          echo "**Branch:** ${{ github.ref_name }}" >> $GITHUB_STEP_SUMMARY
+          echo "**Commit:** ${{ github.sha }}" >> $GITHUB_STEP_SUMMARY
+
+    env:
+      VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+      VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}

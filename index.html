@@ -4,9 +4,43 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TravelCar — Đặt Xe Du Lịch Nhanh Chóng & An Toàn</title>
+    <title>TravelCar — Đặt Xe Du Lịch Nhanh Chóng, Giá Rẻ & An Toàn 100%</title>
+
+    <!-- SEO Meta Tags -->
     <meta name="description"
-        content="Dịch vụ đặt xe du lịch chuyên nghiệp. Xe 4 chỗ, 7 chỗ. Tài xế kinh nghiệm, giá minh bạch, matching tự động.">
+        content="Nền tảng đặt xe du lịch chuyên nghiệp tại Việt Nam. Thuê xe 4 chỗ, 7 chỗ, Limousine cao cấp và xe khách từ 16-45 chỗ. Giá cả minh bạch, tài xế chuyên nghiệp.">
+    <meta name="keywords"
+        content="đặt xe du lịch, thuê xe 4 chỗ, thuê xe 7 chỗ, thuê limousine, thuê xe khách, xe tiện chuyến, xe ghép">
+    <meta name="author" content="TravelCar Vietnam">
+    <meta name="robots" content="index, follow">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://travelcar.vn/">
+    <meta property="og:title" content="TravelCar — Nền Tảng Booking Xe Du Lịch Hàng Đầu">
+    <meta property="og:description"
+        content="Nền tảng đặt xe du lịch chuyên nghiệp tại Việt Nam. Giá cả minh bạch, tài xế chuyên gia.">
+    <meta property="og:image" content="https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?w=1200&q=80">
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://travelcar.vn/">
+    <meta property="twitter:title" content="TravelCar — Đặt Xe Du Lịch Nhanh Chóng & An Toàn">
+    <meta property="twitter:description"
+        content="Nền tảng đặt xe du lịch chuyên nghiệp tại Việt Nam. Giá cả minh bạch.">
+    <meta property="twitter:image" content="https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?w=1200&q=80">
+
+    <!-- JSON-LD Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      "name": "TravelCar",
+      "url": "https://travelcar.vn/",
+      "description": "Nền tảng đặt xe du lịch hàng đầu Việt Nam"
+    }
+    </script>
+
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
         rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
@@ -17,45 +51,54 @@
 
     <!-- NAV -->
     <nav>
-        <div class="logo">Travel<span>Car</span></div>
-        <button class="hamburger" aria-label="Menu">
-            <span></span><span></span><span></span>
-        </button>
+        <a href="index.html" class="logo">Travel<span>Car</span></a>
+
         <div class="nav-links">
-            <a href="#booking-section">Đặt xe</a>
-            <a href="#pricing-section">Bảng giá</a>
-            <a href="#vehicles-section">Loại xe</a>
-            <a href="#routes-section">Tuyến đường</a>
-            <a href="about.html">Về chúng tôi</a>
-            <a href="#booking-section" class="btn-primary">Đặt xe ngay</a>
+            <a href="#booking-section" class="nav-item">Đặt xe</a>
+            <a href="#pricing-section" class="nav-item">Bảng giá</a>
+            <a href="#vehicles-section" class="nav-item">Loại xe</a>
+            <a href="#routes-section" class="nav-item">Tuyến đường</a>
+            <a href="about.html" class="nav-item">Về chúng tôi</a>
+            <a href="travel-guide.html" class="nav-item">Cẩm nang</a>
+            <a href="#booking-section" class="btn-nav-cta mobile-only">Đặt xe ngay</a>
         </div>
-        <!-- User Avatar -->
-        <div class="nav-user" id="nav-user">
-            <button class="user-avatar" id="user-avatar-btn" title="Menu tài khoản" onclick="toggleUserMenu()">
-                <i class="fas fa-user"></i>
-            </button>
-            <div class="user-dropdown" id="user-dropdown">
-                <div class="user-dropdown-header" id="dropdown-header">
-                    <div class="user-dropdown-name">Đăng nhập</div>
-                    <div class="user-dropdown-role">Khách</div>
-                </div>
-                <div class="user-dropdown-body" id="dropdown-logged-out">
-                    <a href="admin.html"><i class="fas fa-sign-in-alt"></i> Đăng nhập Admin</a>
-                    <a href="driver-dashboard.html"><i class="fas fa-steering-wheel"></i> Tài xế Dashboard</a>
-                </div>
-                <div class="user-dropdown-body" id="dropdown-logged-in" style="display:none">
-                    <a href="admin.html"><i class="fas fa-gauge-high"></i> Dashboard</a>
-                    <a href="admin.html#bookings"><i class="fas fa-calendar-check"></i> Quản lý đơn</a>
-                    <a href="admin.html#drivers"><i class="fas fa-id-card"></i> Quản lý tài xế</a>
-                    <div class="user-dropdown-divider"></div>
-                    <a href="#"><i class="fas fa-user-circle"></i> Tài khoản</a>
-                    <a href="#"><i class="fas fa-gift"></i> Điểm thưởng <span class="points-badge">120 pts</span></a>
-                    <a href="#"><i class="fas fa-gear"></i> Cài đặt</a>
-                    <div class="user-dropdown-divider"></div>
-                    <a href="#" onclick="doAdminLogout()" class="logout-link"><i class="fas fa-sign-out-alt"></i> Đăng
-                        xuất</a>
+
+        <div class="nav-actions">
+            <a href="#booking-section" class="btn-nav-cta desktop-only">Đặt xe ngay</a>
+
+            <!-- User Avatar -->
+            <div class="nav-user" id="nav-user">
+                <button class="user-avatar" id="user-avatar-btn" title="Menu tài khoản" onclick="toggleUserMenu()">
+                    <i class="fas fa-user"></i>
+                </button>
+                <div class="user-dropdown" id="user-dropdown">
+                    <div class="user-dropdown-header" id="dropdown-header">
+                        <div class="user-dropdown-name">Đăng nhập</div>
+                        <div class="user-dropdown-role">Khách</div>
+                    </div>
+                    <div class="user-dropdown-body" id="dropdown-logged-out">
+                        <a href="admin.html"><i class="fas fa-sign-in-alt"></i> Đăng nhập Admin</a>
+                        <a href="driver-dashboard.html"><i class="fas fa-steering-wheel"></i> Tài xế Dashboard</a>
+                    </div>
+                    <div class="user-dropdown-body" id="dropdown-logged-in" style="display:none">
+                        <a href="admin.html"><i class="fas fa-gauge-high"></i> Dashboard</a>
+                        <a href="admin.html#bookings"><i class="fas fa-calendar-check"></i> Quản lý đơn</a>
+                        <a href="admin.html#drivers"><i class="fas fa-id-card"></i> Quản lý tài xế</a>
+                        <div class="user-dropdown-divider"></div>
+                        <a href="#"><i class="fas fa-user-circle"></i> Tài khoản</a>
+                        <a href="#"><i class="fas fa-gift"></i> Điểm thưởng <span class="points-badge">120
+                                pts</span></a>
+                        <a href="#"><i class="fas fa-gear"></i> Cài đặt</a>
+                        <div class="user-dropdown-divider"></div>
+                        <a href="#" onclick="doAdminLogout()" class="logout-link"><i class="fas fa-sign-out-alt"></i>
+                            Đăng xuất</a>
+                    </div>
                 </div>
             </div>
+
+            <button class="hamburger" aria-label="Menu">
+                <span></span><span></span><span></span>
+            </button>
         </div>
     </nav>
 
@@ -318,10 +361,11 @@
             </div>
             <div>
                 <h4>Dịch vụ</h4>
-                <a href="#vehicles-section">Xe 4 chỗ</a>
-                <a href="#vehicles-section">Xe 7 chỗ</a>
+                <a href="#vehicles-section">Xe 4 chỗ & 7 chỗ</a>
+                <a href="#vehicles-section">Limousine Cao Cấp</a>
+                <a href="#vehicles-section">Xe Van 16 chỗ</a>
+                <a href="#vehicles-section">Xe Đoàn 29-45 chỗ</a>
                 <a href="#pricing-section">Bảng giá</a>
-                <a href="#routes-section">Tuyến đường</a>
             </div>
             <div>
                 <h4>Đối tác & Thông tin</h4>

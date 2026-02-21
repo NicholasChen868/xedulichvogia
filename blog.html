@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blog Tin Tức & Khuyến Mãi | TravelCar</title>
+
+    <!-- SEO Meta Tags -->
+    <meta name="description"
+        content="Cập nhật tin tức du lịch, khuyến mãi mới nhất từ TravelCar. Những câu chuyện thú vị từ tài xế và review chân thực từ khách hàng.">
+    <meta name="keywords" content="blog du lịch, tin tức thuê xe, review tài xế travelcar, khuyến mãi travelcar">
+    <meta name="author" content="TravelCar Vietnam">
+    <meta name="robots" content="index, follow">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://travelcar.vn/blog.html">
+    <meta property="og:title" content="Blog Tin Tức & Khuyến Mãi | TravelCar">
+    <meta property="og:description"
+        content="Theo dõi cập nhật tình hình du lịch, khuyến mãi đặt xe mới nhất từ TravelCar.">
+    <meta property="og:image" content="https://images.unsplash.com/photo-1449965408869-eaa3f722e40d?w=1200&q=80">
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+
+    <style>
+        .page-hero {
+            padding: 140px 20px 80px;
+            text-align: center;
+            background: linear-gradient(to bottom, rgba(10, 14, 26, 1), #0f172a);
+        }
+
+        .page-hero h1 {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            color: #fff;
+        }
+
+        .page-hero h1 span {
+            background: linear-gradient(to right, #ff9800, #ff5722);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .page-hero p {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 1.1rem;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        /* ======= BLOG CATEGORY FILTERS ======= */
+        .blog-filters {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            padding: 30px 20px;
+            background: #0a0e1a;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: rgba(255, 255, 255, 0.7);
+            padding: 10px 24px;
+            border-radius: 30px;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.95rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .filter-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+        }
+
+        .filter-btn.active {
+            background: rgba(255, 152, 0, 0.15);
+            border-color: rgba(255, 152, 0, 0.4);
+            color: #ff9800;
+        }
+
+        /* ======= BLOG GRID ======= */
+        .blog-section {
+            padding: 40px 5% 80px;
+            background: #0a0e1a;
+        }
+
+        .blog-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 30px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .blog-card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 16px;
+            overflow: hidden;
+            transition: all 0.3s;
+            display: flex;
+            flex-direction: column;
+            text-decoration: none;
+            color: #fff;
+        }
+
+        .blog-card:hover {
+            transform: translateY(-8px);
+            border-color: rgba(255, 152, 0, 0.3);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.4);
+            background: rgba(255, 255, 255, 0.04);
+        }
+
+        .blog-img-wrapper {
+            width: 100%;
+            height: 220px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .blog-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: 0.5s ease;
+        }
+
+        .blog-card:hover .blog-img {
+            transform: scale(1.05);
+        }
+
+        .blog-category-tag {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            background: rgba(15, 23, 42, 0.85);
+            backdrop-filter: blur(5px);
+            color: #ff9800;
+            padding: 6px 14px;
+            border-radius: 8px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            border: 1px solid rgba(255, 152, 0, 0.3);
+            text-transform: uppercase;
+        }
+
+        .blog-category-tag.driver {
+            color: #4CAF50;
+            border-color: rgba(76, 175, 80, 0.3);
+        }
+
+        .blog-category-tag.news {
+            color: #03A9F4;
+            border-color: rgba(3, 169, 244, 0.3);
+        }
+
+        .blog-category-tag.promo {
+            color: #E91E63;
+            border-color: rgba(233, 30, 99, 0.3);
+        }
+
+        .blog-content {
+            padding: 24px;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .blog-meta {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            color: rgba(255, 255, 255, 0.4);
+            font-size: 0.8rem;
+            margin-bottom: 12px;
+        }
+
+        .blog-meta i {
+            margin-right: 5px;
+        }
+
+        .blog-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            line-height: 1.5;
+            margin-bottom: 12px;
+            color: #fff;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            transition: 0.2s;
+        }
+
+        .blog-card:hover .blog-title {
+            color: #ff9800;
+        }
+
+        .blog-excerpt {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 0.9rem;
+            line-height: 1.6;
+            margin-bottom: 20px;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            flex-grow: 1;
+        }
+
+        .blog-author {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-top: auto;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            padding-top: 16px;
+        }
+
+        .author-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: #1e293b;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #ff9800;
+            font-size: 1.1rem;
+        }
+
+        .author-info {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .author-name {
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: #fff;
+        }
+
+        .author-role {
+            font-size: 0.75rem;
+            color: rgba(255, 255, 255, 0.4);
+        }
+
+        /* CTA */
+        .blog-cta {
+            text-align: center;
+            padding: 20px;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- NAV -->
+    <nav>
+        <a href="index.html" class="logo">Travel<span>Car</span></a>
+
+        <div class="nav-links">
+            <a href="index.html" class="nav-item">Trang chủ</a>
+            <a href="travel-guide.html" class="nav-item">Cẩm nang</a>
+            <a href="policy.html" class="nav-item">Chính sách</a>
+            <a href="blog.html" class="nav-item" style="color:#ff9800">Tin tức</a>
+            <a href="index.html#booking-section" class="btn-nav-cta mobile-only">Đặt xe ngay</a>
+        </div>
+
+        <div class="nav-actions">
+            <!-- Account Dropdown -->
+            <div id="nav-user-menu" style="display: none; position: relative;">
+                <div class="nav-user-avatar" id="nav-user-btn">
+                    <i class="fas fa-user-shield"></i>
+                </div>
+                <!-- Dropdown (JS will inject content) -->
+            </div>
+
+            <a href="index.html#booking-section" class="btn-nav-cta desktop-only">Đặt xe ngay</a>
+
+            <button class="hamburger" aria-label="Menu">
+                <span></span><span></span><span></span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- HERO -->
+    <section class="page-hero">
+        <h1>TravelCar <span>Blog</span> & Tin Tức</h1>
+        <p>Cập nhật chương trình khuyến mãi, câu chuyện tài xế và kinh nghiệm du lịch quý báu từ mạng lưới xe đường dài
+            khắp Việt Nam.</p>
+    </section>
+
+    <!-- FILTERS -->
+    <div class="blog-filters">
+        <button class="filter-btn active">Tất cả bài viết</button>
+        <button class="filter-btn">Khuyến mãi</button>
+        <button class="filter-btn">Chuyện tài xế</button>
+        <button class="filter-btn">Tin nền tảng</button>
+        <button class="filter-btn">Góc khách hàng</button>
+    </div>
+
+    <!-- MAIN GRID -->
+    <section class="blog-section">
+        <div class="blog-grid">
+
+            <!-- Post 1: Promo -->
+            <a href="#" class="blog-card">
+                <div class="blog-img-wrapper">
+                    <span class="blog-category-tag promo">Khuyến mãi</span>
+                    <img src="https://images.unsplash.com/photo-1549317661-bd32c8ce0be2?w=800&q=80" alt="Promo"
+                        class="blog-img">
+                </div>
+                <div class="blog-content">
+                    <div class="blog-meta">
+                        <span><i class="far fa-calendar-alt"></i> 20 Thg 2, 2026</span>
+                        <span><i class="far fa-eye"></i> 1.2k lượt xem</span>
+                    </div>
+                    <h3 class="blog-title">Deal Sốc Đầu Năm: Giảm 200k Cho Tuyến Sân Bay & Thuê Xe Đi Tỉnh Giảm 5%</h3>
+                    <p class="blog-excerpt">Nhân dịp TravelCar chính thức ra mắt, chúng tôi tặng ngay voucher giảm giá
+                        200k cho cước xe đưa đón sân bay Tân Sơn Nhất / Nội Bài. Nhanh tay nhận ngay trước khi cháy
+                        code.</p>
+                    <div class="blog-author">
+                        <div class="author-avatar"><i class="fas fa-bullhorn"></i></div>
+                        <div class="author-info">
+                            <span class="author-name">Phòng Marketing</span>
+                            <span class="author-role">TravelCar Team</span>
+                        </div>
+                    </div>
+                </div>
+            </a>
+
+            <!-- Post 2: Chuyện Tài Xế -->
+            <a href="#" class="blog-card">
+                <div class="blog-img-wrapper">
+                    <span class="blog-category-tag driver">Chuyện tài xế</span>
+                    <img src="https://images.unsplash.com/photo-1449965408869-eaa3f722e40d?w=800&q=80" alt="Driver"
+                        class="blog-img">
+                </div>
+                <div class="blog-content">
+                    <div class="blog-meta">
+                        <span><i class="far fa-calendar-alt"></i> 18 Thg 2, 2026</span>
+                        <span><i class="far fa-heart"></i> 450 lượt yêu thích</span>
+                    </div>
+                    <h3 class="blog-title">Hành Trình Chở Chuyên Gia Nước Ngoài Đoạn Đường Xuyên Việt Của Bác Tài 5 Sao
+                    </h3>
+                    <p class="blog-excerpt">Anh Tuấn chia sẻ trải nghiệm vô cùng thú vị khi nhận lệnh chở 3 chuyên gia
+                        từ TPHCM đi Đà Nẵng. Thái độ phục vụ chuẩn TravelCar đã giúp anh nhận ngay tips 1 triệu đồng.
+                    </p>
+                    <div class="blog-author">
+                        <div class="author-avatar"><i class="fas fa-steering-wheel"></i></div>
+                        <div class="author-info">
+                            <span class="author-name">Tài xế Hoàng Tuấn</span>
+                            <span class="author-role">Đối tác Kim Cương</span>
+                        </div>
+                    </div>
+                </div>
+            </a>
+
+            <!-- Post 3: News -->
+            <a href="#" class="blog-card">
+                <div class="blog-img-wrapper">
+                    <span class="blog-category-tag news">Tin nền tảng</span>
+                    <img src="https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=800&q=80" alt="News"
+                        class="blog-img">
+                </div>
+                <div class="blog-content">
+                    <div class="blog-meta">
+                        <span><i class="far fa-calendar-alt"></i> 15 Thg 2, 2026</span>
+                        <span><i class="far fa-comments"></i> 24 bình luận</span>
+                    </div>
+                    <h3 class="blog-title">Ra Mắt Dịch Vụ Thuê Xe Doanh Nghiệp Với Đội Xe Siêu Sang Mercedes 2026</h3>
+                    <p class="blog-excerpt">TravelCar tiếp sức cho các chuyến công tác của doanh nghiệp bằng việc đưa
+                        vào hệ thống 50 xe cao cấp Mercedes, BMW với tài xế có thể giao tiếp tiếng Anh cơ bản.</p>
+                    <div class="blog-author">
+                        <div class="author-avatar"><i class="fas fa-crown"></i></div>
+                        <div class="author-info">
+                            <span class="author-name">Nguyễn Hữu Trí</span>
+                            <span class="author-role">Founder TravelCar</span>
+                        </div>
+                    </div>
+                </div>
+            </a>
+
+            <!-- Post 4: Guest Review -->
+            <a href="#" class="blog-card">
+                <div class="blog-img-wrapper">
+                    <span class="blog-category-tag">Góc khách hàng</span>
+                    <img src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=800&q=80" alt="Review"
+                        class="blog-img">
+                </div>
+                <div class="blog-content">
+                    <div class="blog-meta">
+                        <span><i class="far fa-calendar-alt"></i> 10 Thg 2, 2026</span>
+                        <span><i class="far fa-star text-warning"></i> Đánh giá 5 sao</span>
+                    </div>
+                    <h3 class="blog-title">Lần Đầu Đặt Xe Limousine Đi Vũng Tàu Trải Nghiệm Chuẩn 5 Sao Nhưng Giá Bình
+                        Dân</h3>
+                    <p class="blog-excerpt">"Trải nghiệm tuyệt vời! Cứ ngỡ đặt xe riêng Limousine đi chơi lễ sẽ bị chặt
+                        chém nhưng không, TravelCar đã hiển thị mức giá rẻ hơn mình dự tính 20%. Xe xịn, tài xế cư xử
+                        rất nhã nhặn."</p>
+                    <div class="blog-author">
+                        <div class="author-avatar"><i class="fas fa-user-check"></i></div>
+                        <div class="author-info">
+                            <span class="author-name">Chị Thu Thủy</span>
+                            <span class="author-role">Khách hàng Bạch Kim</span>
+                        </div>
+                    </div>
+                </div>
+            </a>
+
+            <!-- Post 5: Driver Tips -->
+            <a href="#" class="blog-card">
+                <div class="blog-img-wrapper">
+                    <span class="blog-category-tag driver">Kỹ năng tài xế</span>
+                    <img src="https://images.unsplash.com/photo-1549317661-bd32c8ce0be2?w=800&q=80" alt="Tips"
+                        class="blog-img">
+                </div>
+                <div class="blog-content">
+                    <div class="blog-meta">
+                        <span><i class="far fa-calendar-alt"></i> 5 Thg 2, 2026</span>
+                    </div>
+                    <h3 class="blog-title">Mẹo Chăm Sóc Nội Thất Xe Của Các Bác Tài Kỹ Tính Nhất TravelCar</h3>
+                    <p class="blog-excerpt">Chiếc xe sạch sẽ là yếu tố đầu tiên giúp bạn ghi điểm 5 sao. Dưới đây là
+                        cách mà các đối tác hạng Kim Cương vệ sinh xe cực nhanh chỉ 10 phút sau mỗi chuyến đi.</p>
+                    <div class="blog-author">
+                        <div class="author-avatar"><i class="fas fa-tools"></i></div>
+                        <div class="author-info">
+                            <span class="author-name">Quản lý Đội Xe</span>
+                            <span class="author-role">TravelCar</span>
+                        </div>
+                    </div>
+                </div>
+            </a>
+
+            <!-- Post 6: Tour -->
+            <a href="#" class="blog-card">
+                <div class="blog-img-wrapper">
+                    <span class="blog-category-tag">Điểm đến</span>
+                    <img src="https://images.unsplash.com/photo-1559592413-7cec4d0cae2b?w=800&q=80" alt="Tour"
+                        class="blog-img">
+                </div>
+                <div class="blog-content">
+                    <div class="blog-meta">
+                        <span><i class="far fa-calendar-alt"></i> 1 Thg 2, 2026</span>
+                    </div>
+                    <h3 class="blog-title">Thuê Xe Tự Chọn Mộc Châu 2 Ngày 1 Đêm Siêu Tiết Kiệm</h3>
+                    <p class="blog-excerpt">Thay vì đi xe khách rồi phải chen lấn, gia đình 4 người thuê 1 chiếc sedan
+                        từ Hà Nội đi Mộc Châu ngắm hoa mận sẽ có chi phí rẻ hơn và thoải mái hơn khi sử dụng app. Đây là
+                        lý do!</p>
+                    <div class="blog-author">
+                        <div class="author-avatar"><i class="fas fa-map-marker-alt"></i></div>
+                        <div class="author-info">
+                            <span class="author-name">Khách hàng Xuân Bách</span>
+                            <span class="author-role">Chia sẻ hành trình</span>
+                        </div>
+                    </div>
+                </div>
+            </a>
+
+        </div>
+
+        <div class="blog-cta">
+            <button class="btn-secondary" style="margin-top:20px; border-radius:30px; padding:12px 30px">
+                <i class="fas fa-spinner" style="margin-right:8px"></i> Tải thêm bài viết
+            </button>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer>
+        <div class="footer-grid">
+            <div>
+                <div class="footer-logo">Travel<span>Car</span></div>
+                <p>Khởi động kỳ nghỉ của bạn trên những chuyến xe đạt chuẩn 5 sao cùng mạng lưới đối tác rộng khắp Việt
+                    Nam.</p>
+            </div>
+            <div>
+                <h4>Dịch vụ</h4>
+                <a href="index.html#vehicles-section">Các dòng xe</a>
+                <a href="travel-guide.html">Cẩm nang</a>
+                <a href="blog.html">Blog Tin tức</a>
+            </div>
+            <div>
+                <h4>Hỗ trợ</h4>
+                <a href="policy.html">Chính sách chung</a>
+                <a href="driver-register.html">Đăng ký lái xe</a>
+                <a href="about.html">Về chúng tôi</a>
+            </div>
+            <div>
+                <h4>Kết nối</h4>
+                <a href="admin.html"><i class="fas fa-shield-halved"></i> Quản trị CMS</a>
+                <a href="#"><i class="fas fa-envelope"></i> hi@travelcar.vn</a>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/config.js"></script>
+    <script src="js/script.js"></script>
+    <script>
+        // Init hamburger
+        document.addEventListener('DOMContentLoaded', () => {
+            const hamburger = document.querySelector('.hamburger');
+            if (hamburger) {
+                hamburger.addEventListener('click', () => document.querySelector('.nav-links').classList.toggle('active'));
+            }
+        });
+    </script>
+</body>
+
+</html>

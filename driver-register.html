@@ -4,9 +4,41 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Đăng Ký Đối Tác Tài Xế — TravelCar</title>
+    <title>Đăng Ký Đối Tác Tài Xế — Trở Thành Đối Tác TravelCar</title>
+
+    <!-- SEO Meta Tags -->
     <meta name="description"
-        content="Đăng ký xe tham gia dịch vụ TravelCar. Nhận cuốc xe tự động, matching thông minh, thu nhập ổn định.">
+        content="Đăng ký gia nhập cộng đồng đối tác tài xế TravelCar. Nhận chuyến đi tự động, thu nhập hấp dẫn, tự do thời gian, thanh toán nhanh chóng.">
+    <meta name="keywords"
+        content="đăng ký lái xe, đối tác tài xế TravelCar, việc làm lái xe, chạy xe ghép, chạy xe tiện chuyến, thu nhập tài xế">
+    <meta name="author" content="TravelCar Vietnam">
+    <meta name="robots" content="index, follow">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://travelcar.vn/driver-register.html">
+    <meta property="og:title" content="Trở Thành Đối Tác Tài Xế Cùng TravelCar">
+    <meta property="og:description"
+        content="Đăng ký xe tham gia dịch vụ TravelCar. Nhận cuốc xe tự động, thu nhập ổn định lên đến 20-30 triệu/tháng.">
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://travelcar.vn/driver-register.html">
+    <meta property="twitter:title" content="Đăng Ký Đối Tác Tài Xế — TravelCar">
+    <meta property="twitter:description"
+        content="Gia nhập cộng đồng tài xế TravelCar để gia tăng thu nhập tự do mỗi tháng.">
+
+    <!-- JSON-LD Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebPage",
+      "name": "Đăng Ký Trở Thành Đối Tác Tài Xế",
+      "url": "https://travelcar.vn/driver-register.html",
+      "description": "Tham gia vào mạng lưới tài xế TravelCar chuyên nghiệp."
+    }
+    </script>
+
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
         rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
@@ -382,17 +414,23 @@
 
     <!-- NAV -->
     <nav>
-        <a href="index.html" class="logo" style="text-decoration:none">Travel<span>Car</span></a>
-        <button class="hamburger" aria-label="Menu">
-            <span></span><span></span><span></span>
-        </button>
+        <a href="index.html" class="logo">Travel<span>Car</span></a>
+
         <div class="nav-links">
-            <a href="index.html">Trang chủ</a>
-            <a href="index.html#pricing-section">Bảng giá</a>
-            <a href="index.html#vehicles-section">Loại xe</a>
-            <a href="index.html#routes-section">Tuyến đường</a>
-            <a href="driver-register.html" style="color:#ff9800">Đối tác tài xế</a>
-            <a href="index.html#booking-section" class="btn-primary">Đặt xe ngay</a>
+            <a href="index.html" class="nav-item">Trang chủ</a>
+            <a href="index.html#pricing-section" class="nav-item">Bảng giá</a>
+            <a href="index.html#vehicles-section" class="nav-item">Loại xe</a>
+            <a href="index.html#routes-section" class="nav-item">Tuyến đường</a>
+            <a href="driver-register.html" class="nav-item" style="color:#ff9800">Đối tác tài xế</a>
+            <a href="index.html#booking-section" class="btn-nav-cta mobile-only">Đặt xe ngay</a>
+        </div>
+
+        <div class="nav-actions">
+            <a href="index.html#booking-section" class="btn-nav-cta desktop-only">Đặt xe ngay</a>
+
+            <button class="hamburger" aria-label="Menu">
+                <span></span><span></span><span></span>
+            </button>
         </div>
     </nav>
 
@@ -680,7 +718,8 @@
                 const result = await submitDriverRegistration(data);
                 if (result.error) {
                     console.error('Registration error:', result.error);
-                    showNotification('Đăng ký đã được ghi nhận!');
+                    showNotification(result.error.message || 'Có lỗi xảy ra. Vui lòng thử lại.', 'error');
+                    return;
                 } else {
                     showNotification('Đăng ký thành công! Chúng tôi sẽ liên hệ xác nhận trong 24h.');
                 }

@@ -35,7 +35,7 @@ const VEHICLE_TYPES = [
         name: 'Xe 4 chỗ',
         seats: 4,
         icon: 'fa-car',
-        description: 'Sedan, phù hợp 1-3 khách',
+        description: 'Sedan (Vios, Accent...), phù hợp 1-3 khách',
         image: 'https://images.unsplash.com/photo-1549399542-7e3f8b79c341?w=600&q=80',
         priceMultiplier: 1.0
     },
@@ -44,9 +44,72 @@ const VEHICLE_TYPES = [
         name: 'Xe 7 chỗ',
         seats: 7,
         icon: 'fa-van-shuttle',
-        description: 'SUV/MPV, phù hợp 4-6 khách',
+        description: 'SUV/MPV (Xpander, Innova), phù hợp 4-6 khách',
         image: 'https://images.unsplash.com/photo-1519641471654-76ce0107ad1b?w=600&q=80',
         priceMultiplier: 1.3
+    },
+    {
+        id: 'limousine-9',
+        name: 'Limousine 9 chỗ',
+        seats: 9,
+        icon: 'fa-crown',
+        description: 'Khoang hạng thương gia, VIP, rất êm ái',
+        image: 'https://images.unsplash.com/photo-1596541671981-d93541178a57?w=600&q=80', // Hình nội thất VIP
+        priceMultiplier: 2.2
+    },
+    {
+        id: 'van-16',
+        name: 'Xe 16 chỗ',
+        seats: 16,
+        icon: 'fa-shuttle-van',
+        description: 'Ford Transit, Solati - Cho đại gia đình',
+        image: 'https://images.unsplash.com/photo-1568285908226-0043c5b8e4e0?w=600&q=80', // Hình xe dài van
+        priceMultiplier: 1.8
+    },
+    {
+        id: 'bus-29',
+        name: 'Xe 29 chỗ',
+        seats: 29,
+        icon: 'fa-bus-alt',
+        description: 'Samco, Thaco - Cho đoàn du lịch cỡ trung',
+        image: 'https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?w=600&q=80', // Hình xe bus nhỏ
+        priceMultiplier: 2.6
+    },
+    {
+        id: 'bus-45',
+        name: 'Xe 45 chỗ',
+        seats: 45,
+        icon: 'fa-bus',
+        description: 'Universe - Dành cho tour, sự kiện lớn',
+        image: 'https://images.unsplash.com/photo-1570125909232-eb263c188f7e?w=600&q=80', // Hình xe bus lớn
+        priceMultiplier: 3.5
+    },
+    {
+        id: 'luxury-4',
+        name: 'Xe Sang & VIP',
+        seats: 4,
+        icon: 'fa-gem',
+        description: 'Mercedes, BMW, VinFast VF9... Sang trọng, đẳng cấp',
+        image: 'https://images.unsplash.com/photo-1542282088-72c9c27ed0cd?w=600&q=80',
+        priceMultiplier: 3.0
+    },
+    {
+        id: 'truck-500',
+        name: 'Xe tải chở hàng',
+        seats: 2,
+        icon: 'fa-truck-fast',
+        description: 'Xe tải 500kg - 1.5 tấn. Tủ đông lạnh, thiết bị',
+        image: 'https://images.unsplash.com/photo-1601584115197-04ecc0da31d7?w=600&q=80',
+        priceMultiplier: 1.5
+    },
+    {
+        id: 'moving-service',
+        name: 'Dịch vụ dọn nhà',
+        seats: 2,
+        icon: 'fa-boxes-packing',
+        description: 'Xe tải lớn, bao gồm phí đóng gói & bốc xếp',
+        image: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=600&q=80',
+        priceMultiplier: 5.0
     }
 ];
 

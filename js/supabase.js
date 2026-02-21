@@ -30,50 +30,57 @@ function initSupabase() {
 // ===== DATABASE OPERATIONS =====
 
 /**
- * Submit a booking request
+ * Submit a booking request (rate-limited: 5/SĐT/giờ)
  */
 async function submitBooking(bookingData) {
     if (!db) return { error: 'Supabase not initialized' };
 
-    const { data, error } = await db
-        .from('bookings')
-        .insert([{
-            pickup_location: bookingData.pickup,
-            dropoff_location: bookingData.dropoff,
-            date_go: bookingData.date_go,
-            date_return: bookingData.date_return || null,
-            vehicle_type: bookingData.vehicle_type,
-            distance_km: parseInt(bookingData.distance_km) || null,
-            estimated_fare: bookingData.estimated_fare || null,
-            customer_phone: bookingData.phone,
-            status: 'pending'
-        }])
-        .select();
+    const { data, error } = await db.rpc('submit_booking_rated', {
+        p_pickup: bookingData.pickup,
+        p_dropoff: bookingData.dropoff,
+        p_date_go: bookingData.date_go,
+        p_date_return: bookingData.date_return || null,
+        p_vehicle_type: bookingData.vehicle_type,
+        p_distance_km: parseInt(bookingData.distance_km) || null,
+        p_estimated_fare: bookingData.estimated_fare || null,
+        p_phone: bookingData.phone,
+        p_customer_name: bookingData.customer_name || null
+    });
 
-    return { data, error };
+    if (error) return { data: null, error };
+
+    // RPC trả JSON — handle rate limit
+    if (data && !data.success) {
+        return { data: null, error: { message: data.error } };
+    }
+
+    return { data: data?.booking ? [data.booking] : null, error: null };
 }
 
 /**
- * Submit a driver registration
+ * Submit a driver registration (rate-limited: 3/SĐT/ngày)
  */
 async function submitDriverRegistration(driverData) {
     if (!db) return { error: 'Supabase not initialized' };
 
-    const { data, error } = await db
-        .from('drivers')
-        .insert([{
-            full_name: driverData.full_name,
-            phone: driverData.phone,
-            email: driverData.email || null,
-            vehicle_type: driverData.vehicle_type,
-            license_plate: driverData.license_plate,
-            vehicle_brand: driverData.vehicle_brand || null,
-            operating_areas: driverData.areas || [],
-            status: 'pending'
-        }])
-        .select();
+    const { data, error } = await db.rpc('submit_driver_registration_rated', {
+        p_full_name: driverData.full_name,
+        p_phone: driverData.phone,
+        p_email: driverData.email || null,
+        p_vehicle_type: driverData.vehicle_type,
+        p_license_plate: driverData.license_plate,
+        p_vehicle_brand: driverData.vehicle_brand || null,
+        p_operating_areas: driverData.areas || []
+    });
 
-    return { data, error };
+    if (error) return { data: null, error };
+
+    // RPC trả JSON — handle rate limit
+    if (data && !data.success) {
+        return { data: null, error: { message: data.error } };
+    }
+
+    return { data: data?.driver ? [data.driver] : null, error: null };
 }
 
 /**
@@ -416,7 +423,7 @@ async function lookupBookingsByPhone(phone) {
         const driverIds = [...new Set(data.filter(b => b.driver_id).map(b => b.driver_id))];
         if (driverIds.length > 0) {
             const { data: drivers } = await db.from('drivers')
-                .select('id, full_name, phone, license_plate, vehicle_brand, rating')
+                .select('id, full_name, phone, license_plate, vehicle_brand, average_rating, total_ratings')
                 .in('id', driverIds);
             const driverMap = {};
             (drivers || []).forEach(d => driverMap[d.id] = d);
@@ -428,4 +435,35 @@ async function lookupBookingsByPhone(phone) {
         }
     }
     return { data: data || [], error };
+}
+
+// ===== ADMIN AUTHENTICATION =====
+
+/** Đăng nhập admin bằng email + password (Supabase Auth) */
+async function signInAdmin(email, password) {
+    if (!db) return { data: null, error: 'Supabase not initialized' };
+    const { data, error } = await db.auth.signInWithPassword({ email, password });
+    return { data, error };
+}
+
+/** Đăng xuất admin */
+async function signOutAdmin() {
+    if (!db) return { error: 'Supabase not initialized' };
+    const { error } = await db.auth.signOut();
+    return { error };
+}
+
+/** Kiểm tra session admin hiện tại */
+async function checkAdminSession() {
+    if (!db) return { session: null };
+    const { data: { session }, error } = await db.auth.getSession();
+    return { session, error };
+}
+
+/** Lắng nghe thay đổi auth state */
+function onAdminAuthChange(callback) {
+    if (!db) return null;
+    return db.auth.onAuthStateChange((event, session) => {
+        callback(event, session);
+    });
 }

@@ -59,8 +59,7 @@ function toggleUserMenu() {
     if (dropdown) dropdown.classList.toggle('show');
 }
 
-function checkAdminAuth() {
-    const isAdmin = localStorage.getItem('admin_auth') === 'true';
+async function checkAdminAuth() {
     const avatarBtn = document.getElementById('user-avatar-btn');
     const loggedOut = document.getElementById('dropdown-logged-out');
     const loggedIn = document.getElementById('dropdown-logged-in');
@@ -68,6 +67,20 @@ function checkAdminAuth() {
     const roleEl = document.querySelector('.user-dropdown-role');
 
     if (!avatarBtn) return;
+
+    // Kiểm tra Supabase Auth session, fallback localStorage
+    let isAdmin = false;
+    try {
+        if (typeof checkAdminSession === 'function') {
+            const { session } = await checkAdminSession();
+            isAdmin = !!session;
+        }
+    } catch (e) {
+        // Fallback
+    }
+    if (!isAdmin) {
+        isAdmin = localStorage.getItem('admin_auth') === 'true';
+    }
 
     if (isAdmin) {
         avatarBtn.classList.add('logged-in');
@@ -86,9 +99,12 @@ function checkAdminAuth() {
     }
 }
 
-function doAdminLogout() {
+async function doAdminLogout() {
+    if (typeof signOutAdmin === 'function') {
+        await signOutAdmin();
+    }
     localStorage.removeItem('admin_auth');
-    checkAdminAuth();
+    await checkAdminAuth();
     const dropdown = document.getElementById('user-dropdown');
     if (dropdown) dropdown.classList.remove('show');
     showNotification('Đã đăng xuất');
@@ -250,7 +266,8 @@ function initBookingForm() {
 
         if (result.error) {
             console.error('Booking error:', result.error);
-            showNotification('Đặt xe thành công! Đang tìm tài xế...');
+            showNotification(result.error.message || 'Có lỗi xảy ra. Vui lòng thử lại.', 'error');
+            return;
         }
 
         // Show confirmation modal
@@ -529,7 +546,7 @@ async function submitRating() {
     btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Đang gửi...';
     btn.classList.add('btn-loading');
 
-    const { error } = await supabase.from('bookings').update({
+    const { error } = await db.from('bookings').update({
         rating: currentRatingVal,
         review_text: review
     }).eq('id', bookingId);

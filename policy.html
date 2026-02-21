@@ -4,9 +4,40 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chính Sách Dịch Vụ — TravelCar</title>
+    <title>Chính Sách Dịch Vụ & Bảo Mật — TravelCar</title>
+
+    <!-- SEO Meta Tags -->
     <meta name="description"
+        content="Chi tiết về chính sách giá cước, quy chế hợp tác tài xế, chính sách bảo mật, hoàn tiền và điều khoản sử dụng nền tảng TravelCar.">
+    <meta name="keywords"
+        content="chính sách TravelCar, điều khoản sử dụng, chính sách bảo mật, quy chế tài xế, quy định hủy chuyến">
+    <meta name="author" content="TravelCar Vietnam">
+    <meta name="robots" content="index, follow">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://travelcar.vn/policy.html">
+    <meta property="og:title" content="Chính Sách & Điều Khoản — TravelCar">
+    <meta property="og:description"
         content="Chính sách giá cước, quy chế hợp tác tài xế, chính sách bảo mật và điều khoản sử dụng TravelCar.">
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://travelcar.vn/policy.html">
+    <meta property="twitter:title" content="Chính Sách Dịch Vụ — TravelCar">
+    <meta property="twitter:description" content="Chi tiết về chính sách và điều khoản sử dụng nền tảng TravelCar.">
+
+    <!-- JSON-LD Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebPage",
+      "name": "Chính Sách & Điều Khoản",
+      "url": "https://travelcar.vn/policy.html",
+      "description": "Các chính sách, quy chế và điều khoản tại TravelCar."
+    }
+    </script>
+
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
         rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
@@ -221,14 +252,22 @@
 
 <body>
     <nav>
-        <a href="index.html" class="logo" style="text-decoration:none">Travel<span>Car</span></a>
-        <button class="hamburger" aria-label="Menu"><span></span><span></span><span></span></button>
+        <a href="index.html" class="logo">Travel<span>Car</span></a>
+
         <div class="nav-links">
-            <a href="index.html">Trang chủ</a>
-            <a href="index.html#pricing-section">Bảng giá</a>
-            <a href="about.html">Về chúng tôi</a>
-            <a href="policy.html" style="color:#ff9800">Chính sách</a>
-            <a href="index.html#booking-section" class="btn-primary">Đặt xe ngay</a>
+            <a href="index.html" class="nav-item">Trang chủ</a>
+            <a href="index.html#pricing-section" class="nav-item">Bảng giá</a>
+            <a href="about.html" class="nav-item">Về chúng tôi</a>
+            <a href="policy.html" class="nav-item" style="color:#ff9800">Chính sách</a>
+            <a href="index.html#booking-section" class="btn-nav-cta mobile-only">Đặt xe ngay</a>
+        </div>
+
+        <div class="nav-actions">
+            <a href="index.html#booking-section" class="btn-nav-cta desktop-only">Đặt xe ngay</a>
+
+            <button class="hamburger" aria-label="Menu">
+                <span></span><span></span><span></span>
+            </button>
         </div>
     </nav>
 
@@ -417,7 +456,8 @@
 
             <div class="info-box">
                 <p><i class="fas fa-info-circle"></i> Liên hệ bộ phận B2B để nhận báo giá chi tiết:
-                    <strong>b2b@travelcar.vn</strong> · Hotline: <strong>1900 xxxx</strong></p>
+                    <strong>b2b@travelcar.vn</strong> · Hotline: <strong>1900 xxxx</strong>
+                </p>
             </div>
         </div>
 

@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Primary Meta Tags -->
+    <title>Cẩm Nang Du Lịch Theo Mùa | TravelCar - Đặt Xe Giá Rẻ</title>
+    <meta name="title" content="Cẩm Nang Du Lịch Theo Mùa | TravelCar - Đặt Xe Giá Rẻ">
+    <meta name="description"
+        content="Khám phá các điểm đến lý tưởng nhất cho từng tháng trong năm. Cẩm nang du lịch từ TravelCar giúp bạn lên kế hoạch chuyến đi hoàn hảo.">
+
+    <link rel="icon" type="image/svg+xml"
+        href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🚗</text></svg>">
+
+    <!-- Fonts & Icons -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="css/style.css">
+
+    <style>
+        .page-hero {
+            padding: 140px 20px 80px;
+            text-align: center;
+            background: linear-gradient(to bottom, rgba(10, 14, 26, 1), #0f172a);
+        }
+
+        .page-hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 20px;
+        }
+
+        .page-hero h1 span {
+            background: linear-gradient(to right, #ff9800, #ff5722);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .page-hero p {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 1.2rem;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        /* Timeline Styles */
+        .timeline-section {
+            padding: 80px 5%;
+            background: #0a0e1a;
+            color: #fff;
+        }
+
+        .timeline-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .timeline-container::before {
+            content: '';
+            position: absolute;
+            width: 2px;
+            background: rgba(255, 152, 0, 0.3);
+            top: 0;
+            bottom: 0;
+            left: 50%;
+            margin-left: -1px;
+        }
+
+        .timeline-item {
+            padding: 10px 40px;
+            position: relative;
+            background-color: inherit;
+            width: 50%;
+            box-sizing: border-box;
+            margin-bottom: 40px;
+        }
+
+        .timeline-item.left {
+            left: 0;
+        }
+
+        .timeline-item.right {
+            left: 50%;
+        }
+
+        .timeline-marker {
+            position: absolute;
+            width: 40px;
+            height: 40px;
+            right: -20px;
+            background: #0f172a;
+            border: 4px solid #ff9800;
+            top: 15px;
+            border-radius: 50%;
+            z-index: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: #ff9800;
+            box-shadow: 0 0 15px rgba(255, 152, 0, 0.5);
+        }
+
+        .timeline-item.right .timeline-marker {
+            left: -20px;
+        }
+
+        .timeline-content {
+            padding: 30px;
+            background: rgba(255, 255, 255, 0.03);
+            position: relative;
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: all 0.3s ease;
+        }
+
+        .timeline-content:hover {
+            transform: translateY(-5px);
+            border-color: rgba(255, 152, 0, 0.3);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .timeline-month {
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: #ff9800;
+            font-weight: 700;
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        .timeline-content h3 {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            color: #fff;
+        }
+
+        .timeline-content p {
+            color: rgba(255, 255, 255, 0.7);
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .timeline-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .timeline-tag {
+            padding: 5px 12px;
+            background: rgba(255, 152, 0, 0.1);
+            color: #ff9800;
+            border-radius: 100px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .timeline-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 12px;
+            margin-bottom: 20px;
+        }
+
+        @media screen and (max-width: 768px) {
+            .timeline-container::before {
+                left: 31px;
+            }
+
+            .timeline-item {
+                width: 100%;
+                padding-left: 70px;
+                padding-right: 0;
+            }
+
+            .timeline-item.right {
+                left: 0;
+            }
+
+            .timeline-item.left .timeline-marker,
+            .timeline-item.right .timeline-marker {
+                left: 11px;
+            }
+
+            .page-hero h1 {
+                font-size: 2.5rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- NAV -->
+    <nav>
+        <a href="index.html" class="logo">Travel<span>Car</span></a>
+
+        <div class="nav-links">
+            <a href="index.html" class="nav-item">Trang chủ</a>
+            <a href="index.html#pricing-section" class="nav-item">Bảng giá</a>
+            <a href="about.html" class="nav-item">Về chúng tôi</a>
+            <a href="travel-guide.html" class="nav-item" style="color:#ff9800">Cẩm nang</a>
+            <a href="index.html#booking-section" class="btn-nav-cta mobile-only">Đặt xe ngay</a>
+        </div>
+
+        <div class="nav-actions">
+            <a href="index.html#booking-section" class="btn-nav-cta desktop-only">Đặt xe ngay</a>
+
+            <button class="hamburger" aria-label="Menu">
+                <span></span><span></span><span></span>
+            </button>
+        </div>
+    </nav>
+
+    <section class="page-hero">
+        <h1>Cẩm Nang <span>Du Lịch 4 Mùa</span></h1>
+        <p>Khám phá bản đồ du lịch độc đáo theo từng tháng cùng TravelCar. Đặt xe đi muôn nơi với giá tốt nhất.</p>
+    </section>
+
+    <section class="timeline-section">
+        <div class="timeline-container">
+
+            <!-- Item 1 -->
+            <div class="timeline-item left">
+                <div class="timeline-marker"><i class="fas fa-snowflake"></i></div>
+                <div class="timeline-content">
+                    <span class="timeline-month">Tháng 1 - Tháng 3</span>
+                    <h3>Săn Mây Tây Bắc & Du Xuân Đầu Năm</h3>
+                    <img src="https://images.unsplash.com/photo-1559592413-7cec4d0cae2b?w=800&q=80" alt="Sapa mùa xuân"
+                        class="timeline-image">
+                    <p>Khởi đầu năm mới bằng những chuyến đi ngắm hoa mận hoa đào nở rộ ở Mộc Châu, Hà Giang hay săn mây
+                        Tà Xùa. Đầu năm cũng là thời điểm tuyệt vời cho các chuyến du lịch tâm linh, đi lễ chùa đầu năm
+                        với sự đồng hành an toàn từ đội ngũ tài xế TravelCar.</p>
+                    <div class="timeline-tags">
+                        <span class="timeline-tag">Hà Giang</span>
+                        <span class="timeline-tag">Sapa</span>
+                        <span class="timeline-tag">Mộc Châu</span>
+                        <span class="timeline-tag">Lễ Hội</span>
+                    </div>
+                    <a href="index.html#booking-section" class="btn-secondary">Thuê xe đi Tây Bắc</a>
+                </div>
+            </div>
+
+            <!-- Item 2 -->
+            <div class="timeline-item right">
+                <div class="timeline-marker"><i class="fas fa-sun"></i></div>
+                <div class="timeline-content">
+                    <span class="timeline-month">Tháng 4 - Tháng 6</span>
+                    <h3>Đón Nắng Hè Rực Rỡ Biển Đảo</h3>
+                    <img src="https://images.unsplash.com/photo-1504214208698-ea1916a2195a?w=800&q=80"
+                        alt="Biển Nha Trang" class="timeline-image">
+                    <p>Mùa hè gọi tên những bãi biển xanh ngắt đầy nắng. TravelCar cung cấp các dòng xe Limousine giường
+                        nằm và xe cỡ lớn 16-45 chỗ để phục vụ các gia đình, công ty tổ chức team building tại Vũng Tàu,
+                        Nha Trang, Phan Thiết hay Quy Nhơn.</p>
+                    <div class="timeline-tags">
+                        <span class="timeline-tag">Nha Trang</span>
+                        <span class="timeline-tag">Phan Thiết</span>
+                        <span class="timeline-tag">Vũng Tàu</span>
+                        <span class="timeline-tag">Team Building</span>
+                    </div>
+                    <a href="index.html#booking-section" class="btn-secondary">Thuê xe đi Biển</a>
+                </div>
+            </div>
+
+            <!-- Item 3 -->
+            <div class="timeline-item left">
+                <div class="timeline-marker"><i class="fas fa-leaf"></i></div>
+                <div class="timeline-content">
+                    <span class="timeline-month">Tháng 7 - Tháng 9</span>
+                    <h3>Mùa Thu Hà Nội & Sóng Nước Miền Tây</h3>
+                    <img src="https://images.unsplash.com/photo-1582298538104-fe2e74c27f59?w=800&q=80"
+                        alt="Hà Nội mùa thu" class="timeline-image">
+                    <p>Trong khi miền Bắc bước vào thu vô cùng lãng mạn thì miền Tây Nam Bộ lại bước vào mùa nước nổi
+                        nhộn nhịp. Một chuyến đi dạo quanh Đồng Bằng Sông Cửu Long thưởng thức đặc sản tôm cá, hoặc lên
+                        Đà Lạt ngắm sương mù mát lạnh.</p>
+                    <div class="timeline-tags">
+                        <span class="timeline-tag">Miền Tây</span>
+                        <span class="timeline-tag">Cần Thơ</span>
+                        <span class="timeline-tag">Hà Nội</span>
+                        <span class="timeline-tag">Đà Lạt</span>
+                    </div>
+                    <a href="index.html#booking-section" class="btn-secondary">Thuê xe Miền Tây</a>
+                </div>
+            </div>
+
+            <!-- Item 4 -->
+            <div class="timeline-item right">
+                <div class="timeline-marker"><i class="fas fa-mountain"></i></div>
+                <div class="timeline-content">
+                    <span class="timeline-month">Tháng 10 - Tháng 12</span>
+                    <h3>Lễ Hội Cuối Năm & Mùa Hoa Dã Quỳ</h3>
+                    <img src="https://images.unsplash.com/photo-1601584115197-04ecc0da31d7?w=800&q=80"
+                        alt="Du lịch cuối năm" class="timeline-image">
+                    <p>Cuối năm là mùa của các chuyến du lịch xả stress và tiệc tùng. Khám phá những cung đường ngập
+                        tràn sắc vàng Dã Quỳ tại Đà Lạt, hay tận hưởng cái lạnh cuối năm ở điểm đến yêu thích của bạn.
+                        TravelCar hỗ trợ phục vụ xe đưa đón tiệc Tất niên 24/7 an toàn vui vẻ.</p>
+                    <div class="timeline-tags">
+                        <span class="timeline-tag">Đà Lạt</span>
+                        <span class="timeline-tag">Tất niên</span>
+                        <span class="timeline-tag">Giáng sinh</span>
+                    </div>
+                    <a href="index.html#booking-section" class="btn-secondary">Đặt xe ngay</a>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer>
+        <div class="footer-grid">
+            <div>
+                <div class="footer-logo">Travel<span>Car</span></div>
+                <p>Dịch vụ đặt xe du lịch chuyên nghiệp hàng đầu Việt Nam.</p>
+                <div style="margin-top: 15px; display: flex; gap: 10px;">
+                    <a href="#" style="color: rgba(255,255,255,0.5); font-size: 1.2rem;"><i
+                            class="fab fa-facebook"></i></a>
+                    <a href="#" style="color: rgba(255,255,255,0.5); font-size: 1.2rem;"><i
+                            class="fab fa-tiktok"></i></a>
+                </div>
+            </div>
+            <div>
+                <h4>Dịch vụ</h4>
+                <a href="index.html#vehicles-section">Tất cả loại xe</a>
+                <a href="index.html#pricing-section">Bảng giá cước</a>
+                <a href="travel-guide.html">Cẩm nang du lịch</a>
+            </div>
+            <div>
+                <h4>Đối tác & Hỗ trợ</h4>
+                <a href="driver-register.html">Đăng ký tài xế</a>
+                <a href="policy.html">Chính sách & Quy định</a>
+                <a href="about.html">Về TravelCar</a>
+            </div>
+            <div>
+                <h4>Liên hệ</h4>
+                <a href="#"><i class="fas fa-phone"></i> 1900 xxxx</a>
+                <a href="#"><i class="fas fa-envelope"></i> info@travelcar.vn</a>
+                <a href="admin.html"><i class="fas fa-shield-halved"></i> Admin CMS</a>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 TravelCar. Phát triển bởi Antigravity & ClaudeCode.</p>
+        </div>
+    </footer>
+
+    <!-- SCROLL TO TOP -->
+    <button id="scrollToTopBtn" title="Lên đầu trang"><i class="fas fa-arrow-up"></i></button>
+
+    <script src="js/config.js"></script>
+    <script src="js/script.js"></script>
+    <script>
+        // Init hamburger
+        document.addEventListener('DOMContentLoaded', () => {
+            const hamburger = document.querySelector('.hamburger');
+            if (hamburger) {
+                hamburger.addEventListener('click', () => document.querySelector('.nav-links').classList.toggle('active'));
+            }
+
+            // Scroll btn
+            const scrollBtn = document.getElementById("scrollToTopBtn");
+            if (scrollBtn) {
+                window.onscroll = () => scrollBtn.style.display = (document.body.scrollTop > 300 || document.documentElement.scrollTop > 300) ? "flex" : "none";
+                scrollBtn.onclick = () => window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        });
+    </script>
+</body>
+
+</html>

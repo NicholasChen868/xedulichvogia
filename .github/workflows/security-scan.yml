@@ -1,0 +1,124 @@
+name: Security Scan
+
+on:
+  schedule:
+    - cron: '0 6 * * *'  # 6:00 UTC hàng ngày (13:00 VN)
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  secret-scan:
+    runs-on: ubuntu-latest
+    name: Secret Leak Detection
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Run Gitleaks
+        uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  dependency-audit:
+    runs-on: ubuntu-latest
+    name: Dependency Vulnerability Scan
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        run: npm ci --ignore-scripts 2>/dev/null || npm install --ignore-scripts 2>/dev/null || echo "No package-lock.json"
+
+      - name: Run npm audit
+        run: |
+          echo "### Dependency Audit" >> $GITHUB_STEP_SUMMARY
+          if npm audit --production 2>/dev/null; then
+            echo "✅ No vulnerabilities found" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "⚠️ Vulnerabilities detected — review npm audit output" >> $GITHUB_STEP_SUMMARY
+          fi
+        continue-on-error: true
+
+  code-security:
+    runs-on: ubuntu-latest
+    name: Code Security Patterns
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Check for hardcoded secrets
+        run: |
+          echo "Scanning for potential secrets in code..."
+          ISSUES=0
+
+          # Check for hardcoded API keys (not anon keys which are safe)
+          if grep -rn "service_role\|serviceRole\|SERVICE_ROLE" --include="*.js" --include="*.html" --include="*.ts" . 2>/dev/null | grep -v node_modules | grep -v ".git"; then
+            echo "⚠️ Service role key found in code"
+            ISSUES=$((ISSUES + 1))
+          fi
+
+          # Check for hardcoded passwords
+          if grep -rn "password.*=.*['\"]" --include="*.js" --include="*.html" . 2>/dev/null | grep -v node_modules | grep -v ".git" | grep -v "placeholder\|type=\|getElementById\|password.*required"; then
+            echo "⚠️ Potential hardcoded password found"
+            ISSUES=$((ISSUES + 1))
+          fi
+
+          # Check for eval() usage
+          if grep -rn "eval(" --include="*.js" . 2>/dev/null | grep -v node_modules | grep -v ".git"; then
+            echo "⚠️ eval() usage detected"
+            ISSUES=$((ISSUES + 1))
+          fi
+
+          # Check for innerHTML with user input
+          if grep -rn "innerHTML.*\+" --include="*.js" . 2>/dev/null | grep -v node_modules | grep -v ".git" | head -5; then
+            echo "ℹ️ innerHTML concatenation found (review for XSS)"
+          fi
+
+          echo ""
+          if [ $ISSUES -eq 0 ]; then
+            echo "✅ No critical security issues found"
+          else
+            echo "❌ Found $ISSUES potential security issue(s)"
+          fi
+
+      - name: Check security headers in vercel.json
+        run: |
+          if [ -f "vercel.json" ]; then
+            echo "Verifying security headers in vercel.json..."
+            MISSING=0
+
+            for header in "X-Frame-Options" "X-Content-Type-Options" "Strict-Transport-Security" "Content-Security-Policy" "Referrer-Policy"; do
+              if grep -q "$header" vercel.json; then
+                echo "✅ $header configured"
+              else
+                echo "❌ $header MISSING"
+                MISSING=$((MISSING + 1))
+              fi
+            done
+
+            if [ $MISSING -gt 0 ]; then
+              echo "⚠️ $MISSING security header(s) missing from vercel.json"
+              exit 1
+            fi
+          else
+            echo "❌ vercel.json not found — no security headers configured"
+            exit 1
+          fi
+
+      - name: Post Security Summary
+        if: always()
+        run: |
+          echo "### 🔒 Security Scan Results" >> $GITHUB_STEP_SUMMARY
+          echo "**Date:** $(date -u '+%Y-%m-%d %H:%M UTC')" >> $GITHUB_STEP_SUMMARY
+          echo "**Branch:** ${{ github.ref_name }}" >> $GITHUB_STEP_SUMMARY

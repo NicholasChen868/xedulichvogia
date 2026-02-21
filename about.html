@@ -4,9 +4,43 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Về Chúng Tôi — TravelCar</title>
+    <title>Về Chúng Tôi — TravelCar | Nền tảng Đặt Xe Du Lịch Hàng Đầu</title>
+
+    <!-- SEO Meta Tags -->
     <meta name="description"
+        content="Khám phá TravelCar, nền tảng đặt xe du lịch đầu tiên tại Việt Nam cho phép khách hàng biết trước xe và tài xế phục vụ. Với phương châm An toàn - Minh bạch - Chuyên nghiệp.">
+    <meta name="keywords" content="TravelCar, về chúng tôi, đặt xe an toàn, lịch sử TravelCar, công ty thuê xe du lịch">
+    <meta name="author" content="TravelCar Vietnam">
+    <meta name="robots" content="index, follow">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://travelcar.vn/about.html">
+    <meta property="og:title" content="Về Chúng Tôi — Nền Tảng Booking TravelCar">
+    <meta property="og:description"
         content="TravelCar — ứng dụng đầu tiên về dịch vụ xe đường dài tại Việt Nam. Biết trước xe và tài xế phục vụ bạn.">
+    <meta property="og:image" content="https://images.unsplash.com/photo-1518081461904-9d8f136351c2?w=1200&q=80">
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://travelcar.vn/about.html">
+    <meta property="twitter:title" content="Về Chúng Tôi — TravelCar">
+    <meta property="twitter:description"
+        content="Khám phá TravelCar, nền tảng đặt xe du lịch chuyên nghiệp tại Việt Nam.">
+    <meta property="twitter:image" content="https://images.unsplash.com/photo-1518081461904-9d8f136351c2?w=1200&q=80">
+
+    <!-- JSON-LD Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Organization",
+      "name": "TravelCar",
+      "url": "https://travelcar.vn/",
+      "logo": "https://images.unsplash.com/photo-1518081461904-9d8f136351c2?w=200&q=80",
+      "description": "Nền tảng đặt xe du lịch hàng đầu Việt Nam"
+    }
+    </script>
+
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
         rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
@@ -189,14 +223,22 @@
 
 <body>
     <nav>
-        <a href="index.html" class="logo" style="text-decoration:none">Travel<span>Car</span></a>
-        <button class="hamburger" aria-label="Menu"><span></span><span></span><span></span></button>
+        <a href="index.html" class="logo">Travel<span>Car</span></a>
+
         <div class="nav-links">
-            <a href="index.html">Trang chủ</a>
-            <a href="index.html#pricing-section">Bảng giá</a>
-            <a href="about.html" style="color:#ff9800">Về chúng tôi</a>
-            <a href="driver-register.html">Đối tác tài xế</a>
-            <a href="index.html#booking-section" class="btn-primary">Đặt xe ngay</a>
+            <a href="index.html" class="nav-item">Trang chủ</a>
+            <a href="index.html#pricing-section" class="nav-item">Bảng giá</a>
+            <a href="about.html" class="nav-item" style="color:#ff9800">Về chúng tôi</a>
+            <a href="driver-register.html" class="nav-item">Đối tác tài xế</a>
+            <a href="index.html#booking-section" class="btn-nav-cta mobile-only">Đặt xe ngay</a>
+        </div>
+
+        <div class="nav-actions">
+            <a href="index.html#booking-section" class="btn-nav-cta desktop-only">Đặt xe ngay</a>
+
+            <button class="hamburger" aria-label="Menu">
+                <span></span><span></span><span></span>
+            </button>
         </div>
     </nav>
 

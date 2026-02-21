@@ -41,12 +41,12 @@ description: Danh sách tasks và phân công cho dự án TravelCar
 ## 🔴 CẦN LÀM — Antigravity (Frontend) — Ưu tiên cao
 
 ### Batch tiếp: Đánh giá + Blog + Admin charts
-- [ ] **Hệ thống đánh giá tài xế** — sao + review sau mỗi chuyến
-- [ ] **Biểu đồ thống kê Admin** — chart doanh thu, số đơn theo ngày
-- [ ] **Trang blog/tin tức** — đăng bài tài xế, review khách hàng
-- [ ] **Content du lịch theo mùa** — timeline bài viết theo tháng
-- [ ] **Biểu mẫu góp ý tài xế** — tài xế góp ý dịch vụ
-- [ ] **SEO meta tags** — OG tags, structured data
+- [x] **Hệ thống đánh giá tài xế** — sao + review sau mỗi chuyến ✅ 21/02
+- [x] **Biểu đồ thống kê Admin** — chart doanh thu, số đơn theo ngày ✅ 21/02
+- [x] **Trang blog/tin tức** — đăng bài tài xế, review khách hàng (Đang cân nhắc Backend Blog)
+- [x] **Content du lịch theo mùa** — timeline bài viết theo tháng ✅ 21/02
+- [x] **Biểu mẫu góp ý tài xế** — tài xế góp ý dịch vụ ✅ 21/02
+- [x] **SEO meta tags** — OG tags, structured data ✅ 21/02
 
 ### Sau demo:
 - [ ] **Cho khách chọn tài xế** — dựa trên bài viết và đánh giá
@@ -64,38 +64,48 @@ description: Danh sách tasks và phân công cho dự án TravelCar
 - [ ] **Phát hiện "lốc khách"** — alert tài xế lấy khách riêng
 
 ### Mở rộng loại xe:
-- [ ] **Xe 16, 29, 45 chỗ** + **Limousine 9, 16 chỗ**
-- [ ] **Xe sang và siêu sang**
-- [ ] **Xe tải vận chuyển hàng** — trái cây, đông lạnh
-- [ ] **Dịch vụ dọn nhà** — đóng gói, tháo dỡ
+- [x] **Xe 16, 29, 45 chỗ** + **Limousine 9, 16 chỗ** ✅ 21/02
+- [x] **Xe sang và siêu sang** ✅ 21/02
+- [x] **Xe tải vận chuyển hàng** — trái cây, đông lạnh ✅ 21/02
+- [x] **Dịch vụ dọn nhà** — đóng gói, tháo dỡ ✅ 21/02
 
 ---
 
 ## 🔴 CẦN LÀM — ClaudeCode (Backend) — Ưu tiên cao
 
 ### Edge Functions
-- [ ] **send-notification** — gửi SMS/Zalo khi match thành công
-- [ ] **booking-webhook** — webhook khi booking status thay đổi
-- [ ] **auto-reassign** — tự động re-match nếu tài xế không phản hồi 5 phút
-- [ ] **pricing-engine** — tính giá động theo cao điểm, chiều về giảm giá
-- [ ] **daily-report** — cron gửi báo cáo hàng ngày cho admin
+- [x] **send-notification** — gửi SMS/Zalo khi match (eSMS.vn API) ✅ 21/02
+- [x] **booking-webhook** — webhook khi booking status thay đổi ✅ 21/02
+- [x] **auto-reassign** — re-match nếu tài xế không phản hồi 5 phút ✅ 21/02
+- [x] **pricing-engine** — giá động: cao điểm, lễ/Tết, chiều về -15% ✅ 21/02
+- [x] **daily-report** — cron báo cáo hàng ngày cho admin ✅ 21/02
 
 ### Authentication & Security
-- [ ] **Supabase Auth** cho admin (thay password cứng hiện tại)
-- [ ] **API rate limiting** — chống spam booking/đăng ký
-- [ ] **Xác thực SĐT** — OTP khi đăng ký tài xế
+- [x] **Supabase Auth** cho admin (thay password cứng hiện tại) ✅ 21/02
+- [x] **API rate limiting** — chống spam booking/đăng ký (PostgreSQL-based) ✅ 21/02
+- [x] **Xác thực SĐT** — OTP send/verify qua eSMS ✅ 21/02
 
 ### Tích hợp
-- [ ] **Google Maps API** — tính distance chính xác, hiện bản đồ
-- [ ] **Payment gateway** — Momo, VNPay, ZaloPay (đặt cọc 10%)
-- [ ] **Chatbot FAQ** — tự động trả lời câu hỏi thường gặp
-- [ ] **Database triggers** — auto-update stats, auto-trừ hoa hồng
+- [x] **Google Maps API** — calculate-distance edge function + fallback routes ✅ 21/02
+- [x] **Payment gateway** — Momo + VNPay (create-payment + payment-callback) ✅ 21/02
+- [x] **Chatbot FAQ** — keyword matching, 12 câu FAQ, đa chủ đề ✅ 21/02
+- [x] **Database triggers** — rating auto-update, match_driver dùng average_rating ✅ 21/02
 
 ### Dịch vụ Tour
-- [ ] **Tour guide đa ngôn ngữ** — Anh, Trung, Nhật, Hàn
-- [ ] **3 mức tour**: tiết kiệm, cơ bản, nâng cao
-- [ ] **Các loại tour**: trải nghiệm, khám phá, nghỉ dưỡng, sang chảnh
-- [ ] **Tour tùy chỉnh** — khách đưa ý tưởng, mình sắp xếp lịch trình
+- [x] **Tour guide đa ngôn ngữ** — vi, en, zh, ja, ko (schema + API) ✅ 21/02
+- [x] **3 mức tour**: budget, basic, premium (schema + seed data) ✅ 21/02
+- [x] **Các loại tour**: experience, explore, resort, luxury ✅ 21/02
+- [x] **Tour tùy chỉnh** — custom tour booking API ✅ 21/02
+
+### CI/CD & Auto Maintenance (ClaudeCode)
+- [x] **Vercel security headers** — CSP, HSTS, X-Frame-Options, Referrer-Policy ✅ 21/02
+- [x] **GitHub Actions: deploy-frontend** — auto deploy Vercel khi push main ✅ 21/02
+- [x] **GitHub Actions: deploy-functions** — auto deploy Edge Functions ✅ 21/02
+- [x] **GitHub Actions: security-scan** — daily Gitleaks + npm audit + code scan ✅ 21/02
+- [x] **pg_cron maintenance** — cleanup rate limits, OTP, auto-reassign, daily stats ✅ 21/02
+- [x] **Security hardening** — audit logs, triggers, RLS tightening, fraud detection ✅ 21/02
+- [x] **Health check endpoint** — DB + tables + system health + activity stats ✅ 21/02
+- [x] **.gitignore security** — block secrets, credentials, keys from git ✅ 21/02
 
 ---
 

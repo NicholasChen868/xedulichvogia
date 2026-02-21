@@ -211,6 +211,12 @@
             background: rgba(255, 255, 255, 0.04);
             border-radius: 12px;
             padding: 4px;
+            overflow-x: auto;
+            white-space: nowrap;
+        }
+
+        .dash-tabs::-webkit-scrollbar {
+            display: none;
         }
 
         .dash-tab {
@@ -452,13 +458,59 @@
             color: #ef5350;
         }
 
-        /* Earnings Panel */
-        .earnings-panel {
+        /* Earnings & Feedback Panel */
+        .earnings-panel,
+        .feedback-panel {
             display: none;
         }
 
-        .earnings-panel.active {
+        .earnings-panel.active,
+        .feedback-panel.active {
             display: block;
+        }
+
+        .feedback-form {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 14px;
+            padding: 24px;
+        }
+
+        .feedback-form h3 {
+            margin-bottom: 16px;
+            color: #fff;
+            font-size: 1.1rem;
+            display: flex;
+            align-items: center;
+        }
+
+        .feedback-form label {
+            display: block;
+            margin-bottom: 8px;
+            color: rgba(255, 255, 255, 0.7);
+            font-size: .85rem;
+            font-weight: 500;
+        }
+
+        .feedback-form select,
+        .feedback-form textarea {
+            width: 100%;
+            background: rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: #fff;
+            padding: 14px;
+            border-radius: 10px;
+            font-family: 'Inter', sans-serif;
+            margin-bottom: 20px;
+        }
+
+        .feedback-form textarea {
+            resize: vertical;
+            height: 120px;
+        }
+
+        .feedback-form button {
+            width: 100%;
         }
 
         .earnings-cards {
@@ -582,16 +634,22 @@
 
     <!-- NAV -->
     <nav>
-        <a href="index.html" class="logo" style="text-decoration:none">Travel<span>Car</span></a>
-        <button class="hamburger" aria-label="Menu">
-            <span></span><span></span><span></span>
-        </button>
+        <a href="index.html" class="logo">Travel<span>Car</span></a>
+
         <div class="nav-links">
-            <a href="index.html">Trang chủ</a>
-            <a href="index.html#pricing-section">Bảng giá</a>
-            <a href="driver-register.html">Đăng ký tài xế</a>
-            <a href="driver-dashboard.html" style="color:#ff9800">Dashboard</a>
-            <a href="index.html#booking-section" class="btn-primary">Đặt xe ngay</a>
+            <a href="index.html" class="nav-item">Trang chủ</a>
+            <a href="index.html#pricing-section" class="nav-item">Bảng giá</a>
+            <a href="driver-register.html" class="nav-item">Đăng ký tài xế</a>
+            <a href="driver-dashboard.html" class="nav-item" style="color:#ff9800">Dashboard</a>
+            <a href="index.html#booking-section" class="btn-nav-cta mobile-only">Đặt xe ngay</a>
+        </div>
+
+        <div class="nav-actions">
+            <a href="index.html#booking-section" class="btn-nav-cta desktop-only">Đặt xe ngay</a>
+
+            <button class="hamburger" aria-label="Menu">
+                <span></span><span></span><span></span>
+            </button>
         </div>
     </nav>
 
@@ -669,6 +727,9 @@
                 <button class="dash-tab" data-tab="earnings" onclick="switchTab('earnings')">
                     <i class="fas fa-wallet"></i> Thu nhập
                 </button>
+                <button class="dash-tab" data-tab="feedback" onclick="switchTab('feedback')">
+                    <i class="fas fa-comment-dots"></i> Góp ý
+                </button>
             </div>
 
             <!-- Rides List -->
@@ -706,6 +767,35 @@
                 <div class="earn-history-title">Lịch sử gần đây</div>
                 <div class="rides-list" id="earn-history-list"></div>
             </div>
+
+            <!-- Feedback Panel -->
+            <div class="feedback-panel" id="feedback-panel">
+                <div class="feedback-form">
+                    <h3><i class="fas fa-paper-plane" style="color: #ff9800; margin-right: 8px;"></i>Gửi Góp Ý / Yêu Cầu
+                        Hỗ Trợ</h3>
+                    <p style="color: #aaa; font-size: 0.9rem; margin-bottom: 24px;">Chúng tôi luôn lắng nghe để cải
+                        thiện chất lượng ứng dụng và hỗ trợ bạn tốt nhất trên mỗi chuyến đi.</p>
+                    <form id="driver-feedback-form">
+                        <label>Chủ đề <span style="color: #ff4757;">*</span></label>
+                        <select id="feedback-topic" required>
+                            <option value="">-- Chọn chủ đề --</option>
+                            <option value="Lỗi ứng dụng">Báo lỗi ứng dụng / Kỹ thuật</option>
+                            <option value="Thanh toán - Hoa hồng">Vấn đề thanh toán / Chiết khấu / Rút tiền</option>
+                            <option value="Khách hàng">Vấn đề với khách hàng / Bị hủy cuốc</option>
+                            <option value="Góp ý dịch vụ">Góp ý cải thiện giao diện, tính năng</option>
+                            <option value="Khác">Vấn đề khác</option>
+                        </select>
+
+                        <label>Nội dung chi tiết <span style="color: #ff4757;">*</span></label>
+                        <textarea id="feedback-message" placeholder="Mô tả cụ thể và chi tiết trường hợp của bạn..."
+                            required></textarea>
+
+                        <button type="submit" class="btn-primary" id="btn-submit-feedback">
+                            Gửi Góp Ý
+                        </button>
+                    </form>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -735,6 +825,38 @@
                 const phone = document.getElementById('login-phone').value.replace(/\s/g, '');
                 await loginWithPhone(phone);
             });
+
+            // Feedback form submit
+            const feedbackForm = document.getElementById('driver-feedback-form');
+            if (feedbackForm) {
+                feedbackForm.addEventListener('submit', async (e) => {
+                    e.preventDefault();
+                    if (!currentDriver) return;
+
+                    const topic = document.getElementById('feedback-topic').value;
+                    const message = document.getElementById('feedback-message').value.trim();
+                    const btn = document.getElementById('btn-submit-feedback');
+
+                    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Đang gửi...';
+                    btn.disabled = true;
+
+                    const { error } = await db.from('driver_feedbacks').insert([{
+                        driver_id: currentDriver.id,
+                        topic: topic,
+                        message: message
+                    }]);
+
+                    btn.innerHTML = 'Gửi Góp Ý';
+                    btn.disabled = false;
+
+                    if (error) {
+                        showNotification('Có lỗi khi gửi góp ý: ' + error.message, 'error');
+                    } else {
+                        showNotification('Cảm ơn bạn đã gửi góp ý! Chúng tôi sẽ phản hồi sớm nhất.', 'success');
+                        feedbackForm.reset();
+                    }
+                });
+            }
         });
 
         function initNavigation() {
@@ -775,7 +897,7 @@
             document.getElementById('dash-driver-name').textContent = currentDriver.full_name;
             document.getElementById('dash-driver-plate').textContent = currentDriver.license_plate;
             document.getElementById('stat-total').textContent = currentDriver.total_trips || 0;
-            document.getElementById('stat-rating').textContent = currentDriver.rating || '5.0';
+            document.getElementById('stat-rating').textContent = currentDriver.average_rating || '5.00';
 
             // Set online toggle
             updateOnlineUI(currentDriver.is_available);
@@ -822,15 +944,21 @@
             document.querySelector(`[data-tab="${tab}"]`).classList.add('active');
 
             // Toggle panels
-            document.getElementById('rides-list').style.display = tab === 'earnings' ? 'none' : 'flex';
+            document.getElementById('rides-list').style.display = (tab === 'earnings' || tab === 'feedback') ? 'none' : 'flex';
+
             const earningsPanel = document.getElementById('earnings-panel');
             if (earningsPanel) {
                 earningsPanel.classList.toggle('active', tab === 'earnings');
             }
 
+            const feedbackPanel = document.getElementById('feedback-panel');
+            if (feedbackPanel) {
+                feedbackPanel.classList.toggle('active', tab === 'feedback');
+            }
+
             if (tab === 'earnings') {
                 loadEarnings();
-            } else {
+            } else if (tab !== 'feedback') {
                 loadRides();
             }
         }
@@ -928,7 +1056,7 @@
                         </div>
                         <div class="ride-details">
                             <div class="ride-detail"><i class="fas fa-phone"></i> <strong>${ride.customer_phone}</strong></div>
-                            <div class="ride-detail"><i class="fas fa-car"></i> <strong>${ride.vehicle_type === 'sedan-4' ? '4 chỗ' : '7 chỗ'}</strong></div>
+                            <div class="ride-detail"><i class="fas fa-car"></i> <strong>${(typeof VEHICLE_TYPES !== 'undefined' && VEHICLE_TYPES.find(v => v.id === ride.vehicle_type)) ? VEHICLE_TYPES.find(v => v.id === ride.vehicle_type).name : (ride.vehicle_type || '—')}</strong></div>
                             <div class="ride-fare">${fare}</div>
                         </div>
                         ${actions}

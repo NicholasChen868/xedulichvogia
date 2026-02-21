@@ -514,14 +514,18 @@
     <!-- NAV -->
     <nav>
         <a href="index.html" class="logo">Travel<span>Car</span></a>
-        <button class="hamburger" aria-label="Menu">
-            <span></span><span></span><span></span>
-        </button>
+
         <div class="nav-links">
-            <a href="index.html">Trang chủ</a>
-            <a href="driver-register.html">Đăng ký tài xế</a>
-            <a href="driver-dashboard.html">Driver</a>
-            <a href="admin.html" class="active-link">Admin</a>
+            <a href="index.html" class="nav-item">Trang chủ</a>
+            <a href="driver-register.html" class="nav-item">Đăng ký tài xế</a>
+            <a href="driver-dashboard.html" class="nav-item">Driver Dashboard</a>
+            <a href="admin.html" class="nav-item active-link" style="color:#ff9800">Admin</a>
+        </div>
+
+        <div class="nav-actions">
+            <button class="hamburger" aria-label="Menu">
+                <span></span><span></span><span></span>
+            </button>
         </div>
     </nav>
 
@@ -531,10 +535,12 @@
         <p>Đăng nhập quản trị viên</p>
         <div class="admin-login-card">
             <div id="admin-error" class="admin-error">
-                <i class="fas fa-exclamation-circle"></i> Mật khẩu không đúng
+                <i class="fas fa-exclamation-circle"></i> <span id="admin-error-msg">Email hoặc mật khẩu không
+                    đúng</span>
             </div>
             <form id="admin-login-form">
-                <input type="password" id="admin-pass" placeholder="Mật khẩu admin" required autofocus>
+                <input type="email" id="admin-email" placeholder="Email admin" required autofocus>
+                <input type="password" id="admin-pass" placeholder="Mật khẩu" required style="margin-top:8px">
                 <button type="submit" class="btn-book" style="width:100%">
                     <i class="fas fa-lock-open"></i> Đăng nhập
                 </button>
@@ -730,26 +736,41 @@
     <script src="js/pricing.js"></script>
     <script src="js/supabase.js"></script>
     <script>
-        const ADMIN_PASS = 'travelcar2026';
         let currentBookingFilter = 'all';
         let currentDriverFilter = 'all';
 
-        document.addEventListener('DOMContentLoaded', () => {
+        document.addEventListener('DOMContentLoaded', async () => {
             initSupabase();
 
-            // Auto-login
-            if (localStorage.getItem('admin_auth') === 'true') {
+            // Auto-login: kiểm tra Supabase session
+            const { session } = await checkAdminSession();
+            if (session) {
                 showAdminDashboard();
             }
 
-            document.getElementById('admin-login-form').addEventListener('submit', (e) => {
+            // Login form
+            document.getElementById('admin-login-form').addEventListener('submit', async (e) => {
                 e.preventDefault();
+                const email = document.getElementById('admin-email').value;
                 const pass = document.getElementById('admin-pass').value;
-                if (pass === ADMIN_PASS) {
-                    localStorage.setItem('admin_auth', 'true');
-                    showAdminDashboard();
+                const errorEl = document.getElementById('admin-error');
+                const errorMsg = document.getElementById('admin-error-msg');
+
+                errorEl.classList.remove('show');
+
+                const { data, error } = await signInAdmin(email, pass);
+                if (error) {
+                    errorMsg.textContent = error.message || 'Email hoặc mật khẩu không đúng';
+                    errorEl.classList.add('show');
                 } else {
-                    document.getElementById('admin-error').classList.add('show');
+                    showAdminDashboard();
+                }
+            });
+
+            // Lắng nghe auth state
+            onAdminAuthChange((event, session) => {
+                if (event === 'SIGNED_OUT') {
+                    location.reload();
                 }
             });
 
@@ -770,7 +791,8 @@
             loadDrivers();
         }
 
-        function adminLogout() {
+        async function adminLogout() {
+            await signOutAdmin();
             localStorage.removeItem('admin_auth');
             location.reload();
         }
@@ -880,7 +902,8 @@
             tbody.innerHTML = data.map(b => {
                 const time = b.created_at ? new Date(b.created_at).toLocaleString('vi-VN', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' }) : '—';
                 const fare = b.estimated_fare ? formatVNDShort(b.estimated_fare) : '—';
-                const vehicle = b.vehicle_type === 'sedan-4' ? '4 chỗ' : b.vehicle_type === 'suv-7' ? '7 chỗ' : (b.vehicle_type || '—');
+                const vehicleObj = typeof VEHICLE_TYPES !== 'undefined' ? VEHICLE_TYPES.find(v => v.id === b.vehicle_type) : null;
+                const vehicle = vehicleObj ? vehicleObj.name : (b.vehicle_type || '—');
 
                 let actions = '';
                 if (b.status === 'pending') {
@@ -942,7 +965,8 @@
 
             tbody.innerHTML = data.map(d => {
                 const areas = (d.operating_areas || []).join(', ') || '—';
-                const vehicle = d.vehicle_type === 'sedan-4' ? '4 chỗ' : d.vehicle_type === 'suv-7' ? '7 chỗ' : (d.vehicle_type || '—');
+                const vehicleObj = typeof VEHICLE_TYPES !== 'undefined' ? VEHICLE_TYPES.find(v => v.id === d.vehicle_type) : null;
+                const vehicle = vehicleObj ? vehicleObj.name : (d.vehicle_type || '—');
                 const online = d.is_available ? '<span class="badge online">Online</span>' : '<span class="badge offline">Offline</span>';
 
                 let actions = '';
@@ -962,7 +986,7 @@
                     <td>${areas}</td>
                     <td>${online}</td>
                     <td>${d.total_trips || 0}</td>
-                    <td>⭐ ${d.rating || '5.0'}</td>
+                    <td>⭐ ${d.average_rating || '5.00'} (${d.total_ratings || 0})</td>
                     <td><span class="badge ${d.status}">${d.status === 'active' ? 'Hoạt động' : d.status === 'pending' ? 'Chờ duyệt' : 'Bị khóa'}</span></td>
                     <td>${actions}</td>
                 </tr>`;
