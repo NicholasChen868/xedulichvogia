@@ -452,6 +452,75 @@
         </div>
     </div>
 
+    <!-- FLOATING CTA SIDEBAR -->
+    <div class="cta-sidebar" id="cta-sidebar">
+        <!-- Đặt xe -->
+        <div class="cta-widget" id="cta-booking">
+            <div class="cta-label" onclick="toggleCtaWidget('cta-booking')">
+                <span class="cta-label-icon">🚗</span>
+                <span class="cta-label-text">Đặt xe</span>
+            </div>
+            <div class="cta-badge">
+                <div class="cta-badge-header">
+                    <span>🚗 Đặt Xe Ngay</span>
+                    <button class="cta-badge-close" onclick="toggleCtaWidget('cta-booking')">&times;</button>
+                </div>
+                <p>Đặt xe du lịch nhanh chóng, giá tốt nhất. Xe 4-7 chỗ sẵn sàng 24/7.</p>
+                <a href="#booking-section" class="cta-badge-btn cta-btn-primary" onclick="closeAllWidgets()">Đặt xe
+                    ngay</a>
+            </div>
+        </div>
+
+        <!-- Đăng ký tài xế -->
+        <div class="cta-widget" id="cta-driver">
+            <div class="cta-label" onclick="toggleCtaWidget('cta-driver')">
+                <span class="cta-label-icon">🤝</span>
+                <span class="cta-label-text">Tài xế</span>
+            </div>
+            <div class="cta-badge">
+                <div class="cta-badge-header">
+                    <span>🤝 Đối Tác Tài Xế</span>
+                    <button class="cta-badge-close" onclick="toggleCtaWidget('cta-driver')">&times;</button>
+                </div>
+                <p>Đăng ký miễn phí, nhận cuốc xe tự động. Thu nhập hấp dẫn mỗi ngày.</p>
+                <a href="driver-register.html" class="cta-badge-btn cta-btn-driver">Đăng ký ngay</a>
+            </div>
+        </div>
+
+        <!-- Zalo -->
+        <div class="cta-widget" id="cta-zalo">
+            <div class="cta-label" onclick="toggleCtaWidget('cta-zalo')">
+                <span class="cta-label-icon cta-zalo-icon">Z</span>
+                <span class="cta-label-text">Zalo</span>
+            </div>
+            <div class="cta-badge">
+                <div class="cta-badge-header">
+                    <span>💬 Chat Zalo</span>
+                    <button class="cta-badge-close" onclick="toggleCtaWidget('cta-zalo')">&times;</button>
+                </div>
+                <p>Nhắn tin tư vấn trực tiếp qua Zalo. Hỗ trợ nhanh trong 5 phút.</p>
+                <a href="https://zalo.me/0901234567" target="_blank" rel="noopener noreferrer"
+                    class="cta-badge-btn cta-btn-zalo">Mở Zalo</a>
+            </div>
+        </div>
+
+        <!-- Liên hệ ngay -->
+        <div class="cta-widget" id="cta-call">
+            <div class="cta-label" onclick="toggleCtaWidget('cta-call')">
+                <span class="cta-label-icon">📞</span>
+                <span class="cta-label-text">Gọi ngay</span>
+            </div>
+            <div class="cta-badge">
+                <div class="cta-badge-header">
+                    <span>📞 Liên Hệ Ngay</span>
+                    <button class="cta-badge-close" onclick="toggleCtaWidget('cta-call')">&times;</button>
+                </div>
+                <p>Hotline tư vấn 24/7. Gọi ngay để được báo giá tốt nhất!</p>
+                <a href="tel:1900xxxx" class="cta-badge-btn cta-btn-call">1900 XXXX</a>
+            </div>
+        </div>
+    </div>
+
     <!-- CHATBOT WIDGET -->
     <div id="chatbot-widget" class="chatbot-container">
         <div class="chatbot-toggle" onclick="toggleChatbot()" title="Trợ lý ảo TravelCar">
@@ -488,7 +557,7 @@
     <script>
         function escapeHtml(str) {
             if (str == null) return '';
-            return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#039;');
+            return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#039;');
         }
 
         // Chatbot logic
@@ -535,6 +604,33 @@
             }
             msgBox.scrollTop = msgBox.scrollHeight;
         }
+
+        // CTA Sidebar logic
+        function toggleCtaWidget(id) {
+            const widget = document.getElementById(id);
+            if (!widget) return;
+            const isOpen = widget.classList.contains('open');
+            // Close all first
+            document.querySelectorAll('.cta-widget.open').forEach(w => w.classList.remove('open'));
+            // Toggle current
+            if (!isOpen) widget.classList.add('open');
+        }
+
+        function closeAllWidgets() {
+            document.querySelectorAll('.cta-widget.open').forEach(w => w.classList.remove('open'));
+        }
+
+        // Auto-collapse CTA sidebar on scroll
+        let ctaScrollTimer;
+        window.addEventListener('scroll', function () {
+            const sidebar = document.getElementById('cta-sidebar');
+            if (!sidebar) return;
+            sidebar.classList.add('collapsed');
+            clearTimeout(ctaScrollTimer);
+            ctaScrollTimer = setTimeout(() => {
+                sidebar.classList.remove('collapsed');
+            }, 1200);
+        }, { passive: true });
     </script>
 </body>
 
