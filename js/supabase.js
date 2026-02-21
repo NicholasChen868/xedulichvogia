@@ -14,13 +14,13 @@ const SUPABASE_URL = 'https://fjcobjsgcuzbruyoaotz.supabase.co';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZqY29ianNnY3V6YnJ1eW9hb3R6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzE2NTUzMDgsImV4cCI6MjA4NzIzMTMwOH0.fovLEr8YCCAQYigVPLF4IBgXVzhAKHsCd50-w2xXJbM';
 
 // Initialize Supabase client (requires supabase-js CDN loaded in HTML)
-let supabase = null;
+let db = null;
 
 function initSupabase() {
     if (typeof window.supabase !== 'undefined' && window.supabase.createClient) {
-        supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        db = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
         console.log('✅ Supabase connected');
-        return supabase;
+        return db;
     } else {
         console.warn('⚠️ Supabase JS library not loaded. Add CDN script to HTML.');
         return null;
@@ -33,9 +33,9 @@ function initSupabase() {
  * Submit a booking request
  */
 async function submitBooking(bookingData) {
-    if (!supabase) return { error: 'Supabase not initialized' };
+    if (!db) return { error: 'Supabase not initialized' };
 
-    const { data, error } = await supabase
+    const { data, error } = await db
         .from('bookings')
         .insert([{
             pickup_location: bookingData.pickup,
@@ -57,9 +57,9 @@ async function submitBooking(bookingData) {
  * Submit a driver registration
  */
 async function submitDriverRegistration(driverData) {
-    if (!supabase) return { error: 'Supabase not initialized' };
+    if (!db) return { error: 'Supabase not initialized' };
 
-    const { data, error } = await supabase
+    const { data, error } = await db
         .from('drivers')
         .insert([{
             full_name: driverData.full_name,
@@ -81,9 +81,9 @@ async function submitDriverRegistration(driverData) {
  * Falls back to config.js data if DB is empty
  */
 async function fetchPricingTiers() {
-    if (!supabase) return PRICING_TIERS;
+    if (!db) return PRICING_TIERS;
 
-    const { data, error } = await supabase
+    const { data, error } = await db
         .from('pricing_tiers')
         .select('*')
         .order('min_km', { ascending: true });
@@ -105,9 +105,9 @@ async function fetchPricingTiers() {
  * Fetch vehicle types from database
  */
 async function fetchVehicleTypes() {
-    if (!supabase) return VEHICLE_TYPES;
+    if (!db) return VEHICLE_TYPES;
 
-    const { data, error } = await supabase
+    const { data, error } = await db
         .from('vehicle_types')
         .select('*')
         .order('seats', { ascending: true });
@@ -124,9 +124,9 @@ async function fetchVehicleTypes() {
  * Fetch popular routes from database
  */
 async function fetchPopularRoutes() {
-    if (!supabase) return POPULAR_ROUTES;
+    if (!db) return POPULAR_ROUTES;
 
-    const { data, error } = await supabase
+    const { data, error } = await db
         .from('popular_routes')
         .select('*')
         .order('distance', { ascending: true });
