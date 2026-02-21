@@ -68,7 +68,7 @@ async function checkAdminAuth() {
 
     if (!avatarBtn) return;
 
-    // Kiểm tra Supabase Auth session, fallback localStorage
+    // Kiểm tra Supabase Auth session — KHÔNG dùng localStorage fallback
     let isAdmin = false;
     try {
         if (typeof checkAdminSession === 'function') {
@@ -76,10 +76,7 @@ async function checkAdminAuth() {
             isAdmin = !!session;
         }
     } catch (e) {
-        // Fallback
-    }
-    if (!isAdmin) {
-        isAdmin = localStorage.getItem('admin_auth') === 'true';
+        console.warn('Admin session check failed');
     }
 
     if (isAdmin) {
@@ -103,7 +100,6 @@ async function doAdminLogout() {
     if (typeof signOutAdmin === 'function') {
         await signOutAdmin();
     }
-    localStorage.removeItem('admin_auth');
     await checkAdminAuth();
     const dropdown = document.getElementById('user-dropdown');
     if (dropdown) dropdown.classList.remove('show');
@@ -206,28 +202,92 @@ function initBookingForm() {
         ).join('');
     }
 
-    // Distance input live calculation
+    // Distance and Pricing API logic
     const distanceInput = document.getElementById('distance-input');
     const priceDisplay = document.getElementById('price-estimate');
+    const dateGoInput = document.getElementById('date-go');
 
-    if (distanceInput && priceDisplay) {
-        const updateEstimate = () => {
+    // Auto calculate distance
+    const pickupInput = form.querySelector('[name="pickup"]');
+    const dropoffInput = form.querySelector('[name="dropoff"]');
+    let distanceDebounceTimeout;
+
+    const triggerDistanceCalc = () => {
+        if (distanceDebounceTimeout) clearTimeout(distanceDebounceTimeout);
+        distanceDebounceTimeout = setTimeout(async () => {
+            const origin = pickupInput?.value?.trim();
+            const dest = dropoffInput?.value?.trim();
+            if (origin && dest && origin.length > 2 && dest.length > 2) {
+                try {
+                    const res = await fetch(`${SUPABASE_URL}/functions/v1/calculate-distance`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${SUPABASE_ANON_KEY}` },
+                        body: JSON.stringify({ origin, destination: dest })
+                    });
+                    const data = await res.json();
+                    if (data.success && data.distance_km) {
+                        distanceInput.value = data.distance_km;
+                        updateEstimate();
+                    }
+                } catch (e) { console.error('Lỗi tính khoảng cách:', e); }
+            }
+        }, 1500); // Wait 1.5s after typing
+    };
+
+    if (pickupInput) pickupInput.addEventListener('input', triggerDistanceCalc);
+    if (dropoffInput) dropoffInput.addEventListener('input', triggerDistanceCalc);
+
+    // Dynamic pricing calculation
+    let pricingDebounceTimeout;
+    const updateEstimate = () => {
+        if (!distanceInput || !priceDisplay) return;
+        if (pricingDebounceTimeout) clearTimeout(pricingDebounceTimeout);
+
+        pricingDebounceTimeout = setTimeout(async () => {
             const km = parseInt(distanceInput.value) || 0;
             const vehicleId = vehicleSelect ? vehicleSelect.value : 'sedan-4';
+            const dateGo = dateGoInput && dateGoInput.value ? dateGoInput.value : new Date().toISOString();
+
             if (km > 0) {
-                const fare = calculateFare(km, vehicleId);
-                priceDisplay.innerHTML = `<span class="estimate-label">Ước tính:</span> <span class="estimate-value">${formatVND(fare.total)}</span>`;
+                priceDisplay.innerHTML = `<span class="estimate-label">Đang tính giá... <i class="fas fa-spinner fa-spin"></i></span>`;
                 priceDisplay.classList.add('visible');
+
+                try {
+                    const res = await fetch(`${SUPABASE_URL}/functions/v1/pricing-engine`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${SUPABASE_ANON_KEY}` },
+                        body: JSON.stringify({ distance_km: km, vehicle_type: vehicleId, pickup_time: dateGo })
+                    });
+                    const data = await res.json();
+
+                    if (data.success && data.final_fare) {
+                        priceDisplay.innerHTML = `
+                            <span class="estimate-label">Ước tính:</span> 
+                            <span class="estimate-value">${formatVND(data.final_fare)}</span>
+                            <div style="font-size:0.8rem;color:rgba(255,255,255,0.7);margin-top:6px;line-height:1.4"><i class="fas fa-info-circle"></i> ${data.note || 'Giá cước cơ bản'}</div>`;
+                    } else {
+                        // Fallback local calculation
+                        const fare = calculateFare(km, vehicleId);
+                        priceDisplay.innerHTML = `<span class="estimate-label">Ước tính:</span> <span class="estimate-value">${formatVND(fare.total)}</span>`;
+                    }
+                } catch (e) {
+                    console.error('Pricing error:', e);
+                    const fare = calculateFare(km, vehicleId);
+                    priceDisplay.innerHTML = `<span class="estimate-label">Ước tính:</span> <span class="estimate-value">${formatVND(fare.total)}</span>`;
+                }
             } else {
                 priceDisplay.classList.remove('visible');
             }
-        };
+        }, 800);
+    };
+
+    if (distanceInput && priceDisplay) {
         distanceInput.addEventListener('input', updateEstimate);
         if (vehicleSelect) vehicleSelect.addEventListener('change', updateEstimate);
+        if (dateGoInput) dateGoInput.addEventListener('change', updateEstimate);
     }
 
     // Set min date = today
-    const dateGoInput = document.getElementById('date-go');
     if (dateGoInput) {
         dateGoInput.min = new Date().toISOString().split('T')[0];
     }
@@ -388,25 +448,53 @@ function showBookingConfirmation(bookingData, result) {
                 <div class="mii-value">${vehicleLabel}</div>
             </div>
             <div class="modal-info-item">
-                <div class="mii-label">Khoảng cách</div>
-                <div class="mii-value">${bookingData.distance_km || '—'} km</div>
-            </div>
-            <div class="modal-info-item">
                 <div class="mii-label">Giá ước tính</div>
-                <div class="mii-value" style="color:#ff9800">${fareText}</div>
+                <div class="mii-value" style="color:#ff9800; font-weight:700">${fareText}</div>
             </div>
         </div>
 
         ${driverHTML}
 
-        <div class="modal-actions">
+        ${result.data && result.data[0] ? `
+        <div style="margin:20px 0;text-align:center;padding:15px;background:rgba(255,152,0,0.1);border:1px dashed rgba(255,152,0,0.5);border-radius:12px">
+            <h4 style="color:#ff9800;margin-bottom:8px"><i class="fas fa-wallet"></i> Đặt cọc 10% giữ chuyến</h4>
+            <p style="font-size:0.85rem;color:rgba(255,255,255,0.7);margin-bottom:15px">Cọc ${formatVND((bookingData.estimated_fare || 0) * 0.1)} để đảm bảo có xe ngay (Bắt buộc dịp lễ).</p>
+            <div style="display:flex;gap:10px;justify-content:center" id="payment-btns">
+                <button class="btn-book" onclick="processPayment('${result.data[0].id}', 'momo')" style="padding:10px;font-size:0.9rem;border-radius:8px"><img src="https://upload.wikimedia.org/wikipedia/vi/f/fe/MoMo_Logo.png" style="height:16px;margin-right:5px;vertical-align:middle"> MoMo</button>
+                <button class="btn-secondary" onclick="processPayment('${result.data[0].id}', 'vnpay')" style="padding:10px;font-size:0.9rem;border-radius:8px"><i class="fas fa-qrcode"></i> VNPay</button>
+            </div>
+        </div>` : ''}
+
+        <div class="modal-actions" style="margin-top:20px;">
             <button class="modal-btn-secondary" onclick="closeBookingModal()">Đóng</button>
             <button class="modal-btn-primary" onclick="closeBookingModal(); document.getElementById('lookup-section').scrollIntoView({behavior:'smooth'})">
-                <i class="fas fa-search"></i> Tra cứu đơn
+                <i class="fas fa-search"></i> Theo dõi đơn
             </button>
         </div>`;
 
     modal.classList.add('show');
+}
+
+// Hàm khởi tạo thanh toán
+window.processPayment = async function (bookingId, provider) {
+    const btns = document.getElementById('payment-btns');
+    if (btns) btns.innerHTML = '<span style="color:#ff9800;font-size:0.9rem"><i class="fas fa-spinner fa-spin"></i> Đang tạo mã thanh toán...</span>';
+    try {
+        const req = await fetch(`${SUPABASE_URL}/functions/v1/create-payment`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${SUPABASE_ANON_KEY}` },
+            body: JSON.stringify({ booking_id: bookingId, provider })
+        });
+        const res = await req.json();
+        if (res.pay_url) {
+            window.location.href = res.pay_url;
+        } else {
+            alert('Không thể tạo Link thanh toán lúc này (Dev fallback).');
+        }
+    } catch (e) {
+        console.error('Payment Error', e);
+        alert('Cổng thanh toán tạm thời không khả dụng trên môi trường Dev.');
+    }
 }
 
 function closeBookingModal() {

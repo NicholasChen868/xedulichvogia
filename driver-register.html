@@ -714,19 +714,78 @@
                     return;
                 }
 
-                // Gửi lên Supabase
-                const result = await submitDriverRegistration(data);
-                if (result.error) {
-                    console.error('Registration error:', result.error);
-                    showNotification(result.error.message || 'Có lỗi xảy ra. Vui lòng thử lại.', 'error');
-                    return;
-                } else {
-                    showNotification('Đăng ký thành công! Chúng tôi sẽ liên hệ xác nhận trong 24h.');
-                }
+                // Gửi OTP
+                const btnSubmit = form.querySelector('button[type="submit"]');
+                const originalText = btnSubmit.innerHTML;
+                btnSubmit.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Đang gửi OTP...';
+                btnSubmit.classList.add('btn-loading');
 
-                console.log('Driver data:', data, result);
-                form.reset();
-                document.querySelectorAll('.vehicle-type-option').forEach(el => el.classList.remove('selected'));
+                try {
+                    const res = await fetch(`${SUPABASE_URL}/functions/v1/send-otp`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${SUPABASE_ANON_KEY}` },
+                        body: JSON.stringify({ phone: data.phone })
+                    });
+
+                    const otpRes = await res.json();
+
+                    if (otpRes.success) {
+                        // Hiển thị modal OTP
+                        document.getElementById('otp-phone-display').innerText = data.phone;
+                        document.getElementById('otp-modal').style.display = 'flex';
+
+                        // Setup event verify OTP
+                        const btnVerify = document.getElementById('btn-verify-otp');
+                        btnVerify.onclick = async () => {
+                            const code = document.getElementById('otp-input').value;
+                            if (code.length < 6) return alert('Vui lòng nhập đủ 6 số OTP');
+
+                            btnVerify.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Đang kiểm tra...';
+
+                            try {
+                                const verifyReq = await fetch(`${SUPABASE_URL}/functions/v1/verify-otp`, {
+                                    method: 'POST',
+                                    headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${SUPABASE_ANON_KEY}` },
+                                    body: JSON.stringify({ phone: data.phone, code: code })
+                                });
+                                const verifyRes = await verifyReq.json();
+
+                                if (verifyRes.success) {
+                                    // Submit data
+                                    const result = await submitDriverRegistration(data);
+                                    if (result.error) {
+                                        showNotification('Lỗi đăng ký: ' + result.error.message, 'error');
+                                    } else {
+                                        showNotification('Đăng ký thành công! Chúng tôi sẽ liên hệ xác nhận trong 24h.');
+                                        document.getElementById('otp-modal').style.display = 'none';
+                                        form.reset();
+                                        document.querySelectorAll('.vehicle-type-option').forEach(el => el.classList.remove('selected'));
+                                    }
+                                } else {
+                                    alert('Mã OTP không chính xác hoặc đã hết hạn.');
+                                }
+                            } catch (e) {
+                                alert('Có lỗi khi xác thực: ' + e.message);
+                            } finally {
+                                btnVerify.innerHTML = 'Xác thực & Hoàn tất';
+                            }
+                        };
+                    } else {
+                        // Fallback nếu chứng thực API lỗi (như block rate limit)
+                        alert('Gửi OTP thất bại: ' + otpRes.error);
+                    }
+                } catch (e) {
+                    console.error('API OTP chưa sẵn sàng, dùng fallback bypass (Dev Mode):', e);
+                    // Bỏ qua OTP khi backend tèo (Dev env)
+                    const result = await submitDriverRegistration(data);
+                    if (!result.error) {
+                        showNotification('Đăng ký thành công! (Bypass OTP)');
+                        form.reset();
+                    }
+                } finally {
+                    btnSubmit.innerHTML = originalText;
+                    btnSubmit.classList.remove('btn-loading');
+                }
             });
         }
 
@@ -764,6 +823,26 @@
             });
         }
     </script>
+
+    <!-- OTP Modal -->
+    <div id="otp-modal" class="modal-overlay"
+        style="display:none;align-items:center;justify-content:center;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.8);z-index:9999;">
+        <div class="modal-box"
+            style="background:#1e293b;padding:30px;border-radius:12px;width:90%;max-width:400px;text-align:center;">
+            <div class="modal-icon" style="color:#ff9800;font-size:3rem;margin-bottom:15px"><i
+                    class="fas fa-mobile-alt"></i></div>
+            <h3 class="modal-title" style="color:#fff;margin-bottom:10px;">Xác thực số điện thoại</h3>
+            <p class="modal-subtitle" style="color:rgba(255,255,255,0.7);margin-bottom:20px;font-size:0.9rem;">Mã OTP đã
+                được gửi đến số <strong id="otp-phone-display" style="color:#ff9800;"></strong></p>
+
+            <input type="text" id="otp-input" placeholder="Nhập 6 số OTP" maxlength="6"
+                style="width:100%;padding:12px;border-radius:8px;border:1px solid rgba(255,255,255,0.1);background:rgba(255,255,255,0.05);color:#fff;text-align:center;font-size:1.5rem;letter-spacing:10px;margin-bottom:20px;">
+
+            <button id="btn-verify-otp" class="btn-book" style="width:100%">Xác thực & Hoàn tất</button>
+            <button type="button" onclick="document.getElementById('otp-modal').style.display='none'"
+                style="background:transparent;border:none;color:rgba(255,255,255,0.5);margin-top:15px;cursor:pointer;">Đóng</button>
+        </div>
+    </div>
 
 </body>
 

@@ -484,7 +484,9 @@ entrypoint = "./functions/create-payment/index.ts"
 
 [functions.payment-callback]
 enabled = true
-verify_jwt = true
+# Payment providers (Momo/VNPay/ZaloPay) send webhook callbacks without JWT
+# Authentication is done via HMAC signature verification inside the function
+verify_jwt = false
 import_map = "./functions/payment-callback/deno.json"
 # Uncomment to specify a custom file path to the entrypoint.
 # Supported file extensions are: .ts, .js, .mjs, .jsx, .tsx

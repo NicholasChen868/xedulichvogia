@@ -87,15 +87,15 @@ description: Danh sách tasks và phân công cho dự án TravelCar
 
 ### Tích hợp
 - [x] **Google Maps API** — calculate-distance edge function + fallback routes ✅ 21/02
-- [x] **Payment gateway** — Momo + VNPay (create-payment + payment-callback) ✅ 21/02
-- [x] **Chatbot FAQ** — keyword matching, 12 câu FAQ, đa chủ đề ✅ 21/02
+- [x] **Payment gateway** — Momo + VNPay (create-payment + payment-callback) ✅ 21/02 (Đã tích hợp vào Booking modal)
+- [x] **Chatbot FAQ** — keyword matching, 12 câu FAQ, đa chủ đề ✅ 21/02 (Đã tích hợp chatbot widget vào trang chủ)
 - [x] **Database triggers** — rating auto-update, match_driver dùng average_rating ✅ 21/02
 
 ### Dịch vụ Tour
 - [x] **Tour guide đa ngôn ngữ** — vi, en, zh, ja, ko (schema + API) ✅ 21/02
 - [x] **3 mức tour**: budget, basic, premium (schema + seed data) ✅ 21/02
 - [x] **Các loại tour**: experience, explore, resort, luxury ✅ 21/02
-- [x] **Tour tùy chỉnh** — custom tour booking API ✅ 21/02
+- [x] **Tour tùy chỉnh** — custom tour booking API ✅ 21/02 (Đã tạo trang tours.html tích hợp tour-api)
 
 ### CI/CD & Auto Maintenance (ClaudeCode)
 - [x] **Vercel security headers** — CSP, HSTS, X-Frame-Options, Referrer-Policy ✅ 21/02

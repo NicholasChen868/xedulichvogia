@@ -793,7 +793,6 @@
 
         async function adminLogout() {
             await signOutAdmin();
-            localStorage.removeItem('admin_auth');
             location.reload();
         }
 

@@ -421,6 +421,32 @@
         </div>
     </div>
 
+    <!-- CHATBOT WIDGET -->
+    <div id="chatbot-widget" class="chatbot-container">
+        <div class="chatbot-toggle" onclick="toggleChatbot()" title="Trợ lý ảo TravelCar">
+            <i class="fas fa-comment-dots"></i>
+        </div>
+        <div class="chatbot-window">
+            <div class="chatbot-header">
+                <i class="fas fa-robot"></i> Trợ lý ảo TravelCar
+                <button onclick="toggleChatbot()" title="Đóng chat" aria-label="Đóng chat"><i
+                        class="fas fa-times"></i></button>
+            </div>
+            <div class="chatbot-messages" id="chatbot-messages">
+                <div class="chat-msg bot-msg">
+                    <div class="msg-bubble">Chào bạn, tôi là trợ lý ảo của TravelCar. Bạn cần hỗ trợ thông tin gì về đặt
+                        xe, bảng giá hay quy định?</div>
+                </div>
+            </div>
+            <div class="chatbot-input">
+                <input type="text" id="chat-input-text" placeholder="Nhập câu hỏi (VD: giá cước)"
+                    onkeypress="if(event.key==='Enter') sendChatQuery()">
+                <button onclick="sendChatQuery()" title="Gửi câu hỏi" aria-label="Gửi câu hỏi"><i
+                        class="fas fa-paper-plane"></i></button>
+            </div>
+        </div>
+    </div>
+
     <!-- SCRIPTS -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="js/config.js"></script>
@@ -428,6 +454,51 @@
     <script src="js/supabase.js"></script>
     <script src="js/app.js"></script>
 
+    <script>
+        // Chatbot logic
+        function toggleChatbot() {
+            document.getElementById('chatbot-widget').classList.toggle('open');
+            setTimeout(() => document.getElementById('chat-input-text')?.focus(), 300);
+        }
+
+        async function sendChatQuery() {
+            const input = document.getElementById('chat-input-text');
+            const msgBox = document.getElementById('chatbot-messages');
+            const question = input.value.trim();
+            if (!question) return;
+
+            // Add user message
+            msgBox.innerHTML += `<div class="chat-msg user-msg"><div class="msg-bubble">${question}</div></div>`;
+            input.value = '';
+            msgBox.scrollTop = msgBox.scrollHeight;
+
+            // Add typing indicator
+            const typingId = 'typing-' + Date.now();
+            msgBox.innerHTML += `<div class="chat-msg bot-msg" id="${typingId}"><div class="msg-bubble"><i class="fas fa-spinner fa-spin"></i> Đang trả lời...</div></div>`;
+            msgBox.scrollTop = msgBox.scrollHeight;
+
+            try {
+                const res = await fetch(`${SUPABASE_URL}/functions/v1/chatbot-faq`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${SUPABASE_ANON_KEY}` },
+                    body: JSON.stringify({ question })
+                });
+                const data = await res.json();
+
+                document.getElementById(typingId).remove();
+
+                if (data.answer) {
+                    msgBox.innerHTML += `<div class="chat-msg bot-msg"><div class="msg-bubble">${data.answer.replace(/\n/g, '<br>')}</div></div>`;
+                } else {
+                    msgBox.innerHTML += `<div class="chat-msg bot-msg"><div class="msg-bubble">Xin lỗi, tôi chưa hiểu ý bạn. Vui lòng gọi Hotline để được hỗ trợ.</div></div>`;
+                }
+            } catch (e) {
+                document.getElementById(typingId).remove();
+                msgBox.innerHTML += `<div class="chat-msg bot-msg"><div class="msg-bubble">Lỗi kết nối máy chủ, vui lòng thử lại sau.</div></div>`;
+            }
+            msgBox.scrollTop = msgBox.scrollHeight;
+        }
+    </script>
 </body>
 
 </html>
