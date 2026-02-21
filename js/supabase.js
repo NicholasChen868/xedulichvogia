@@ -399,3 +399,33 @@ async function adminManualMatch(bookingId) {
     const { data, error } = await db.rpc('match_driver', { p_booking_id: bookingId });
     return { data, error };
 }
+
+// ===== TRA CỨU ĐƠN =====
+
+/** Tra cứu booking theo SĐT */
+async function lookupBookingsByPhone(phone) {
+    if (!db) return { data: [], error: null };
+    const { data, error } = await db.from('bookings')
+        .select('*')
+        .eq('customer_phone', phone)
+        .order('created_at', { ascending: false })
+        .limit(10);
+
+    // Nếu có driver_id, lấy thêm thông tin tài xế
+    if (data && data.length > 0) {
+        const driverIds = [...new Set(data.filter(b => b.driver_id).map(b => b.driver_id))];
+        if (driverIds.length > 0) {
+            const { data: drivers } = await db.from('drivers')
+                .select('id, full_name, phone, license_plate, vehicle_brand, rating')
+                .in('id', driverIds);
+            const driverMap = {};
+            (drivers || []).forEach(d => driverMap[d.id] = d);
+            data.forEach(b => {
+                if (b.driver_id && driverMap[b.driver_id]) {
+                    b._driver = driverMap[b.driver_id];
+                }
+            });
+        }
+    }
+    return { data: data || [], error };
+}

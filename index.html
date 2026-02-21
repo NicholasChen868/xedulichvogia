@@ -108,9 +108,16 @@
                         </div>
                     </div>
                     <div id="price-estimate" class="price-estimate"></div>
-                    <div class="form-group">
-                        <label for="phone">Số điện thoại</label>
-                        <input type="tel" id="phone" name="phone" placeholder="VD: 0901 234 567" required>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="customer-name">Họ tên</label>
+                            <input type="text" id="customer-name" name="customer_name" placeholder="Nguyễn Văn A"
+                                required>
+                        </div>
+                        <div class="form-group">
+                            <label for="phone">Số điện thoại</label>
+                            <input type="tel" id="phone" name="phone" placeholder="0901 234 567" required>
+                        </div>
                     </div>
                     <button type="submit" class="btn-book"><i class="fas fa-paper-plane"></i> Đặt xe ngay</button>
                 </form>
@@ -205,14 +212,44 @@
         </div>
     </section>
 
+    <!-- TRA CỨU ĐƠN -->
+    <section class="section" id="lookup-section">
+        <div class="section-header">
+            <span class="pill">🔍 Tra cứu</span>
+            <h2>Tra Cứu Đơn Đặt Xe</h2>
+            <p>Nhập số điện thoại để xem trạng thái đơn của bạn</p>
+        </div>
+        <div class="lookup-card">
+            <form id="lookup-form" class="lookup-form">
+                <div class="lookup-input-wrap">
+                    <i class="fas fa-phone"></i>
+                    <input type="tel" id="lookup-phone" placeholder="Nhập số điện thoại..." required>
+                </div>
+                <button type="submit" class="btn-book lookup-btn"><i class="fas fa-search"></i> Tra cứu</button>
+            </form>
+            <div id="lookup-results" class="lookup-results"></div>
+        </div>
+    </section>
+
     <!-- CTA - DRIVER REGISTRATION -->
     <section class="cta-section">
         <div class="cta-box">
             <h2>Trở Thành Đối Tác Tài Xế</h2>
-            <p>Đăng ký xe của bạn và nhận cuốc xe tự động. Hệ thống matching thông minh ghép khách gần nhất.</p>
+            <p>Đăng ký miễn phí 100% và nhận cuốc xe tự động. Hệ thống matching thông minh ghép khách gần nhất. Bạn chạy
+                bao nhiêu hưởng bấy nhiêu.</p>
             <a href="driver-register.html" class="btn-cta"><i class="fas fa-handshake"></i> Đăng ký ngay</a>
         </div>
     </section>
+
+    <!-- BOOKING CONFIRMATION MODAL -->
+    <div id="booking-modal" class="modal-overlay">
+        <div class="modal-card">
+            <button class="modal-close" onclick="closeBookingModal()">&times;</button>
+            <div id="modal-content">
+                <!-- Populated by JS -->
+            </div>
+        </div>
+    </div>
 
     <!-- FOOTER -->
     <footer>
@@ -233,7 +270,7 @@
                 <h4>Đối tác</h4>
                 <a href="driver-register.html">Đăng ký tài xế</a>
                 <a href="driver-dashboard.html">Dashboard tài xế</a>
-                <a href="#">Quy chế hợp tác</a>
+                <a href="#lookup-section">Tra cứu đơn</a>
                 <a href="#">Chính sách</a>
             </div>
             <div>
