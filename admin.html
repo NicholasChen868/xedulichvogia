@@ -1,0 +1,931 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard — TravelCar</title>
+    <meta name="description" content="Quản trị hệ thống TravelCar: bookings, tài xế, matching.">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        /* ===== ADMIN DASHBOARD ===== */
+        * {
+            box-sizing: border-box;
+        }
+
+        .admin-wrap {
+            display: flex;
+            min-height: 100vh;
+            padding-top: 70px;
+        }
+
+        /* Sidebar */
+        .admin-sidebar {
+            width: 240px;
+            background: rgba(255, 255, 255, 0.03);
+            border-right: 1px solid rgba(255, 255, 255, 0.06);
+            padding: 24px 16px;
+            position: fixed;
+            top: 70px;
+            bottom: 0;
+            left: 0;
+            z-index: 10;
+        }
+
+        .sidebar-title {
+            font-size: .68rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: rgba(255, 255, 255, 0.25);
+            margin-bottom: 16px;
+            padding: 0 12px;
+        }
+
+        .sidebar-nav {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .sidebar-nav li a {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 11px 14px;
+            border-radius: 10px;
+            color: rgba(255, 255, 255, 0.5);
+            text-decoration: none;
+            font-size: .85rem;
+            font-weight: 500;
+            transition: .2s;
+            margin-bottom: 2px;
+        }
+
+        .sidebar-nav li a:hover {
+            background: rgba(255, 255, 255, 0.04);
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        .sidebar-nav li a.active {
+            background: rgba(255, 152, 0, 0.12);
+            color: #ff9800;
+        }
+
+        .sidebar-nav li a i {
+            width: 18px;
+            text-align: center;
+            font-size: .9rem;
+        }
+
+        .sidebar-badge {
+            margin-left: auto;
+            background: rgba(255, 152, 0, 0.2);
+            color: #ff9800;
+            font-size: .68rem;
+            font-weight: 700;
+            padding: 2px 8px;
+            border-radius: 10px;
+        }
+
+        /* Main content */
+        .admin-main {
+            flex: 1;
+            margin-left: 240px;
+            padding: 24px 32px;
+        }
+
+        .admin-page-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: 24px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .admin-page-title i {
+            color: #ff9800;
+        }
+
+        /* Stats Grid */
+        .stats-row {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 14px;
+            margin-bottom: 28px;
+        }
+
+        .stat-box {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 16px;
+            padding: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-box::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #ff9800, #f57c00);
+            opacity: 0;
+            transition: .2s;
+        }
+
+        .stat-box:hover::before {
+            opacity: 1;
+        }
+
+        .stat-box .sb-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+            margin-bottom: 12px;
+        }
+
+        .stat-box .sb-icon.blue {
+            background: rgba(33, 150, 243, 0.12);
+            color: #42a5f5;
+        }
+
+        .stat-box .sb-icon.orange {
+            background: rgba(255, 152, 0, 0.12);
+            color: #ff9800;
+        }
+
+        .stat-box .sb-icon.green {
+            background: rgba(76, 175, 80, 0.12);
+            color: #66bb6a;
+        }
+
+        .stat-box .sb-icon.purple {
+            background: rgba(156, 39, 176, 0.12);
+            color: #ab47bc;
+        }
+
+        .stat-box .sb-value {
+            font-size: 1.6rem;
+            font-weight: 800;
+            color: #fff;
+        }
+
+        .stat-box .sb-label {
+            font-size: .75rem;
+            color: rgba(255, 255, 255, 0.35);
+            margin-top: 2px;
+        }
+
+        /* Filter bar */
+        .filter-bar {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 16px;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            padding: 7px 16px;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            background: rgba(255, 255, 255, 0.03);
+            color: rgba(255, 255, 255, 0.5);
+            font-size: .78rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: .2s;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .filter-btn.active {
+            border-color: #ff9800;
+            color: #ff9800;
+            background: rgba(255, 152, 0, 0.08);
+        }
+
+        .filter-btn:hover {
+            border-color: rgba(255, 152, 0, 0.3);
+        }
+
+        .filter-bar .refresh-btn {
+            margin-left: auto;
+            padding: 7px 14px;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: none;
+            color: rgba(255, 255, 255, 0.4);
+            cursor: pointer;
+            font-family: 'Inter', sans-serif;
+            font-size: .78rem;
+            transition: .2s;
+        }
+
+        .filter-bar .refresh-btn:hover {
+            color: #ff9800;
+            border-color: #ff9800;
+        }
+
+        /* Table */
+        .admin-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 14px;
+            overflow: hidden;
+        }
+
+        .admin-table th {
+            background: rgba(255, 255, 255, 0.04);
+            color: rgba(255, 255, 255, 0.4);
+            font-size: .7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: .8px;
+            padding: 12px 14px;
+            text-align: left;
+            white-space: nowrap;
+        }
+
+        .admin-table td {
+            padding: 12px 14px;
+            border-top: 1px solid rgba(255, 255, 255, 0.04);
+            color: rgba(255, 255, 255, 0.7);
+            font-size: .82rem;
+            white-space: nowrap;
+        }
+
+        .admin-table tr:hover td {
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .admin-table td strong {
+            color: #fff;
+            font-weight: 600;
+        }
+
+        /* Status badges */
+        .badge {
+            font-size: .68rem;
+            font-weight: 700;
+            padding: 3px 10px;
+            border-radius: 20px;
+            text-transform: uppercase;
+            letter-spacing: .3px;
+        }
+
+        .badge.pending {
+            background: rgba(255, 193, 7, 0.15);
+            color: #ffc107;
+        }
+
+        .badge.matched {
+            background: rgba(255, 152, 0, 0.15);
+            color: #ff9800;
+        }
+
+        .badge.confirmed {
+            background: rgba(33, 150, 243, 0.15);
+            color: #42a5f5;
+        }
+
+        .badge.completed {
+            background: rgba(76, 175, 80, 0.12);
+            color: #66bb6a;
+        }
+
+        .badge.cancelled {
+            background: rgba(244, 67, 54, 0.12);
+            color: #ef5350;
+        }
+
+        .badge.active {
+            background: rgba(76, 175, 80, 0.12);
+            color: #66bb6a;
+        }
+
+        .badge.suspended {
+            background: rgba(244, 67, 54, 0.12);
+            color: #ef5350;
+        }
+
+        .badge.online {
+            background: rgba(76, 175, 80, 0.2);
+            color: #4caf50;
+        }
+
+        .badge.offline {
+            background: rgba(255, 255, 255, 0.06);
+            color: rgba(255, 255, 255, 0.3);
+        }
+
+        /* Action buttons */
+        .action-btn {
+            padding: 5px 10px;
+            border-radius: 6px;
+            border: none;
+            font-size: .72rem;
+            font-weight: 600;
+            cursor: pointer;
+            font-family: 'Inter', sans-serif;
+            transition: .15s;
+            margin-right: 4px;
+        }
+
+        .action-btn.match {
+            background: rgba(255, 152, 0, 0.15);
+            color: #ff9800;
+        }
+
+        .action-btn.match:hover {
+            background: rgba(255, 152, 0, 0.3);
+        }
+
+        .action-btn.cancel {
+            background: rgba(244, 67, 54, 0.1);
+            color: #ef5350;
+        }
+
+        .action-btn.cancel:hover {
+            background: rgba(244, 67, 54, 0.25);
+        }
+
+        .action-btn.approve {
+            background: rgba(76, 175, 80, 0.15);
+            color: #66bb6a;
+        }
+
+        .action-btn.approve:hover {
+            background: rgba(76, 175, 80, 0.3);
+        }
+
+        .action-btn.suspend {
+            background: rgba(244, 67, 54, 0.1);
+            color: #ef5350;
+        }
+
+        .action-btn.suspend:hover {
+            background: rgba(244, 67, 54, 0.25);
+        }
+
+        /* Login */
+        .admin-login {
+            max-width: 380px;
+            margin: 100px auto;
+            text-align: center;
+        }
+
+        .admin-login h2 {
+            color: #fff;
+            font-size: 1.6rem;
+            margin-bottom: 6px;
+        }
+
+        .admin-login p {
+            color: rgba(255, 255, 255, 0.4);
+            font-size: .85rem;
+            margin-bottom: 24px;
+        }
+
+        .admin-login-card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 18px;
+            padding: 28px;
+            -webkit-backdrop-filter: blur(20px);
+            backdrop-filter: blur(20px);
+        }
+
+        .admin-login-card input {
+            width: 100%;
+            padding: 13px 16px;
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 10px;
+            color: #fff;
+            font-size: .9rem;
+            font-family: 'Inter', sans-serif;
+            margin-bottom: 14px;
+        }
+
+        .admin-login-card input::placeholder {
+            color: rgba(255, 255, 255, 0.25);
+        }
+
+        .admin-login-card input:focus {
+            outline: none;
+            border-color: #ff9800;
+        }
+
+        .admin-error {
+            background: rgba(244, 67, 54, 0.12);
+            border: 1px solid rgba(244, 67, 54, 0.25);
+            color: #ef5350;
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-size: .78rem;
+            margin-bottom: 12px;
+            display: none;
+        }
+
+        .admin-error.show {
+            display: block;
+        }
+
+        /* Section panels */
+        .admin-panel {
+            display: none;
+        }
+
+        .admin-panel.active {
+            display: block;
+        }
+
+        /* Empty */
+        .table-empty {
+            text-align: center;
+            padding: 40px;
+            color: rgba(255, 255, 255, 0.25);
+            font-size: .85rem;
+        }
+
+        .table-empty i {
+            font-size: 2rem;
+            margin-bottom: 8px;
+            display: block;
+            opacity: .4;
+        }
+
+        /* Scroll wrapper */
+        .table-wrap {
+            overflow-x: auto;
+            border-radius: 14px;
+        }
+
+        /* Mobile */
+        @media (max-width: 900px) {
+            .admin-sidebar {
+                display: none;
+            }
+
+            .admin-main {
+                margin-left: 0;
+                padding: 16px;
+            }
+
+            .stats-row {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 500px) {
+            .stats-row {
+                grid-template-columns: 1fr 1fr;
+                gap: 8px;
+            }
+
+            .stat-box {
+                padding: 14px;
+            }
+
+            .stat-box .sb-value {
+                font-size: 1.2rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- NAV -->
+    <nav>
+        <a href="index.html" class="logo">Travel<span>Car</span></a>
+        <button class="hamburger" aria-label="Menu">
+            <span></span><span></span><span></span>
+        </button>
+        <div class="nav-links">
+            <a href="index.html">Trang chủ</a>
+            <a href="driver-register.html">Đăng ký tài xế</a>
+            <a href="driver-dashboard.html">Driver</a>
+            <a href="admin.html" class="active-link">Admin</a>
+        </div>
+    </nav>
+
+    <!-- ADMIN LOGIN -->
+    <div id="admin-login" class="admin-login">
+        <h2><i class="fas fa-shield-halved" style="color:#ff9800"></i> Admin Panel</h2>
+        <p>Đăng nhập quản trị viên</p>
+        <div class="admin-login-card">
+            <div id="admin-error" class="admin-error">
+                <i class="fas fa-exclamation-circle"></i> Mật khẩu không đúng
+            </div>
+            <form id="admin-login-form">
+                <input type="password" id="admin-pass" placeholder="Mật khẩu admin" required autofocus>
+                <button type="submit" class="btn-book" style="width:100%">
+                    <i class="fas fa-lock-open"></i> Đăng nhập
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- ADMIN DASHBOARD (hidden until login) -->
+    <div id="admin-dashboard" class="admin-wrap" style="display:none">
+
+        <!-- Sidebar -->
+        <aside class="admin-sidebar">
+            <div class="sidebar-title">Quản trị</div>
+            <ul class="sidebar-nav">
+                <li><a href="#" class="active" data-panel="overview" onclick="showPanel('overview')">
+                        <i class="fas fa-chart-pie"></i> Tổng quan
+                    </a></li>
+                <li><a href="#" data-panel="bookings" onclick="showPanel('bookings')">
+                        <i class="fas fa-calendar-check"></i> Đơn đặt xe
+                        <span class="sidebar-badge" id="sb-booking-count">0</span>
+                    </a></li>
+                <li><a href="#" data-panel="drivers" onclick="showPanel('drivers')">
+                        <i class="fas fa-id-card"></i> Tài xế
+                        <span class="sidebar-badge" id="sb-driver-count">0</span>
+                    </a></li>
+            </ul>
+            <div class="sidebar-title" style="margin-top:32px">Liên kết</div>
+            <ul class="sidebar-nav">
+                <li><a href="index.html"><i class="fas fa-globe"></i> Website</a></li>
+                <li><a href="driver-dashboard.html"><i class="fas fa-steering-wheel"></i> Driver Panel</a></li>
+                <li><a href="#" onclick="adminLogout()"><i class="fas fa-sign-out-alt"></i> Đăng xuất</a></li>
+            </ul>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="admin-main">
+
+            <!-- ===== OVERVIEW PANEL ===== -->
+            <div id="panel-overview" class="admin-panel active">
+                <div class="admin-page-title"><i class="fas fa-chart-pie"></i> Tổng quan hệ thống</div>
+
+                <div class="stats-row">
+                    <div class="stat-box">
+                        <div class="sb-icon blue"><i class="fas fa-calendar-check"></i></div>
+                        <div class="sb-value" id="ov-total-bookings">—</div>
+                        <div class="sb-label">Tổng đơn đặt xe</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="sb-icon orange"><i class="fas fa-clock"></i></div>
+                        <div class="sb-value" id="ov-pending">—</div>
+                        <div class="sb-label">Chờ xử lý</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="sb-icon green"><i class="fas fa-check-circle"></i></div>
+                        <div class="sb-value" id="ov-completed">—</div>
+                        <div class="sb-label">Hoàn thành</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="sb-icon purple"><i class="fas fa-money-bill-wave"></i></div>
+                        <div class="sb-value" id="ov-revenue">—</div>
+                        <div class="sb-label">Doanh thu</div>
+                    </div>
+                </div>
+
+                <div class="stats-row">
+                    <div class="stat-box">
+                        <div class="sb-icon blue"><i class="fas fa-users"></i></div>
+                        <div class="sb-value" id="ov-total-drivers">—</div>
+                        <div class="sb-label">Tổng tài xế</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="sb-icon green"><i class="fas fa-user-check"></i></div>
+                        <div class="sb-value" id="ov-active-drivers">—</div>
+                        <div class="sb-label">Đã duyệt</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="sb-icon orange"><i class="fas fa-signal"></i></div>
+                        <div class="sb-value" id="ov-online-drivers">—</div>
+                        <div class="sb-label">Đang online</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="sb-icon purple"><i class="fas fa-user-clock"></i></div>
+                        <div class="sb-value" id="ov-pending-drivers">—</div>
+                        <div class="sb-label">Chờ duyệt</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ===== BOOKINGS PANEL ===== -->
+            <div id="panel-bookings" class="admin-panel">
+                <div class="admin-page-title"><i class="fas fa-calendar-check"></i> Quản lý đơn đặt xe</div>
+
+                <div class="filter-bar">
+                    <button class="filter-btn active" data-filter="all" onclick="filterBookings('all')">Tất cả</button>
+                    <button class="filter-btn" data-filter="pending" onclick="filterBookings('pending')">Chờ
+                        match</button>
+                    <button class="filter-btn" data-filter="matched" onclick="filterBookings('matched')">Đã
+                        match</button>
+                    <button class="filter-btn" data-filter="confirmed" onclick="filterBookings('confirmed')">Đã
+                        nhận</button>
+                    <button class="filter-btn" data-filter="completed" onclick="filterBookings('completed')">Hoàn
+                        thành</button>
+                    <button class="filter-btn" data-filter="cancelled" onclick="filterBookings('cancelled')">Đã
+                        hủy</button>
+                    <button class="refresh-btn" onclick="loadBookings()"><i class="fas fa-refresh"></i> Làm mới</button>
+                </div>
+
+                <div class="table-wrap">
+                    <table class="admin-table" id="bookings-table">
+                        <thead>
+                            <tr>
+                                <th>Thời gian</th>
+                                <th>Tuyến đường</th>
+                                <th>Loại xe</th>
+                                <th>Km</th>
+                                <th>Giá</th>
+                                <th>SĐT khách</th>
+                                <th>Trạng thái</th>
+                                <th>Tài xế</th>
+                                <th>Thao tác</th>
+                            </tr>
+                        </thead>
+                        <tbody id="bookings-tbody">
+                            <tr>
+                                <td colspan="9" class="table-empty"><i class="fas fa-spinner fa-spin"></i>Đang tải...
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- ===== DRIVERS PANEL ===== -->
+            <div id="panel-drivers" class="admin-panel">
+                <div class="admin-page-title"><i class="fas fa-id-card"></i> Quản lý tài xế</div>
+
+                <div class="filter-bar">
+                    <button class="filter-btn active" data-filter="all" onclick="filterDrivers('all')">Tất cả</button>
+                    <button class="filter-btn" data-filter="pending" onclick="filterDrivers('pending')">Chờ
+                        duyệt</button>
+                    <button class="filter-btn" data-filter="active" onclick="filterDrivers('active')">Hoạt động</button>
+                    <button class="filter-btn" data-filter="suspended" onclick="filterDrivers('suspended')">Bị
+                        khóa</button>
+                    <button class="refresh-btn" onclick="loadDrivers()"><i class="fas fa-refresh"></i> Làm mới</button>
+                </div>
+
+                <div class="table-wrap">
+                    <table class="admin-table" id="drivers-table">
+                        <thead>
+                            <tr>
+                                <th>Tên</th>
+                                <th>SĐT</th>
+                                <th>Loại xe</th>
+                                <th>Biển số</th>
+                                <th>Khu vực</th>
+                                <th>Online</th>
+                                <th>Chuyến</th>
+                                <th>Rating</th>
+                                <th>Trạng thái</th>
+                                <th>Thao tác</th>
+                            </tr>
+                        </thead>
+                        <tbody id="drivers-tbody">
+                            <tr>
+                                <td colspan="10" class="table-empty"><i class="fas fa-spinner fa-spin"></i>Đang tải...
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </main>
+    </div>
+
+    <!-- SCRIPTS -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/config.js"></script>
+    <script src="js/pricing.js"></script>
+    <script src="js/supabase.js"></script>
+    <script>
+        const ADMIN_PASS = 'travelcar2026';
+        let currentBookingFilter = 'all';
+        let currentDriverFilter = 'all';
+
+        document.addEventListener('DOMContentLoaded', () => {
+            initSupabase();
+
+            // Auto-login
+            if (localStorage.getItem('admin_auth') === 'true') {
+                showAdminDashboard();
+            }
+
+            document.getElementById('admin-login-form').addEventListener('submit', (e) => {
+                e.preventDefault();
+                const pass = document.getElementById('admin-pass').value;
+                if (pass === ADMIN_PASS) {
+                    localStorage.setItem('admin_auth', 'true');
+                    showAdminDashboard();
+                } else {
+                    document.getElementById('admin-error').classList.add('show');
+                }
+            });
+
+            // Nav
+            const hamburger = document.querySelector('.hamburger');
+            const navLinks = document.querySelector('.nav-links');
+            if (hamburger && navLinks) {
+                hamburger.addEventListener('click', () => navLinks.classList.toggle('open'));
+            }
+        });
+
+        function showAdminDashboard() {
+            document.getElementById('admin-login').style.display = 'none';
+            document.getElementById('admin-dashboard').style.display = 'flex';
+            loadOverview();
+            loadBookings();
+            loadDrivers();
+        }
+
+        function adminLogout() {
+            localStorage.removeItem('admin_auth');
+            location.reload();
+        }
+
+        // ===== PANELS =====
+        function showPanel(name) {
+            document.querySelectorAll('.admin-panel').forEach(p => p.classList.remove('active'));
+            document.getElementById('panel-' + name).classList.add('active');
+            document.querySelectorAll('.sidebar-nav a').forEach(a => a.classList.remove('active'));
+            document.querySelector(`[data-panel="${name}"]`).classList.add('active');
+
+            if (name === 'overview') loadOverview();
+            else if (name === 'bookings') loadBookings();
+            else if (name === 'drivers') loadDrivers();
+        }
+
+        // ===== OVERVIEW =====
+        async function loadOverview() {
+            const s = await adminGetStats();
+            document.getElementById('ov-total-bookings').textContent = s.totalBookings || 0;
+            document.getElementById('ov-pending').textContent = (s.pendingBookings || 0) + (s.matchedBookings || 0);
+            document.getElementById('ov-completed').textContent = s.completedBookings || 0;
+            document.getElementById('ov-revenue').textContent = formatVNDShort(s.totalRevenue || 0);
+            document.getElementById('ov-total-drivers').textContent = s.totalDrivers || 0;
+            document.getElementById('ov-active-drivers').textContent = s.activeDrivers || 0;
+            document.getElementById('ov-online-drivers').textContent = s.onlineDrivers || 0;
+            document.getElementById('ov-pending-drivers').textContent = s.pendingDrivers || 0;
+            document.getElementById('sb-booking-count').textContent = s.totalBookings || 0;
+            document.getElementById('sb-driver-count').textContent = s.totalDrivers || 0;
+        }
+
+        // ===== BOOKINGS =====
+        async function loadBookings() {
+            const result = await adminGetBookings(currentBookingFilter);
+            const tbody = document.getElementById('bookings-tbody');
+            const data = result.data || [];
+
+            if (data.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="9" class="table-empty"><i class="fas fa-inbox"></i>Không có đơn nào</td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = data.map(b => {
+                const time = b.created_at ? new Date(b.created_at).toLocaleString('vi-VN', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' }) : '—';
+                const fare = b.estimated_fare ? formatVNDShort(b.estimated_fare) : '—';
+                const vehicle = b.vehicle_type === 'sedan-4' ? '4 chỗ' : b.vehicle_type === 'suv-7' ? '7 chỗ' : (b.vehicle_type || '—');
+
+                let actions = '';
+                if (b.status === 'pending') {
+                    actions = `<button class="action-btn match" onclick="doMatch('${b.id}')"><i class="fas fa-link"></i> Match</button>
+                               <button class="action-btn cancel" onclick="doCancel('${b.id}')"><i class="fas fa-times"></i></button>`;
+                } else if (b.status === 'matched' || b.status === 'confirmed') {
+                    actions = `<button class="action-btn cancel" onclick="doCancel('${b.id}')"><i class="fas fa-times"></i> Hủy</button>`;
+                }
+
+                return `<tr>
+                    <td>${time}</td>
+                    <td><strong>${b.pickup_location || '—'}</strong> → ${b.dropoff_location || '—'}</td>
+                    <td>${vehicle}</td>
+                    <td>${b.distance_km || '—'}</td>
+                    <td><strong>${fare}</strong></td>
+                    <td>${b.customer_phone || '—'}</td>
+                    <td><span class="badge ${b.status}">${getStatusLabel(b.status)}</span></td>
+                    <td>${b.driver_id ? '<i class="fas fa-user-check" style="color:#66bb6a"></i>' : '—'}</td>
+                    <td>${actions}</td>
+                </tr>`;
+            }).join('');
+        }
+
+        function filterBookings(status) {
+            currentBookingFilter = status;
+            document.querySelectorAll('#panel-bookings .filter-btn').forEach(b => b.classList.remove('active'));
+            document.querySelector(`#panel-bookings [data-filter="${status}"]`).classList.add('active');
+            loadBookings();
+        }
+
+        async function doMatch(bookingId) {
+            const result = await adminManualMatch(bookingId);
+            if (result.data?.success) {
+                showNotif(`Matched tài xế: ${result.data.driver_name}`);
+            } else {
+                showNotif(result.data?.message || 'Không tìm thấy tài xế phù hợp');
+            }
+            loadBookings();
+            loadOverview();
+        }
+
+        async function doCancel(bookingId) {
+            await adminCancelBooking(bookingId);
+            showNotif('Đã hủy đơn');
+            loadBookings();
+            loadOverview();
+        }
+
+        // ===== DRIVERS =====
+        async function loadDrivers() {
+            const result = await adminGetDrivers(currentDriverFilter);
+            const tbody = document.getElementById('drivers-tbody');
+            const data = result.data || [];
+
+            if (data.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="10" class="table-empty"><i class="fas fa-inbox"></i>Không có tài xế nào</td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = data.map(d => {
+                const areas = (d.operating_areas || []).join(', ') || '—';
+                const vehicle = d.vehicle_type === 'sedan-4' ? '4 chỗ' : d.vehicle_type === 'suv-7' ? '7 chỗ' : (d.vehicle_type || '—');
+                const online = d.is_available ? '<span class="badge online">Online</span>' : '<span class="badge offline">Offline</span>';
+
+                let actions = '';
+                if (d.status === 'pending') {
+                    actions = `<button class="action-btn approve" onclick="doApprove('${d.id}')"><i class="fas fa-check"></i> Duyệt</button>`;
+                } else if (d.status === 'active') {
+                    actions = `<button class="action-btn suspend" onclick="doSuspend('${d.id}')"><i class="fas fa-ban"></i> Khóa</button>`;
+                } else if (d.status === 'suspended') {
+                    actions = `<button class="action-btn approve" onclick="doApprove('${d.id}')"><i class="fas fa-undo"></i> Mở</button>`;
+                }
+
+                return `<tr>
+                    <td><strong>${d.full_name}</strong></td>
+                    <td>${d.phone}</td>
+                    <td>${vehicle}</td>
+                    <td>${d.license_plate || '—'}</td>
+                    <td>${areas}</td>
+                    <td>${online}</td>
+                    <td>${d.total_trips || 0}</td>
+                    <td>⭐ ${d.rating || '5.0'}</td>
+                    <td><span class="badge ${d.status}">${d.status === 'active' ? 'Hoạt động' : d.status === 'pending' ? 'Chờ duyệt' : 'Bị khóa'}</span></td>
+                    <td>${actions}</td>
+                </tr>`;
+            }).join('');
+        }
+
+        function filterDrivers(status) {
+            currentDriverFilter = status;
+            document.querySelectorAll('#panel-drivers .filter-btn').forEach(b => b.classList.remove('active'));
+            document.querySelector(`#panel-drivers [data-filter="${status}"]`).classList.add('active');
+            loadDrivers();
+        }
+
+        async function doApprove(driverId) {
+            await adminApproveDriver(driverId);
+            showNotif('Đã duyệt tài xế');
+            loadDrivers();
+            loadOverview();
+        }
+
+        async function doSuspend(driverId) {
+            await adminSuspendDriver(driverId);
+            showNotif('Đã khóa tài xế');
+            loadDrivers();
+            loadOverview();
+        }
+
+        // ===== HELPERS =====
+        function getStatusLabel(s) {
+            return { pending: 'Chờ match', matched: 'Đã match', confirmed: 'Đã nhận', in_progress: 'Đang chạy', completed: 'Hoàn thành', cancelled: 'Đã hủy' }[s] || s;
+        }
+
+        function showNotif(msg) {
+            const n = document.createElement('div');
+            n.className = 'notification';
+            n.innerHTML = `<i class="fas fa-check-circle"></i> ${msg}`;
+            document.body.appendChild(n);
+            setTimeout(() => n.classList.add('show'), 10);
+            setTimeout(() => { n.classList.remove('show'); setTimeout(() => n.remove(), 300); }, 3000);
+        }
+    </script>
+
+</body>
+
+</html>

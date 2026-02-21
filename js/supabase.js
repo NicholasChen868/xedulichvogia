@@ -322,3 +322,80 @@ function subscribeDriverRides(driverId, callback) {
         })
         .subscribe();
 }
+
+// ===== ADMIN DASHBOARD =====
+
+/** Lấy tất cả bookings (admin) */
+async function adminGetBookings(status, limit = 50) {
+    if (!db) return { data: [], error: null };
+    let query = db.from('bookings').select('*').order('created_at', { ascending: false }).limit(limit);
+    if (status && status !== 'all') query = query.eq('status', status);
+    const { data, error } = await query;
+    return { data: data || [], error };
+}
+
+/** Lấy tất cả drivers (admin) */
+async function adminGetDrivers(status, limit = 50) {
+    if (!db) return { data: [], error: null };
+    let query = db.from('drivers').select('*').order('created_at', { ascending: false }).limit(limit);
+    if (status && status !== 'all') query = query.eq('status', status);
+    const { data, error } = await query;
+    return { data: data || [], error };
+}
+
+/** Thống kê tổng quan */
+async function adminGetStats() {
+    if (!db) return {};
+    const [bookings, drivers] = await Promise.all([
+        db.from('bookings').select('status, estimated_fare'),
+        db.from('drivers').select('status, is_available')
+    ]);
+    const b = bookings.data || [];
+    const d = drivers.data || [];
+    return {
+        totalBookings: b.length,
+        pendingBookings: b.filter(x => x.status === 'pending').length,
+        matchedBookings: b.filter(x => x.status === 'matched').length,
+        confirmedBookings: b.filter(x => x.status === 'confirmed').length,
+        completedBookings: b.filter(x => x.status === 'completed').length,
+        totalRevenue: b.filter(x => x.status === 'completed').reduce((s, x) => s + (x.estimated_fare || 0), 0),
+        totalDrivers: d.length,
+        activeDrivers: d.filter(x => x.status === 'active').length,
+        onlineDrivers: d.filter(x => x.status === 'active' && x.is_available).length,
+        pendingDrivers: d.filter(x => x.status === 'pending').length
+    };
+}
+
+/** Duyệt tài xế */
+async function adminApproveDriver(driverId) {
+    if (!db) return { error: 'Not initialized' };
+    const { data, error } = await db.from('drivers')
+        .update({ status: 'active', updated_at: new Date().toISOString() })
+        .eq('id', driverId).select();
+    return { data, error };
+}
+
+/** Khóa tài xế */
+async function adminSuspendDriver(driverId) {
+    if (!db) return { error: 'Not initialized' };
+    const { data, error } = await db.from('drivers')
+        .update({ status: 'suspended', is_available: false, updated_at: new Date().toISOString() })
+        .eq('id', driverId).select();
+    return { data, error };
+}
+
+/** Hủy booking */
+async function adminCancelBooking(bookingId) {
+    if (!db) return { error: 'Not initialized' };
+    const { data, error } = await db.from('bookings')
+        .update({ status: 'cancelled', updated_at: new Date().toISOString() })
+        .eq('id', bookingId).select();
+    return { data, error };
+}
+
+/** Match thủ công */
+async function adminManualMatch(bookingId) {
+    if (!db) return { error: 'Not initialized' };
+    const { data, error } = await db.rpc('match_driver', { p_booking_id: bookingId });
+    return { data, error };
+}
