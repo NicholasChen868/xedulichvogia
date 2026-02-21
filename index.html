@@ -68,30 +68,24 @@
 
             <!-- User Avatar -->
             <div class="nav-user" id="nav-user">
-                <button class="user-avatar" id="user-avatar-btn" title="Menu tài khoản" onclick="toggleUserMenu()">
+                <button class="user-avatar" id="user-avatar-btn" title="Đăng nhập" onclick="toggleUserMenu()">
                     <i class="fas fa-user"></i>
                 </button>
                 <div class="user-dropdown" id="user-dropdown">
                     <div class="user-dropdown-header" id="dropdown-header">
                         <div class="user-dropdown-name">Đăng nhập</div>
-                        <div class="user-dropdown-role">Khách</div>
+                        <div class="user-dropdown-role">Chọn loại tài khoản</div>
                     </div>
                     <div class="user-dropdown-body" id="dropdown-logged-out">
-                        <a href="admin.html"><i class="fas fa-sign-in-alt"></i> Đăng nhập Admin</a>
-                        <a href="driver-dashboard.html"><i class="fas fa-steering-wheel"></i> Tài xế Dashboard</a>
+                        <a href="driver-dashboard.html">🚗 Tài xế đăng nhập</a>
+                        <a href="#lookup-section">🔍 Tra cứu đơn đặt xe</a>
                     </div>
                     <div class="user-dropdown-body" id="dropdown-logged-in" style="display:none">
-                        <a href="admin.html"><i class="fas fa-gauge-high"></i> Dashboard</a>
-                        <a href="admin.html#bookings"><i class="fas fa-calendar-check"></i> Quản lý đơn</a>
-                        <a href="admin.html#drivers"><i class="fas fa-id-card"></i> Quản lý tài xế</a>
+                        <a href="#lookup-section">📋 Đơn đặt xe của tôi</a>
+                        <a href="#loyalty-section">🏆 TravelCar Miles</a>
+                        <a href="driver-dashboard.html">🚗 Tài xế Dashboard</a>
                         <div class="user-dropdown-divider"></div>
-                        <a href="#"><i class="fas fa-user-circle"></i> Tài khoản</a>
-                        <a href="#"><i class="fas fa-gift"></i> Điểm thưởng <span class="points-badge">120
-                                pts</span></a>
-                        <a href="#"><i class="fas fa-gear"></i> Cài đặt</a>
-                        <div class="user-dropdown-divider"></div>
-                        <a href="#" onclick="doAdminLogout()" class="logout-link"><i class="fas fa-sign-out-alt"></i>
-                            Đăng xuất</a>
+                        <a href="#" onclick="doAdminLogout()" class="logout-link">Đăng xuất</a>
                     </div>
                 </div>
             </div>
@@ -653,6 +647,19 @@
         </div>
     </footer>
 
+    <!-- SOCIAL PROOF NOTIFICATION -->
+    <div id="social-proof" class="social-proof">
+        <div class="social-proof-content">
+            <div class="social-proof-avatar" id="sp-avatar"></div>
+            <div class="social-proof-text">
+                <strong id="sp-name"></strong>
+                <span id="sp-message"></span>
+                <small id="sp-time"></small>
+            </div>
+        </div>
+        <button class="social-proof-close" onclick="closeSocialProof()" title="Đóng">&times;</button>
+    </div>
+
     <!-- NOTIFICATION CONTAINER -->
     <!-- (Created dynamically by JS) -->
     <!-- RATING MODAL -->
@@ -875,6 +882,52 @@
                 sidebar.classList.remove('collapsed');
             }, 1200);
         }, { passive: true });
+
+        // ===== SOCIAL PROOF NOTIFICATIONS =====
+        const spData = [
+            { name: 'Chị Lan', loc: 'Q.1, HCM', msg: 'vừa đặt xe đi Đà Lạt cho gia đình 4 người', mins: 2 },
+            { name: 'Anh Tuấn', loc: 'Bình Thạnh', msg: 'đang thưởng thức chuyến du lịch Mũi Né', mins: 5 },
+            { name: 'Chị Mai', loc: 'Q.7, HCM', msg: 'đã hoàn thành chuyến Sài Gòn → Vũng Tàu ⭐5/5', mins: 8 },
+            { name: 'Anh Khoa', loc: 'Thủ Đức', msg: 'vừa book xe limousine đi Nha Trang', mins: 1 },
+            { name: 'Chị Hương', loc: 'Tân Bình', msg: 'đã đặt đón sân bay cho 3 người', mins: 3 },
+            { name: 'Anh Đức', loc: 'Q.3, HCM', msg: 'đang trên đường đi Phú Quốc cùng gia đình', mins: 12 },
+            { name: 'Chị Thanh', loc: 'Gò Vấp', msg: 'vừa nhận voucher 200K hạng Khám Phá 🧭', mins: 6 },
+            { name: 'Anh Phong', loc: 'Đà Nẵng', msg: 'đã hoàn thành chuyến Đà Nẵng → Hội An ⭐5/5', mins: 15 },
+            { name: 'Chị Ngọc', loc: 'Q.10, HCM', msg: 'vừa đặt xe 7 chỗ đi Cần Thơ', mins: 4 },
+            { name: 'Anh Nam', loc: 'Biên Hòa', msg: 'đã lên hạng Phiêu Lưu ⛰️ — giảm 12%!', mins: 10 },
+            { name: 'Chị Vy', loc: 'Bình Dương', msg: 'vừa book xe team building 16 chỗ', mins: 7 },
+            { name: 'Anh Hùng', loc: 'Q.2, HCM', msg: 'đang thưởng thức hành trình Sapa tuyệt vời', mins: 20 },
+        ];
+
+        let spIndex = 0;
+        let spTimeout;
+
+        function showSocialProof() {
+            const el = document.getElementById('social-proof');
+            if (!el) return;
+            const d = spData[spIndex];
+            const initials = d.name.split(' ').pop().charAt(0);
+            document.getElementById('sp-avatar').textContent = initials;
+            document.getElementById('sp-name').textContent = d.name + ' (' + d.loc + ')';
+            document.getElementById('sp-message').textContent = d.msg;
+            document.getElementById('sp-time').textContent = d.mins + ' phút trước';
+            el.classList.add('show');
+            spTimeout = setTimeout(() => {
+                el.classList.remove('show');
+                spIndex = (spIndex + 1) % spData.length;
+                setTimeout(showSocialProof, Math.random() * 7000 + 8000);
+            }, 5000);
+        }
+
+        function closeSocialProof() {
+            const el = document.getElementById('social-proof');
+            if (el) el.classList.remove('show');
+            clearTimeout(spTimeout);
+            setTimeout(showSocialProof, 30000);
+        }
+
+        // Start after 5s delay
+        setTimeout(showSocialProof, 5000);
     </script>
 </body>
 
