@@ -48,9 +48,6 @@
 --   ZALOPAY_KEY1=<production_key1>
 --   ZALOPAY_KEY2=<production_key2>
 --
--- CAPTCHA:
---   TURNSTILE_SECRET_KEY=<from_cloudflare_dashboard>
---
 -- Health Check:
 --   HEALTH_CHECK_KEY=<random_32_char_key>
 --

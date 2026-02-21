@@ -563,7 +563,6 @@
                                 bảo mật</a> của TravelCar. Tôi cam kết thông tin cung cấp là chính xác.</label>
                     </div>
 
-                    <div class="cf-turnstile" data-sitekey="" id="captcha-register"></div>
                     <button type="submit" class="btn-book"><i class="fas fa-check-circle"></i> Đăng ký ngay</button>
                 </form>
             </div>
@@ -605,7 +604,6 @@
     </footer>
 
     <!-- SCRIPTS -->
-    <script src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit" defer></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="js/config.js"></script>
     <script src="js/pricing.js"></script>
@@ -638,10 +636,6 @@
             renderDriverStats();
             initDriverForm();
             initNavigation();
-            // Init Turnstile CAPTCHA
-            if (typeof turnstile !== 'undefined' && TURNSTILE_SITE_KEY && !TURNSTILE_SITE_KEY.includes('REPLACE')) {
-                turnstile.render('#captcha-register', { sitekey: TURNSTILE_SITE_KEY, theme: 'dark' });
-            }
         });
 
         function initNavigation() {
@@ -720,13 +714,6 @@
                     return;
                 }
 
-                // Verify CAPTCHA token if Turnstile is active
-                const captchaToken = typeof turnstile !== 'undefined' ? turnstile.getResponse(document.querySelector('#captcha-register')) : null;
-                if (TURNSTILE_SITE_KEY && !TURNSTILE_SITE_KEY.includes('REPLACE') && !captchaToken) {
-                    alert('Vui lòng xác minh CAPTCHA trước khi đăng ký');
-                    return;
-                }
-
                 // Gửi OTP
                 const btnSubmit = form.querySelector('button[type="submit"]');
                 const originalText = btnSubmit.innerHTML;
@@ -737,7 +724,7 @@
                     const res = await fetch(`${SUPABASE_URL}/functions/v1/send-otp`, {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${SUPABASE_ANON_KEY}` },
-                        body: JSON.stringify({ phone: data.phone, captcha_token: captchaToken })
+                        body: JSON.stringify({ phone: data.phone })
                     });
 
                     const otpRes = await res.json();

@@ -9,22 +9,6 @@ import { createClient } from "https://esm.sh/@supabase/supabase-js@2"
 
 const supabaseUrl = Deno.env.get("SUPABASE_URL")!
 const serviceRoleKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!
-const TURNSTILE_SECRET_KEY = Deno.env.get("TURNSTILE_SECRET_KEY") || ""
-
-async function verifyCaptcha(token: string): Promise<boolean> {
-  if (!TURNSTILE_SECRET_KEY || !token) return false
-  try {
-    const res = await fetch("https://challenges.cloudflare.com/turnstile/v0/siteverify", {
-      method: "POST",
-      headers: { "Content-Type": "application/x-www-form-urlencoded" },
-      body: `secret=${encodeURIComponent(TURNSTILE_SECRET_KEY)}&response=${encodeURIComponent(token)}`,
-    })
-    const data = await res.json()
-    return data.success === true
-  } catch {
-    return false
-  }
-}
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "https://travelcar.vn",
@@ -115,18 +99,7 @@ Deno.serve(async (req) => {
     // POST requests (book, custom)
     if (req.method === "POST") {
       const body = await req.json()
-      const { action, captcha_token } = body
-
-      // SECURITY: Verify CAPTCHA if configured
-      if (TURNSTILE_SECRET_KEY && captcha_token) {
-        const captchaValid = await verifyCaptcha(captcha_token)
-        if (!captchaValid) {
-          return new Response(
-            JSON.stringify({ success: false, error: "CAPTCHA verification failed" }),
-            { status: 403, headers: { ...corsHeaders, "Content-Type": "application/json" } }
-          )
-        }
-      }
+      const { action } = body
 
       // === Đặt tour có sẵn ===
       if (action === "book") {
