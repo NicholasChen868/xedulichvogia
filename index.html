@@ -4,489 +4,228 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Wireframe Showcase — Đặt Xe Du Lịch</title>
+    <title>TravelCar — Đặt Xe Du Lịch Nhanh Chóng & An Toàn</title>
+    <meta name="description"
+        content="Dịch vụ đặt xe du lịch chuyên nghiệp. Xe 4 chỗ, 7 chỗ. Tài xế kinh nghiệm, giá minh bạch, matching tự động.">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
         rel="stylesheet">
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box
-        }
-
-        body {
-            font-family: 'Inter', sans-serif;
-            background: #0a0a0f;
-            color: #fff;
-            min-height: 100vh
-        }
-
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 60px 40px
-        }
-
-        header {
-            text-align: center;
-            margin-bottom: 60px
-        }
-
-        .badge {
-            display: inline-block;
-            background: rgba(99, 102, 241, 0.15);
-            color: #818cf8;
-            padding: 8px 20px;
-            border-radius: 30px;
-            font-size: .78rem;
-            font-weight: 600;
-            margin-bottom: 20px;
-            letter-spacing: .5px
-        }
-
-        header h1 {
-            font-size: 2.8rem;
-            font-weight: 800;
-            margin-bottom: 16px;
-            background: linear-gradient(135deg, #fff, #a5b4fc);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent
-        }
-
-        header p {
-            color: #64748b;
-            font-size: 1.05rem;
-            max-width: 600px;
-            margin: 0 auto;
-            line-height: 1.7
-        }
-
-        .grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 28px;
-            margin-bottom: 60px
-        }
-
-        .card {
-            background: rgba(255, 255, 255, 0.04);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            border-radius: 20px;
-            overflow: hidden;
-            transition: .4s;
-            cursor: pointer;
-            text-decoration: none;
-            color: #fff;
-            position: relative
-        }
-
-        .card:hover {
-            border-color: rgba(255, 255, 255, 0.2);
-            transform: translateY(-8px);
-            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4)
-        }
-
-        .card-img {
-            height: 240px;
-            overflow: hidden;
-            position: relative
-        }
-
-        .card-img img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            object-position: top;
-            transition: .4s
-        }
-
-        .card:hover .card-img img {
-            transform: scale(1.05)
-        }
-
-        .card-label {
-            position: absolute;
-            top: 16px;
-            left: 16px;
-            padding: 6px 14px;
-            border-radius: 8px;
-            font-size: .7rem;
-            font-weight: 700;
-            letter-spacing: .5px;
-            backdrop-filter: blur(10px)
-        }
-
-        .label-a {
-            background: rgba(255, 111, 0, 0.9);
-            color: #fff
-        }
-
-        .label-b {
-            background: rgba(5, 150, 105, 0.9);
-            color: #fff
-        }
-
-        .label-c {
-            background: rgba(99, 102, 241, 0.9);
-            color: #fff
-        }
-
-        .card-body {
-            padding: 24px
-        }
-
-        .card-body h3 {
-            font-size: 1.15rem;
-            font-weight: 700;
-            margin-bottom: 8px
-        }
-
-        .card-body p {
-            font-size: .85rem;
-            color: #94a3b8;
-            line-height: 1.6;
-            margin-bottom: 16px
-        }
-
-        .card-tags {
-            display: flex;
-            gap: 8px;
-            flex-wrap: wrap
-        }
-
-        .tag {
-            padding: 4px 10px;
-            border-radius: 6px;
-            font-size: .7rem;
-            font-weight: 500;
-            background: rgba(255, 255, 255, 0.06);
-            color: #94a3b8
-        }
-
-        .card-arrow {
-            position: absolute;
-            bottom: 24px;
-            right: 24px;
-            width: 36px;
-            height: 36px;
-            border-radius: 10px;
-            background: rgba(255, 255, 255, 0.06);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: .9rem;
-            transition: .3s
-        }
-
-        .card:hover .card-arrow {
-            background: rgba(255, 255, 255, 0.15)
-        }
-
-        .footer-note {
-            text-align: center;
-            color: #475569;
-            font-size: .85rem;
-            padding: 30px 0;
-            border-top: 1px solid rgba(255, 255, 255, 0.06)
-        }
-
-        .footer-note span {
-            color: #818cf8
-        }
-
-        /* Placeholder images using CSS gradients */
-        .placeholder-a {
-            background: linear-gradient(135deg, #0a1628, #0d2137, #0f3460)
-        }
-
-        .placeholder-b {
-            background: linear-gradient(180deg, #ecfdf5, #fff)
-        }
-
-        .placeholder-c {
-            background: linear-gradient(135deg, #eef2ff, #e0e7ff, #f5f3ff)
-        }
-
-        .ph-inner {
-            width: 100%;
-            height: 100%;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            padding: 20px
-        }
-
-        .ph-nav {
-            width: 90%;
-            height: 8px;
-            border-radius: 4px;
-            margin-bottom: 20px;
-            opacity: .3
-        }
-
-        .ph-title {
-            width: 60%;
-            height: 14px;
-            border-radius: 4px;
-            margin-bottom: 10px
-        }
-
-        .ph-subtitle {
-            width: 45%;
-            height: 10px;
-            border-radius: 4px;
-            margin-bottom: 20px
-        }
-
-        .ph-form {
-            width: 70%;
-            height: 80px;
-            border-radius: 12px;
-            opacity: .2
-        }
-
-        .placeholder-a .ph-nav {
-            background: #fff
-        }
-
-        .placeholder-a .ph-title {
-            background: linear-gradient(90deg, #fff, #ff9800)
-        }
-
-        .placeholder-a .ph-subtitle {
-            background: rgba(255, 255, 255, 0.4)
-        }
-
-        .placeholder-a .ph-form {
-            background: rgba(255, 255, 255, 0.3)
-        }
-
-        .placeholder-b .ph-nav {
-            background: #059669
-        }
-
-        .placeholder-b .ph-title {
-            background: linear-gradient(90deg, #1e293b, #059669)
-        }
-
-        .placeholder-b .ph-subtitle {
-            background: #94a3b8
-        }
-
-        .placeholder-b .ph-form {
-            background: rgba(0, 0, 0, 0.08)
-        }
-
-        .placeholder-c .ph-nav {
-            background: #6366f1
-        }
-
-        .placeholder-c .ph-title {
-            background: linear-gradient(90deg, #1e293b, #8b5cf6)
-        }
-
-        .placeholder-c .ph-subtitle {
-            background: #94a3b8
-        }
-
-        .placeholder-c .ph-form {
-            background: rgba(99, 102, 241, 0.15)
-        }
-
-        /* ===== TABLET ===== */
-        @media(max-width:900px) {
-            .container {
-                padding: 48px 24px
-            }
-
-            header {
-                margin-bottom: 40px
-            }
-
-            header h1 {
-                font-size: 2.2rem
-            }
-
-            .grid {
-                grid-template-columns: 1fr;
-                gap: 20px
-            }
-
-            .card-img {
-                height: 200px
-            }
-
-            .card-body {
-                padding: 20px
-            }
-        }
-
-        /* ===== MOBILE ===== */
-        @media(max-width:480px) {
-            .container {
-                padding: 32px 16px
-            }
-
-            header {
-                margin-bottom: 32px
-            }
-
-            header h1 {
-                font-size: 1.6rem
-            }
-
-            header p {
-                font-size: .9rem
-            }
-
-            .badge {
-                font-size: .72rem;
-                padding: 6px 16px
-            }
-
-            .grid {
-                gap: 16px;
-                margin-bottom: 32px
-            }
-
-            .card {
-                border-radius: 16px
-            }
-
-            .card:hover {
-                transform: translateY(-4px)
-            }
-
-            .card-img {
-                height: 160px
-            }
-
-            .card-body {
-                padding: 16px
-            }
-
-            .card-body h3 {
-                font-size: 1rem
-            }
-
-            .card-body p {
-                font-size: .82rem;
-                margin-bottom: 12px
-            }
-
-            .tag {
-                font-size: .65rem
-            }
-
-            .card-arrow {
-                bottom: 16px;
-                right: 16px;
-                width: 30px;
-                height: 30px
-            }
-
-            .footer-note {
-                font-size: .78rem;
-                padding: 20px 0
-            }
-        }
-    </style>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
 </head>
 
 <body>
 
-    <div class="container">
-        <header>
-            <div class="badge">🎨 WIREFRAME SHOWCASE</div>
-            <h1>Website Đặt Xe Du Lịch</h1>
-            <p>3 concept thiết kế dựa trên phân tích UI/UX từ Booking.com, Klook, Vexere — những website đặt xe hàng đầu
-                thế giới và Việt Nam.</p>
-        </header>
-
-        <div class="grid">
-            <!-- Concept A -->
-            <a href="wireframe-concept-A.html" class="card">
-                <div class="card-img">
-                    <div class="placeholder-a">
-                        <div class="ph-inner">
-                            <div class="ph-nav"></div>
-                            <div class="ph-title"></div>
-                            <div class="ph-subtitle"></div>
-                            <div class="ph-form"></div>
-                        </div>
-                    </div>
-                    <div class="card-label label-a">CONCEPT A</div>
-                </div>
-                <div class="card-body">
-                    <h3>Premium Dark</h3>
-                    <p>Sang trọng, chuyên nghiệp. Glassmorphism booking form trên nền dark blue. Phù hợp dịch vụ xe cao
-                        cấp.</p>
-                    <div class="card-tags">
-                        <span class="tag">Navy + Orange</span>
-                        <span class="tag">Glassmorphism</span>
-                        <span class="tag">Cao cấp</span>
-                    </div>
-                </div>
-                <div class="card-arrow">→</div>
-            </a>
-
-            <!-- Concept B -->
-            <a href="wireframe-concept-B.html" class="card">
-                <div class="card-img">
-                    <div class="placeholder-b">
-                        <div class="ph-inner">
-                            <div class="ph-nav"></div>
-                            <div class="ph-title"></div>
-                            <div class="ph-subtitle"></div>
-                            <div class="ph-form"></div>
-                        </div>
-                    </div>
-                    <div class="card-label label-b">CONCEPT B</div>
-                </div>
-                <div class="card-body">
-                    <h3>Clean Minimal</h3>
-                    <p>Sạch sẽ, tối giản. Search bar ngang giống Booking.com. Dễ dùng cho mọi đối tượng khách hàng.</p>
-                    <div class="card-tags">
-                        <span class="tag">Green + White</span>
-                        <span class="tag">Horizontal Search</span>
-                        <span class="tag">Tối giản</span>
-                    </div>
-                </div>
-                <div class="card-arrow">→</div>
-            </a>
-
-            <!-- Concept C -->
-            <a href="wireframe-concept-C.html" class="card">
-                <div class="card-img">
-                    <div class="placeholder-c">
-                        <div class="ph-inner">
-                            <div class="ph-nav"></div>
-                            <div class="ph-title"></div>
-                            <div class="ph-subtitle"></div>
-                            <div class="ph-form"></div>
-                        </div>
-                    </div>
-                    <div class="card-label label-c">CONCEPT C</div>
-                </div>
-                <div class="card-body">
-                    <h3>Modern Purple</h3>
-                    <p>Hiện đại, trẻ trung. Floating booking card với gradient tím. Phù hợp đối tượng trẻ, tech-savvy.
-                    </p>
-                    <div class="card-tags">
-                        <span class="tag">Purple Gradient</span>
-                        <span class="tag">Floating Card</span>
-                        <span class="tag">Trẻ trung</span>
-                    </div>
-                </div>
-                <div class="card-arrow">→</div>
-            </a>
+    <!-- NAV -->
+    <nav>
+        <div class="logo">Travel<span>Car</span></div>
+        <button class="hamburger" aria-label="Menu">
+            <span></span><span></span><span></span>
+        </button>
+        <div class="nav-links">
+            <a href="#booking-section">Đặt xe</a>
+            <a href="#pricing-section">Bảng giá</a>
+            <a href="#vehicles-section">Loại xe</a>
+            <a href="#routes-section">Tuyến đường</a>
+            <a href="driver-register.html">Đối tác tài xế</a>
+            <a href="#booking-section" class="btn-primary">Đặt xe ngay</a>
         </div>
+    </nav>
 
-        <div class="footer-note">
-            Click vào từng concept để xem full wireframe · Designed with <span>♥</span>
+    <!-- HERO -->
+    <section class="hero" id="booking-section">
+        <div class="hero-content">
+            <div class="hero-text">
+                <h1>Đặt Xe Du Lịch<br><span>Nhanh Chóng & An Toàn</span></h1>
+                <p>Dịch vụ cho thuê xe du lịch chuyên nghiệp hàng đầu. Đa dạng loại xe từ 4 đến 7 chỗ, tài xế kinh
+                    nghiệm, giá cả minh bạch — hệ thống matching tự động ghép xe gần nhất.</p>
+                <div class="hero-stats">
+                    <div class="hero-stat"><i class="fas fa-star" style="color:#ff9800"></i> 4.9/5 từ 12,000+ đánh giá
+                    </div>
+                    <div class="hero-stat"><i class="fas fa-users" style="color:#4fc3f7"></i> 500,000+ khách hàng</div>
+                </div>
+            </div>
+
+            <!-- BOOKING FORM -->
+            <div class="booking-card">
+                <h3><i class="fas fa-car-side"></i> Đặt xe nhanh</h3>
+                <form id="booking-form">
+                    <div class="form-group">
+                        <label for="pickup">Điểm đón</label>
+                        <input type="text" id="pickup" name="pickup" placeholder="Nhập địa chỉ đón..." required>
+                    </div>
+                    <div class="form-group">
+                        <label for="dropoff">Điểm đến</label>
+                        <input type="text" id="dropoff" name="dropoff" placeholder="Nhập điểm đến..." required>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="date-go">Ngày đi</label>
+                            <input type="date" id="date-go" name="date_go" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="date-return">Ngày về</label>
+                            <input type="date" id="date-return" name="date_return">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="vehicle-select">Loại xe</label>
+                            <select id="vehicle-select" name="vehicle_type">
+                                <!-- Populated by JS from config -->
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="distance-input">Khoảng cách (km)</label>
+                            <input type="number" id="distance-input" name="distance_km" placeholder="VD: 310" min="1">
+                        </div>
+                    </div>
+                    <div id="price-estimate" class="price-estimate"></div>
+                    <div class="form-group">
+                        <label for="phone">Số điện thoại</label>
+                        <input type="tel" id="phone" name="phone" placeholder="VD: 0901 234 567" required>
+                    </div>
+                    <button type="submit" class="btn-book"><i class="fas fa-paper-plane"></i> Đặt xe ngay</button>
+                </form>
+            </div>
         </div>
+    </section>
+
+    <!-- TRUST BAR -->
+    <div class="trust-bar" id="trust-bar">
+        <!-- Rendered by JS -->
     </div>
+
+    <!-- PRICING SECTION -->
+    <section class="section" id="pricing-section">
+        <div class="section-header">
+            <span class="pill">💰 Bảng giá minh bạch</span>
+            <h2>Cơ Cấu Giá Theo Cự Ly</h2>
+            <p>Giá được tính theo khoảng cách, không có chi phí ẩn</p>
+        </div>
+
+        <!-- Pricing Tiers -->
+        <div id="pricing-tiers" class="pricing-tiers-grid">
+            <!-- Rendered by JS -->
+        </div>
+
+        <!-- Interactive Calculator -->
+        <div class="calc-container">
+            <div class="calc-header">
+                <h3><i class="fas fa-calculator"></i> Tính giá chuyến đi</h3>
+                <div class="calc-vehicle-selector">
+                    <button class="calc-vehicle-btn active" data-vehicle="sedan-4"><i class="fas fa-car"></i> 4
+                        chỗ</button>
+                    <button class="calc-vehicle-btn" data-vehicle="suv-7"><i class="fas fa-van-shuttle"></i> 7
+                        chỗ</button>
+                </div>
+            </div>
+            <div class="calc-body">
+                <div class="calc-slider-group">
+                    <label for="calc-distance">Khoảng cách</label>
+                    <input type="range" id="calc-distance" min="10" max="500" value="150" step="5">
+                    <div class="calc-slider-labels">
+                        <span>10 km</span>
+                        <span id="calc-km-display" class="calc-km-value">150 km</span>
+                        <span>500 km</span>
+                    </div>
+                </div>
+                <div class="calc-result">
+                    <div class="calc-total-label">Tổng chi phí ước tính</div>
+                    <div id="calc-total" class="calc-total">0 ₫</div>
+                    <div class="calc-rate-label">Mức giá hiện tại: <span id="calc-rate">15,000 ₫/km</span></div>
+                </div>
+                <div id="calc-breakdown" class="calc-breakdown">
+                    <!-- Rendered by JS -->
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- VEHICLES SECTION -->
+    <section class="section" id="vehicles-section">
+        <div class="section-header">
+            <span class="pill">🚗 Đội xe</span>
+            <h2>Loại Xe Dịch Vụ</h2>
+            <p>Chọn loại xe phù hợp với nhu cầu của bạn</p>
+        </div>
+        <div id="vehicle-grid" class="vehicle-grid">
+            <!-- Rendered by JS -->
+        </div>
+    </section>
+
+    <!-- ROUTES SECTION -->
+    <section class="section" id="routes-section">
+        <div class="section-header">
+            <span class="pill">📍 Tuyến phổ biến</span>
+            <h2>Tuyến Đường Phổ Biến</h2>
+            <p>Click để đặt xe nhanh cho các tuyến yêu thích</p>
+        </div>
+        <div id="routes-grid" class="routes-grid">
+            <!-- Rendered by JS -->
+        </div>
+    </section>
+
+    <!-- HOW IT WORKS -->
+    <section class="section section-alt">
+        <div class="section-header">
+            <span class="pill">✨ Quy trình</span>
+            <h2>Đặt Xe Chỉ 3 Bước</h2>
+            <p>Đơn giản, nhanh chóng, không cần đợi</p>
+        </div>
+        <div id="steps-grid" class="steps-grid">
+            <!-- Rendered by JS -->
+        </div>
+    </section>
+
+    <!-- CTA - DRIVER REGISTRATION -->
+    <section class="cta-section">
+        <div class="cta-box">
+            <h2>Trở Thành Đối Tác Tài Xế</h2>
+            <p>Đăng ký xe của bạn và nhận cuốc xe tự động. Hệ thống matching thông minh ghép khách gần nhất.</p>
+            <a href="driver-register.html" class="btn-cta"><i class="fas fa-handshake"></i> Đăng ký ngay</a>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer>
+        <div class="footer-grid">
+            <div>
+                <div class="footer-logo">Travel<span>Car</span></div>
+                <p>Dịch vụ đặt xe du lịch chuyên nghiệp hàng đầu Việt Nam. Giá minh bạch, tài xế chuyên nghiệp, hệ thống
+                    matching tự động.</p>
+            </div>
+            <div>
+                <h4>Dịch vụ</h4>
+                <a href="#vehicles-section">Xe 4 chỗ</a>
+                <a href="#vehicles-section">Xe 7 chỗ</a>
+                <a href="#pricing-section">Bảng giá</a>
+                <a href="#routes-section">Tuyến đường</a>
+            </div>
+            <div>
+                <h4>Đối tác</h4>
+                <a href="driver-register.html">Đăng ký tài xế</a>
+                <a href="#">Quy chế hợp tác</a>
+                <a href="#">Chính sách</a>
+            </div>
+            <div>
+                <h4>Liên hệ</h4>
+                <a href="#"><i class="fas fa-phone"></i> 1900 xxxx</a>
+                <a href="#"><i class="fas fa-envelope"></i> info@travelcar.vn</a>
+                <a href="#"><i class="fas fa-location-dot"></i> TP. Hồ Chí Minh</a>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            © 2026 TravelCar. All rights reserved.
+        </div>
+    </footer>
+
+    <!-- NOTIFICATION CONTAINER -->
+    <!-- (Created dynamically by JS) -->
+
+    <!-- SCRIPTS -->
+    <script src="js/config.js"></script>
+    <script src="js/pricing.js"></script>
+    <script src="js/app.js"></script>
 
 </body>
 

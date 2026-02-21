@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Đăng Ký Đối Tác Tài Xế — TravelCar</title>
+    <meta name="description"
+        content="Đăng ký xe tham gia dịch vụ TravelCar. Nhận cuốc xe tự động, matching thông minh, thu nhập ổn định.">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        /* ===== DRIVER REGISTRATION SPECIFIC ===== */
+        .register-hero {
+            min-height: auto;
+            padding: 120px 60px 60px;
+            background: linear-gradient(135deg, rgba(10, 14, 26, 0.95), rgba(13, 33, 55, 0.97)),
+                url('https://images.unsplash.com/photo-1449965408869-ebd13bc7f550?w=1920&q=80') center/cover no-repeat;
+        }
+
+        .register-hero .hero-content {
+            grid-template-columns: 1fr 1.1fr;
+            gap: 48px
+        }
+
+        .register-hero .hero-text h1 {
+            font-size: 2.6rem
+        }
+
+        .benefits-list {
+            list-style: none;
+            margin-top: 24px
+        }
+
+        .benefits-list li {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            margin-bottom: 16px;
+            color: rgba(255, 255, 255, 0.7);
+            font-size: .92rem;
+            line-height: 1.5
+        }
+
+        .benefits-list li i {
+            color: #ff9800;
+            margin-top: 3px;
+            flex-shrink: 0
+        }
+
+        /* Registration Form */
+        .register-card {
+            background: rgba(255, 255, 255, 0.06);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 24px;
+            padding: 36px
+        }
+
+        .register-card h3 {
+            color: #fff;
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            gap: 8px
+        }
+
+        .register-card h3 i {
+            color: #ff9800
+        }
+
+        .register-subtitle {
+            font-size: .82rem;
+            color: rgba(255, 255, 255, 0.4);
+            margin-bottom: 24px
+        }
+
+        .form-section-label {
+            font-size: .72rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #ff9800;
+            margin: 20px 0 10px;
+            padding-top: 16px;
+            border-top: 1px solid rgba(255, 255, 255, 0.06)
+        }
+
+        .form-section-label:first-of-type {
+            border-top: none;
+            margin-top: 0;
+            padding-top: 0
+        }
+
+        .vehicle-type-options {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 14px
+        }
+
+        .vehicle-type-option {
+            padding: 14px 16px;
+            border-radius: 12px;
+            border: 1.5px solid rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 0.03);
+            cursor: pointer;
+            transition: .2s;
+            text-align: center
+        }
+
+        .vehicle-type-option:hover {
+            border-color: rgba(255, 152, 0, 0.3)
+        }
+
+        .vehicle-type-option.selected {
+            border-color: #ff9800;
+            background: rgba(255, 152, 0, 0.1)
+        }
+
+        .vehicle-type-option i {
+            font-size: 1.5rem;
+            color: rgba(255, 255, 255, 0.4);
+            margin-bottom: 6px;
+            display: block
+        }
+
+        .vehicle-type-option.selected i {
+            color: #ff9800
+        }
+
+        .vehicle-type-option span {
+            font-size: .82rem;
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.6)
+        }
+
+        .vehicle-type-option.selected span {
+            color: #fff
+        }
+
+        .area-checkboxes {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+            margin-bottom: 14px
+        }
+
+        .area-check {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 12px;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            background: rgba(255, 255, 255, 0.03);
+            cursor: pointer;
+            transition: .2s;
+            font-size: .82rem;
+            color: rgba(255, 255, 255, 0.6)
+        }
+
+        .area-check:hover {
+            border-color: rgba(255, 152, 0, 0.3)
+        }
+
+        .area-check input[type="checkbox"] {
+            accent-color: #ff9800;
+            width: 16px;
+            height: 16px
+        }
+
+        .terms-check {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            margin: 18px 0;
+            font-size: .8rem;
+            color: rgba(255, 255, 255, 0.5);
+            line-height: 1.5
+        }
+
+        .terms-check input {
+            accent-color: #ff9800;
+            margin-top: 2px;
+            width: 16px;
+            height: 16px;
+            flex-shrink: 0
+        }
+
+        .terms-check a {
+            color: #ff9800;
+            text-decoration: none
+        }
+
+        /* Stats section */
+        .driver-stats {
+            padding: 60px;
+            background: rgba(255, 255, 255, 0.02)
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+            max-width: 800px;
+            margin: 0 auto
+        }
+
+        .stat-card {
+            text-align: center;
+            padding: 28px 20px;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 16px
+        }
+
+        .stat-card i {
+            font-size: 1.5rem;
+            color: #ff9800;
+            margin-bottom: 10px
+        }
+
+        .stat-card h3 {
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: #fff;
+            margin-bottom: 4px
+        }
+
+        .stat-card p {
+            font-size: .78rem;
+            color: rgba(255, 255, 255, 0.4)
+        }
+
+        /* Mobile */
+        @media (max-width: 900px) {
+            .register-hero {
+                padding: 90px 24px 50px
+            }
+
+            .register-hero .hero-content {
+                grid-template-columns: 1fr;
+                gap: 32px
+            }
+
+            .register-hero .hero-text h1 {
+                font-size: 2rem
+            }
+
+            .driver-stats {
+                padding: 48px 24px
+            }
+
+            .stats-grid {
+                grid-template-columns: repeat(3, 1fr);
+                gap: 12px
+            }
+        }
+
+        @media (max-width: 480px) {
+            .register-hero {
+                padding: 80px 16px 40px
+            }
+
+            .register-hero .hero-text h1 {
+                font-size: 1.6rem
+            }
+
+            .register-card {
+                padding: 24px
+            }
+
+            .vehicle-type-options {
+                grid-template-columns: 1fr 1fr
+            }
+
+            .area-checkboxes {
+                grid-template-columns: 1fr
+            }
+
+            .driver-stats {
+                padding: 40px 16px
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+                gap: 12px
+            }
+
+            .stat-card {
+                padding: 20px
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- NAV -->
+    <nav>
+        <a href="index.html" class="logo" style="text-decoration:none">Travel<span>Car</span></a>
+        <button class="hamburger" aria-label="Menu">
+            <span></span><span></span><span></span>
+        </button>
+        <div class="nav-links">
+            <a href="index.html">Trang chủ</a>
+            <a href="index.html#pricing-section">Bảng giá</a>
+            <a href="index.html#vehicles-section">Loại xe</a>
+            <a href="index.html#routes-section">Tuyến đường</a>
+            <a href="driver-register.html" style="color:#ff9800">Đối tác tài xế</a>
+            <a href="index.html#booking-section" class="btn-primary">Đặt xe ngay</a>
+        </div>
+    </nav>
+
+    <!-- HERO + REGISTRATION FORM -->
+    <section class="register-hero hero">
+        <div class="hero-content">
+            <div class="hero-text">
+                <h1>Trở Thành<br><span>Đối Tác Tài Xế</span></h1>
+                <p>Đăng ký xe của bạn vào hệ thống TravelCar. Nhận cuốc xe tự động từ khách hàng gần nhất — thu nhập ổn
+                    định, linh hoạt thời gian.</p>
+
+                <ul class="benefits-list">
+                    <li><i class="fas fa-check-circle"></i> Hệ thống matching tự động — nhận cuốc xe gần nhất</li>
+                    <li><i class="fas fa-check-circle"></i> Giá cước minh bạch theo cự ly, không ép giá</li>
+                    <li><i class="fas fa-check-circle"></i> Thanh toán nhanh chóng, hỗ trợ 24/7</li>
+                    <li><i class="fas fa-check-circle"></i> Tự do chọn thời gian làm việc</li>
+                    <li><i class="fas fa-check-circle"></i> Đào tạo và hỗ trợ chuyên nghiệp</li>
+                </ul>
+            </div>
+
+            <!-- REGISTRATION FORM -->
+            <div class="register-card">
+                <h3><i class="fas fa-user-plus"></i> Đăng ký đối tác</h3>
+                <p class="register-subtitle">Điền thông tin bên dưới để trở thành thành viên dịch vụ</p>
+
+                <form id="driver-register-form">
+                    <div class="form-section-label">Thông tin cá nhân</div>
+
+                    <div class="form-group">
+                        <label for="driver-name">Họ và tên</label>
+                        <input type="text" id="driver-name" name="full_name" placeholder="VD: Nguyễn Văn A" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="driver-phone">Số điện thoại</label>
+                        <input type="tel" id="driver-phone" name="phone" placeholder="VD: 0901 234 567" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="driver-email">Email (không bắt buộc)</label>
+                        <input type="email" id="driver-email" name="email" placeholder="VD: email@example.com">
+                    </div>
+
+                    <div class="form-section-label">Thông tin phương tiện</div>
+
+                    <div class="form-group">
+                        <label>Loại xe dịch vụ</label>
+                        <div class="vehicle-type-options" id="vehicle-type-selector">
+                            <!-- Populated by JS -->
+                        </div>
+                        <input type="hidden" name="vehicle_type" id="selected-vehicle-type" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="license-plate">Biển số xe</label>
+                        <input type="text" id="license-plate" name="license_plate" placeholder="VD: 51A-123.45"
+                            required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="vehicle-brand">Hãng xe & đời xe</label>
+                        <input type="text" id="vehicle-brand" name="vehicle_brand" placeholder="VD: Toyota Innova 2023">
+                    </div>
+
+                    <div class="form-section-label">Khu vực hoạt động</div>
+
+                    <div class="area-checkboxes" id="area-checkboxes">
+                        <!-- Populated by JS -->
+                    </div>
+
+                    <div class="terms-check">
+                        <input type="checkbox" id="terms" required>
+                        <label for="terms">Tôi đồng ý với <a href="#">Điều khoản dịch vụ</a> và <a href="#">Chính sách
+                                bảo mật</a> của TravelCar</label>
+                    </div>
+
+                    <button type="submit" class="btn-book"><i class="fas fa-check-circle"></i> Đăng ký ngay</button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- DRIVER STATS -->
+    <div class="driver-stats">
+        <div class="stats-grid" id="driver-stats-grid">
+            <!-- Populated by JS -->
+        </div>
+    </div>
+
+    <!-- FOOTER -->
+    <footer>
+        <div class="footer-grid">
+            <div>
+                <div class="footer-logo">Travel<span>Car</span></div>
+                <p>Dịch vụ đặt xe du lịch chuyên nghiệp hàng đầu Việt Nam.</p>
+            </div>
+            <div>
+                <h4>Dịch vụ</h4>
+                <a href="index.html#vehicles-section">Xe 4 chỗ</a>
+                <a href="index.html#vehicles-section">Xe 7 chỗ</a>
+                <a href="index.html#pricing-section">Bảng giá</a>
+            </div>
+            <div>
+                <h4>Đối tác</h4>
+                <a href="driver-register.html">Đăng ký tài xế</a>
+                <a href="#">Quy chế hợp tác</a>
+            </div>
+            <div>
+                <h4>Liên hệ</h4>
+                <a href="#"><i class="fas fa-phone"></i> 1900 xxxx</a>
+                <a href="#"><i class="fas fa-envelope"></i> info@travelcar.vn</a>
+            </div>
+        </div>
+        <div class="footer-bottom">© 2026 TravelCar. All rights reserved.</div>
+    </footer>
+
+    <!-- SCRIPTS -->
+    <script src="js/config.js"></script>
+    <script src="js/pricing.js"></script>
+    <script>
+        // ===== DRIVER REGISTRATION APP =====
+        // All data from config, ready for Supabase
+
+        const OPERATING_AREAS = [
+            { id: 'hcm', name: 'TP. Hồ Chí Minh' },
+            { id: 'hanoi', name: 'Hà Nội' },
+            { id: 'danang', name: 'Đà Nẵng' },
+            { id: 'dalat', name: 'Đà Lạt' },
+            { id: 'nhatrang', name: 'Nha Trang' },
+            { id: 'vungtau', name: 'Vũng Tàu' },
+            { id: 'phanthiet', name: 'Phan Thiết' },
+            { id: 'cantho', name: 'Cần Thơ' }
+        ];
+
+        const DRIVER_STATS_DATA = [
+            { icon: 'fa-car', number: '1,200+', label: 'Tài xế đối tác' },
+            { icon: 'fa-route', number: '50,000+', label: 'Chuyến xe/tháng' },
+            { icon: 'fa-money-bill-wave', number: '15-25M', label: 'Thu nhập TB/tháng' }
+        ];
+
+        document.addEventListener('DOMContentLoaded', () => {
+            renderVehicleTypeSelector();
+            renderAreaCheckboxes();
+            renderDriverStats();
+            initDriverForm();
+            initNavigation();
+        });
+
+        function initNavigation() {
+            const hamburger = document.querySelector('.hamburger');
+            const navLinks = document.querySelector('.nav-links');
+            if (hamburger && navLinks) {
+                hamburger.addEventListener('click', () => navLinks.classList.toggle('open'));
+                navLinks.querySelectorAll('a').forEach(a => {
+                    a.addEventListener('click', () => navLinks.classList.remove('open'));
+                });
+            }
+        }
+
+        function renderVehicleTypeSelector() {
+            const container = document.getElementById('vehicle-type-selector');
+            if (!container) return;
+            container.innerHTML = VEHICLE_TYPES.map(v => `
+                <div class="vehicle-type-option" data-vehicle="${v.id}" onclick="selectVehicleType('${v.id}')">
+                    <i class="fas ${v.icon}"></i>
+                    <span>${v.name}</span>
+                </div>
+            `).join('');
+        }
+
+        function selectVehicleType(id) {
+            document.querySelectorAll('.vehicle-type-option').forEach(el => el.classList.remove('selected'));
+            document.querySelector(`[data-vehicle="${id}"]`).classList.add('selected');
+            document.getElementById('selected-vehicle-type').value = id;
+        }
+
+        function renderAreaCheckboxes() {
+            const container = document.getElementById('area-checkboxes');
+            if (!container) return;
+            container.innerHTML = OPERATING_AREAS.map(area => `
+                <label class="area-check">
+                    <input type="checkbox" name="areas" value="${area.id}">
+                    ${area.name}
+                </label>
+            `).join('');
+        }
+
+        function renderDriverStats() {
+            const container = document.getElementById('driver-stats-grid');
+            if (!container) return;
+            container.innerHTML = DRIVER_STATS_DATA.map(stat => `
+                <div class="stat-card">
+                    <i class="fas ${stat.icon}"></i>
+                    <h3>${stat.number}</h3>
+                    <p>${stat.label}</p>
+                </div>
+            `).join('');
+        }
+
+        function initDriverForm() {
+            const form = document.getElementById('driver-register-form');
+            if (!form) return;
+
+            form.addEventListener('submit', (e) => {
+                e.preventDefault();
+
+                const formData = new FormData(form);
+                const data = Object.fromEntries(formData);
+
+                // Get selected areas
+                data.areas = Array.from(form.querySelectorAll('input[name="areas"]:checked'))
+                    .map(cb => cb.value);
+
+                // Validate vehicle type selection
+                if (!data.vehicle_type) {
+                    alert('Vui lòng chọn loại xe dịch vụ');
+                    return;
+                }
+
+                if (data.areas.length === 0) {
+                    alert('Vui lòng chọn ít nhất 1 khu vực hoạt động');
+                    return;
+                }
+
+                // TODO: Send to Supabase
+                console.log('Driver registration data:', data);
+                showNotification('Đăng ký thành công! Chúng tôi sẽ liên hệ xác nhận trong 24h.');
+                form.reset();
+                document.querySelectorAll('.vehicle-type-option').forEach(el => el.classList.remove('selected'));
+            });
+        }
+
+        function showNotification(message) {
+            const notif = document.createElement('div');
+            notif.className = 'notification';
+            notif.innerHTML = `<i class="fas fa-check-circle"></i> ${message}`;
+            document.body.appendChild(notif);
+            setTimeout(() => notif.classList.add('show'), 10);
+            setTimeout(() => {
+                notif.classList.remove('show');
+                setTimeout(() => notif.remove(), 300);
+            }, 4000);
+        }
+    </script>
+
+</body>
+
+</html>
