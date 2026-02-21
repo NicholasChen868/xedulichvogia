@@ -792,7 +792,10 @@
         function showNotification(message) {
             const notif = document.createElement('div');
             notif.className = 'notification';
-            notif.innerHTML = `<i class="fas fa-check-circle"></i> ${message}`;
+            const icon = document.createElement('i');
+            icon.className = 'fas fa-check-circle';
+            notif.appendChild(icon);
+            notif.appendChild(document.createTextNode(' ' + message));
             document.body.appendChild(notif);
             setTimeout(() => notif.classList.add('show'), 10);
             setTimeout(() => {

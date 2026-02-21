@@ -486,6 +486,11 @@
     <script src="js/app.js"></script>
 
     <script>
+        function escapeHtml(str) {
+            if (str == null) return '';
+            return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#039;');
+        }
+
         // Chatbot logic
         function toggleChatbot() {
             document.getElementById('chatbot-widget').classList.toggle('open');
@@ -498,8 +503,8 @@
             const question = input.value.trim();
             if (!question) return;
 
-            // Add user message
-            msgBox.innerHTML += `<div class="chat-msg user-msg"><div class="msg-bubble">${question}</div></div>`;
+            // Add user message (escaped)
+            msgBox.innerHTML += `<div class="chat-msg user-msg"><div class="msg-bubble">${escapeHtml(question)}</div></div>`;
             input.value = '';
             msgBox.scrollTop = msgBox.scrollHeight;
 
@@ -516,15 +521,16 @@
                 });
                 const data = await res.json();
 
-                document.getElementById(typingId).remove();
+                document.getElementById(typingId)?.remove();
 
                 if (data.answer) {
-                    msgBox.innerHTML += `<div class="chat-msg bot-msg"><div class="msg-bubble">${data.answer.replace(/\n/g, '<br>')}</div></div>`;
+                    // Escape then convert newlines to <br> for display
+                    msgBox.innerHTML += `<div class="chat-msg bot-msg"><div class="msg-bubble">${escapeHtml(data.answer).replace(/\n/g, '<br>')}</div></div>`;
                 } else {
                     msgBox.innerHTML += `<div class="chat-msg bot-msg"><div class="msg-bubble">Xin lỗi, tôi chưa hiểu ý bạn. Vui lòng gọi Hotline để được hỗ trợ.</div></div>`;
                 }
             } catch (e) {
-                document.getElementById(typingId).remove();
+                document.getElementById(typingId)?.remove();
                 msgBox.innerHTML += `<div class="chat-msg bot-msg"><div class="msg-bubble">Lỗi kết nối máy chủ, vui lòng thử lại sau.</div></div>`;
             }
             msgBox.scrollTop = msgBox.scrollHeight;

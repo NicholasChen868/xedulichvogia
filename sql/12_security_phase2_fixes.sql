@@ -211,3 +211,87 @@ $$ LANGUAGE plpgsql SECURITY DEFINER;
 
 GRANT EXECUTE ON FUNCTION driver_report_pickup(UUID, UUID, TEXT) TO anon;
 GRANT EXECUTE ON FUNCTION driver_report_pickup(UUID, UUID, TEXT) TO service_role;
+
+-- =============================================
+-- 6. FIX RATE LIMITING: Atomic + Require phone
+-- =============================================
+
+-- Replace check_rate_limit with atomic INSERT ON CONFLICT (no TOCTOU)
+CREATE OR REPLACE FUNCTION check_rate_limit(
+  p_identifier TEXT,
+  p_action TEXT,
+  p_max_requests INTEGER DEFAULT 5,
+  p_window_seconds INTEGER DEFAULT 3600
+)
+RETURNS BOOLEAN AS $$
+DECLARE
+  v_count INTEGER;
+  v_window_start TIMESTAMPTZ;
+BEGIN
+  v_window_start := now() - (p_window_seconds || ' seconds')::INTERVAL;
+
+  -- Atomic upsert: INSERT or UPDATE in one statement (no TOCTOU race)
+  INSERT INTO rate_limits (identifier, action, request_count, window_start)
+  VALUES (p_identifier, p_action, 1, now())
+  ON CONFLICT (identifier, action) DO UPDATE
+  SET
+    request_count = CASE
+      WHEN rate_limits.window_start < v_window_start THEN 1  -- Window expired, reset
+      ELSE rate_limits.request_count + 1
+    END,
+    window_start = CASE
+      WHEN rate_limits.window_start < v_window_start THEN now()  -- Reset window
+      ELSE rate_limits.window_start
+    END
+  RETURNING request_count INTO v_count;
+
+  RETURN v_count <= p_max_requests;
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+-- Fix submit_booking_rated: Require phone (no NULL bypass)
+CREATE OR REPLACE FUNCTION submit_booking_rated(
+  p_pickup TEXT,
+  p_dropoff TEXT,
+  p_date_go DATE,
+  p_date_return DATE DEFAULT NULL,
+  p_vehicle_type TEXT DEFAULT 'sedan-4',
+  p_distance_km INTEGER DEFAULT NULL,
+  p_estimated_fare BIGINT DEFAULT NULL,
+  p_phone TEXT DEFAULT NULL,
+  p_customer_name TEXT DEFAULT NULL
+)
+RETURNS JSON AS $$
+DECLARE
+  v_allowed BOOLEAN;
+  v_booking RECORD;
+BEGIN
+  -- SECURITY: Phone is required for rate limiting
+  IF p_phone IS NULL OR trim(p_phone) = '' THEN
+    RETURN json_build_object(
+      'success', false,
+      'error', 'Số điện thoại là bắt buộc.'
+    );
+  END IF;
+
+  -- Rate limit: 5 bookings / SĐT / giờ (atomic, no TOCTOU)
+  v_allowed := check_rate_limit(p_phone, 'booking', 5, 3600);
+  IF NOT v_allowed THEN
+    RETURN json_build_object(
+      'success', false,
+      'error', 'Quý khách đã đặt quá nhiều đơn. Vui lòng thử lại sau 1 giờ.'
+    );
+  END IF;
+
+  INSERT INTO bookings (
+    pickup_location, dropoff_location, date_go, date_return,
+    vehicle_type, distance_km, estimated_fare, customer_phone, customer_name, status
+  ) VALUES (
+    p_pickup, p_dropoff, p_date_go, p_date_return,
+    p_vehicle_type, p_distance_km, p_estimated_fare, p_phone, p_customer_name, 'pending'
+  )
+  RETURNING * INTO v_booking;
+
+  RETURN json_build_object('success', true, 'booking', row_to_json(v_booking));
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;

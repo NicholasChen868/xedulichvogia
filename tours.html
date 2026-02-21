@@ -70,6 +70,11 @@
     <script src="js/config.js"></script>
     <script src="js/supabase.js"></script>
     <script>
+        function escapeHtml(str) {
+            if (str == null) return '';
+            return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#039;');
+        }
+
         async function loadTours() {
             try {
                 const res = await fetch(`${SUPABASE_URL}/functions/v1/tour-api?action=list`, {
@@ -84,18 +89,18 @@
                     grid.innerHTML = data.tours.map(t => `
                         <div class="blog-card">
                             <div class="blog-image">
-                                <img src="${t.image_url || 'https://images.unsplash.com/photo-1528127269322-53982823b814'}" alt="${t.title}" style="width:100%; height:200px; object-fit:cover;">
-                                <div class="blog-category">${t.tier}</div>
+                                <img src="${escapeHtml(t.image_url || 'https://images.unsplash.com/photo-1528127269322-53982823b814')}" alt="${escapeHtml(t.title)}" style="width:100%; height:200px; object-fit:cover;">
+                                <div class="blog-category">${escapeHtml(t.tier)}</div>
                             </div>
                             <div class="blog-content">
-                                <h3 class="blog-title">${t.title}</h3>
-                                <div style="color:#ff9800; font-weight:bold; margin-bottom:10px">${new Intl.NumberFormat('vi-VN', {style: 'currency', currency: 'VND'}).format(t.price)}</div>
-                                <p class="blog-excerpt">${t.description}</p>
+                                <h3 class="blog-title">${escapeHtml(t.title)}</h3>
+                                <div style="color:#ff9800; font-weight:bold; margin-bottom:10px">${new Intl.NumberFormat('vi-VN', {style: 'currency', currency: 'VND'}).format(Number(t.price) || 0)}</div>
+                                <p class="blog-excerpt">${escapeHtml(t.description)}</p>
                                 <div style="display:flex; justify-content:space-between; font-size:0.85rem; color:#aaa; margin-top:10px;">
-                                    <span><i class="fas fa-clock"></i> ${t.duration_days} ngày ${t.duration_nights} đêm</span>
-                                    <span><i class="fas fa-language"></i> ${t.languages.join(', ')}</span>
+                                    <span><i class="fas fa-clock"></i> ${parseInt(t.duration_days) || 0} ngày ${parseInt(t.duration_nights) || 0} đêm</span>
+                                    <span><i class="fas fa-language"></i> ${Array.isArray(t.languages) ? t.languages.map(l => escapeHtml(l)).join(', ') : ''}</span>
                                 </div>
-                                <button class="btn-book" style="width:100%; margin-top:15px;" onclick="bookTour('${t.slug}')">Đặt Tour Này</button>
+                                <button class="btn-book" style="width:100%; margin-top:15px;" onclick="bookTour('${escapeHtml(t.slug)}')">Đặt Tour Này</button>
                             </div>
                         </div>
                     `).join('');
