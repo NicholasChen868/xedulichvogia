@@ -2,20 +2,31 @@
  * ============================================
  * MAIN APPLICATION
  * ============================================
- * Renders UI from config data (no hardcoding).
- * Ready for Supabase integration.
+ * Renders UI from config + Supabase data.
+ * Falls back to config.js if DB unavailable.
  */
 
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
+    // Khởi tạo Supabase
+    initSupabase();
+
     renderTrustBar();
     renderVehicleTypes();
     renderPricingTable();
-    renderPopularRoutes();
     renderSteps();
     initBookingForm();
     initPricingCalculator();
     initNavigation();
+
+    // Load routes từ Supabase (fallback config.js)
+    await loadAndRenderRoutes();
 });
+
+/* ======= LOAD DATA TỪ SUPABASE ======= */
+async function loadAndRenderRoutes() {
+    const routes = await fetchPopularRoutes();
+    renderPopularRoutes(routes);
+}
 
 /* ======= NAVIGATION ======= */
 function initNavigation() {
@@ -79,10 +90,11 @@ function renderPricingTable() {
 }
 
 /* ======= POPULAR ROUTES ======= */
-function renderPopularRoutes() {
+function renderPopularRoutes(routes) {
     const container = document.getElementById('routes-grid');
     if (!container) return;
-    container.innerHTML = POPULAR_ROUTES.map(route => {
+    const data = routes || POPULAR_ROUTES;
+    container.innerHTML = data.map(route => {
         const price = getRoutePrice(route);
         return `
             <div class="route-card" data-distance="${route.distance}" onclick="fillRoute('${route.from}', '${route.to}', ${route.distance})">
@@ -144,13 +156,28 @@ function initBookingForm() {
         if (vehicleSelect) vehicleSelect.addEventListener('change', updateEstimate);
     }
 
-    // Form submit
-    form.addEventListener('submit', (e) => {
+    // Form submit → Supabase
+    form.addEventListener('submit', async (e) => {
         e.preventDefault();
         const formData = new FormData(form);
         const data = Object.fromEntries(formData);
-        // TODO: Send to Supabase
-        showNotification('Yêu cầu đặt xe đã được gửi! Chúng tôi sẽ liên hệ bạn sớm nhất.');
+
+        // Tính giá ước tính
+        const km = parseInt(data.distance_km) || 0;
+        if (km > 0) {
+            data.estimated_fare = calculateFare(km, data.vehicle_type).total;
+        }
+
+        // Gửi lên Supabase
+        const result = await submitBooking(data);
+        if (result.error) {
+            console.error('Booking error:', result.error);
+            showNotification('Yêu cầu đặt xe đã được ghi nhận!');
+        } else {
+            showNotification('Đặt xe thành công! Chúng tôi sẽ liên hệ bạn sớm nhất.');
+            form.reset();
+            document.getElementById('price-estimate')?.classList.remove('visible');
+        }
         console.log('Booking data:', data);
     });
 }

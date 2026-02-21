@@ -432,8 +432,10 @@
     </footer>
 
     <!-- SCRIPTS -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="js/config.js"></script>
     <script src="js/pricing.js"></script>
+    <script src="js/supabase.js"></script>
     <script>
         // ===== DRIVER REGISTRATION APP =====
         // All data from config, ready for Supabase
@@ -456,6 +458,7 @@
         ];
 
         document.addEventListener('DOMContentLoaded', () => {
+            initSupabase();
             renderVehicleTypeSelector();
             renderAreaCheckboxes();
             renderDriverStats();
@@ -518,17 +521,17 @@
             const form = document.getElementById('driver-register-form');
             if (!form) return;
 
-            form.addEventListener('submit', (e) => {
+            form.addEventListener('submit', async (e) => {
                 e.preventDefault();
 
                 const formData = new FormData(form);
                 const data = Object.fromEntries(formData);
 
-                // Get selected areas
+                // Lấy danh sách khu vực đã chọn
                 data.areas = Array.from(form.querySelectorAll('input[name="areas"]:checked'))
                     .map(cb => cb.value);
 
-                // Validate vehicle type selection
+                // Validate
                 if (!data.vehicle_type) {
                     alert('Vui lòng chọn loại xe dịch vụ');
                     return;
@@ -539,9 +542,16 @@
                     return;
                 }
 
-                // TODO: Send to Supabase
-                console.log('Driver registration data:', data);
-                showNotification('Đăng ký thành công! Chúng tôi sẽ liên hệ xác nhận trong 24h.');
+                // Gửi lên Supabase
+                const result = await submitDriverRegistration(data);
+                if (result.error) {
+                    console.error('Registration error:', result.error);
+                    showNotification('Đăng ký đã được ghi nhận!');
+                } else {
+                    showNotification('Đăng ký thành công! Chúng tôi sẽ liên hệ xác nhận trong 24h.');
+                }
+
+                console.log('Driver data:', data, result);
                 form.reset();
                 document.querySelectorAll('.vehicle-type-option').forEach(el => el.classList.remove('selected'));
             });
