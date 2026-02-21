@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chính Sách Dịch Vụ — TravelCar</title>
+    <meta name="description"
+        content="Chính sách giá cước, quy chế hợp tác tài xế, chính sách bảo mật và điều khoản sử dụng TravelCar.">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        .page-hero {
+            padding: 120px 40px 60px;
+            text-align: center;
+            background: linear-gradient(135deg, rgba(10, 14, 26, 0.97), rgba(13, 33, 55, 0.95));
+        }
+
+        .page-hero h1 {
+            color: #fff;
+            font-size: 2.4rem;
+            margin-bottom: 12px;
+        }
+
+        .page-hero h1 span {
+            color: #ff9800;
+        }
+
+        .page-hero p {
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 1rem;
+            max-width: 600px;
+            margin: 0 auto;
+            line-height: 1.7;
+        }
+
+        .policy-content {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 60px 24px;
+        }
+
+        .policy-nav {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-bottom: 36px;
+            padding: 16px;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 14px;
+        }
+
+        .policy-nav a {
+            padding: 8px 16px;
+            border-radius: 8px;
+            color: rgba(255, 255, 255, 0.5);
+            text-decoration: none;
+            font-size: .82rem;
+            font-weight: 600;
+            transition: .2s;
+        }
+
+        .policy-nav a:hover {
+            background: rgba(255, 152, 0, 0.1);
+            color: #ff9800;
+        }
+
+        .policy-section {
+            margin-bottom: 48px;
+            scroll-margin-top: 100px;
+        }
+
+        .policy-section h2 {
+            font-size: 1.3rem;
+            color: #fff;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .policy-section h2 i {
+            color: #ff9800;
+            font-size: 1rem;
+        }
+
+        .policy-section h3 {
+            font-size: .95rem;
+            color: #ff9800;
+            margin: 20px 0 10px;
+        }
+
+        .policy-section p,
+        .policy-section li {
+            color: rgba(255, 255, 255, 0.6);
+            line-height: 1.8;
+            font-size: .88rem;
+        }
+
+        .policy-section ul {
+            list-style: none;
+            margin: 10px 0 16px;
+        }
+
+        .policy-section ul li {
+            padding: 6px 0;
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+        }
+
+        .policy-section ul li::before {
+            content: '';
+            display: none;
+        }
+
+        .policy-section ul li i {
+            color: #ff9800;
+            margin-top: 3px;
+            flex-shrink: 0;
+            font-size: .75rem;
+        }
+
+        .policy-section ol {
+            margin: 10px 0 16px;
+            padding-left: 20px;
+        }
+
+        .policy-section ol li {
+            padding: 4px 0;
+        }
+
+        .policy-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 16px 0;
+        }
+
+        .policy-table th,
+        .policy-table td {
+            padding: 12px 14px;
+            text-align: left;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            font-size: .82rem;
+        }
+
+        .policy-table th {
+            background: rgba(255, 152, 0, 0.1);
+            color: #ff9800;
+            font-weight: 700;
+            font-size: .72rem;
+            text-transform: uppercase;
+            letter-spacing: .5px;
+        }
+
+        .policy-table td {
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .warning-box {
+            background: rgba(244, 67, 54, 0.08);
+            border: 1px solid rgba(244, 67, 54, 0.15);
+            border-radius: 12px;
+            padding: 16px 20px;
+            margin: 16px 0;
+        }
+
+        .warning-box p {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: .82rem;
+        }
+
+        .warning-box i {
+            color: #ef5350;
+            margin-right: 6px;
+        }
+
+        .info-box {
+            background: rgba(33, 150, 243, 0.08);
+            border: 1px solid rgba(33, 150, 243, 0.15);
+            border-radius: 12px;
+            padding: 16px 20px;
+            margin: 16px 0;
+        }
+
+        .info-box p {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: .82rem;
+        }
+
+        .info-box i {
+            color: #42a5f5;
+            margin-right: 6px;
+        }
+
+        @media (max-width: 600px) {
+            .page-hero h1 {
+                font-size: 1.6rem;
+            }
+
+            .policy-nav {
+                flex-direction: column;
+            }
+
+            .policy-table {
+                font-size: .75rem;
+            }
+
+            .policy-table th,
+            .policy-table td {
+                padding: 8px 10px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <nav>
+        <a href="index.html" class="logo" style="text-decoration:none">Travel<span>Car</span></a>
+        <button class="hamburger" aria-label="Menu"><span></span><span></span><span></span></button>
+        <div class="nav-links">
+            <a href="index.html">Trang chủ</a>
+            <a href="index.html#pricing-section">Bảng giá</a>
+            <a href="about.html">Về chúng tôi</a>
+            <a href="policy.html" style="color:#ff9800">Chính sách</a>
+            <a href="index.html#booking-section" class="btn-primary">Đặt xe ngay</a>
+        </div>
+    </nav>
+
+    <section class="page-hero">
+        <h1>Chính Sách <span>Dịch Vụ</span></h1>
+        <p>Quy định rõ ràng, minh bạch cho khách hàng và đối tác tài xế TravelCar</p>
+    </section>
+
+    <div class="policy-content">
+
+        <!-- Quick Nav -->
+        <div class="policy-nav">
+            <a href="#pricing"><i class="fas fa-tag"></i> Giá cước</a>
+            <a href="#payment"><i class="fas fa-credit-card"></i> Thanh toán</a>
+            <a href="#driver-rules"><i class="fas fa-user-shield"></i> Quy chế tài xế</a>
+            <a href="#cancel"><i class="fas fa-ban"></i> Hủy đơn</a>
+            <a href="#privacy"><i class="fas fa-lock"></i> Bảo mật</a>
+            <a href="#terms"><i class="fas fa-file-contract"></i> Điều khoản</a>
+        </div>
+
+        <!-- GIÁ CƯỚC -->
+        <div class="policy-section" id="pricing">
+            <h2><i class="fas fa-tag"></i> Chính sách giá cước</h2>
+            <p>TravelCar áp dụng bảng giá minh bạch theo km, niêm yết công khai. Giá cuối cùng dựa trên khoảng cách thực
+                tế và loại xe.</p>
+
+            <table class="policy-table">
+                <thead>
+                    <tr>
+                        <th>Khoảng cách</th>
+                        <th>Giá / km</th>
+                        <th>Ghi chú</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>0 – 100 km</td>
+                        <td>10,000 ₫</td>
+                        <td>Giá nội thành & lân cận</td>
+                    </tr>
+                    <tr>
+                        <td>101 – 300 km</td>
+                        <td>8,500 ₫</td>
+                        <td>Giá tuyến trung bình</td>
+                    </tr>
+                    <tr>
+                        <td>301+ km</td>
+                        <td>7,500 ₫</td>
+                        <td>Ưu đãi đường dài</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>Hệ số loại xe</h3>
+            <table class="policy-table">
+                <thead>
+                    <tr>
+                        <th>Loại xe</th>
+                        <th>Hệ số</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Xe 4 chỗ (Sedan)</td>
+                        <td>×1.0</td>
+                    </tr>
+                    <tr>
+                        <td>Xe 7 chỗ (SUV/MPV)</td>
+                        <td>×1.3</td>
+                    </tr>
+                    <tr>
+                        <td>Xe 16 chỗ</td>
+                        <td>×1.8 (dự kiến)</td>
+                    </tr>
+                    <tr>
+                        <td>Xe 29+ chỗ</td>
+                        <td>×2.5 (dự kiến)</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="info-box">
+                <p><i class="fas fa-info-circle"></i> Chiều về (1 chiều): được giảm 30–50% so với giá 2 chiều. Giá chính
+                    xác hiện trên hệ thống khi đặt.</p>
+            </div>
+        </div>
+
+        <!-- THANH TOÁN -->
+        <div class="policy-section" id="payment">
+            <h2><i class="fas fa-credit-card"></i> Chính sách thanh toán</h2>
+            <p>TravelCar hỗ trợ nhiều hình thức thanh toán linh hoạt:</p>
+            <ul>
+                <li><i class="fas fa-check"></i> <span>Tiền mặt — thanh toán trực tiếp cho tài xế khi hoàn thành</span>
+                </li>
+                <li><i class="fas fa-check"></i> <span>Chuyển khoản ngân hàng — trước hoặc sau chuyến đi</span></li>
+                <li><i class="fas fa-check"></i> <span>Momo, ZaloPay, VNPay — quét QR tiện lợi (sắp ra mắt)</span></li>
+            </ul>
+
+            <h3>Phân chia doanh thu</h3>
+            <table class="policy-table">
+                <thead>
+                    <tr>
+                        <th>Đối tượng</th>
+                        <th>Tỷ lệ</th>
+                        <th>Ghi chú</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Tài xế</td>
+                        <td><strong>90%</strong></td>
+                        <td>Nhận trực tiếp sau mỗi chuyến</td>
+                    </tr>
+                    <tr>
+                        <td>TravelCar</td>
+                        <td><strong>10%</strong></td>
+                        <td>Chi phí vận hành + marketing</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="info-box">
+                <p><i class="fas fa-info-circle"></i> Hệ thống tính cước tự động. Không thu phí đăng ký, không thu phí
+                    cố định hàng tháng. Tài xế chỉ trả phần trăm khi có cuốc.</p>
+            </div>
+        </div>
+
+        <!-- QUY CHẾ TÀI XẾ -->
+        <div class="policy-section" id="driver-rules">
+            <h2><i class="fas fa-user-shield"></i> Quy chế đối tác tài xế</h2>
+
+            <h3>Yêu cầu đăng ký</h3>
+            <ul>
+                <li><i class="fas fa-check"></i> <span>GPLX hạng B2 trở lên, còn hiệu lực</span></li>
+                <li><i class="fas fa-check"></i> <span>Xe đời từ 2015, tình trạng tốt</span></li>
+                <li><i class="fas fa-check"></i> <span>Bảo hiểm xe + bảo hiểm hành khách đầy đủ</span></li>
+                <li><i class="fas fa-check"></i> <span>Hình xe thật 3 ảnh, GPLX + đăng ký xe 2 mặt</span></li>
+                <li><i class="fas fa-check"></i> <span>Số tài khoản ngân hàng chính chủ</span></li>
+            </ul>
+
+            <h3>Quy tắc phục vụ</h3>
+            <ul>
+                <li><i class="fas fa-star"></i> <span>Đúng giờ — đến điểm đón trước 10 phút</span></li>
+                <li><i class="fas fa-star"></i> <span>Mở cửa xe, hỗ trợ hành lý cho khách</span></li>
+                <li><i class="fas fa-star"></i> <span>Chuẩn bị nước suối sẵn trên xe</span></li>
+                <li><i class="fas fa-star"></i> <span>Nhiệt kế xe mát, xe sạch, không mùi thuốc lá</span></li>
+                <li><i class="fas fa-star"></i> <span>Không gọi điện thoại khi lái xe</span></li>
+                <li><i class="fas fa-star"></i> <span>Lịch sự, nhã nhặn, hỗ trợ khách gợi ý điểm du lịch</span></li>
+            </ul>
+
+            <div class="warning-box">
+                <p><i class="fas fa-exclamation-triangle"></i> <strong>Vi phạm sẽ bị:</strong> Không nhận cuốc 1 ngày
+                    (lần 1), tạm khóa 7 ngày (lần 2), khóa vĩnh viễn (lần 3). Bỏ cuốc → bị khóa ngay lập tức.</p>
+            </div>
+
+            <h3>Khen thưởng</h3>
+            <ul>
+                <li><i class="fas fa-trophy"></i> <span>Rating ≥ 4.8 sau 50 chuyến → ưu tiên nhận cuốc</span></li>
+                <li><i class="fas fa-trophy"></i> <span>Tài xế 5 sao → badge xanh, khách thấy trước khi đặt</span></li>
+                <li><i class="fas fa-trophy"></i> <span>Tài xế xuất sắc tháng → quà tặng + giảm 50% phí nền tảng</span>
+                </li>
+            </ul>
+        </div>
+
+        <!-- HỦY ĐƠN -->
+        <div class="policy-section" id="cancel">
+            <h2><i class="fas fa-ban"></i> Chính sách hủy đơn</h2>
+
+            <table class="policy-table">
+                <thead>
+                    <tr>
+                        <th>Thời điểm hủy</th>
+                        <th>Phí hủy</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Trước 24 giờ</td>
+                        <td>Miễn phí</td>
+                    </tr>
+                    <tr>
+                        <td>12–24 giờ trước chuyến</td>
+                        <td>20% giá cuốc</td>
+                    </tr>
+                    <tr>
+                        <td>Dưới 12 giờ</td>
+                        <td>50% giá cuốc</td>
+                    </tr>
+                    <tr>
+                        <td>Không báo (no-show)</td>
+                        <td>100% giá cuốc</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="info-box">
+                <p><i class="fas fa-info-circle"></i> Trường hợp bất khả kháng (thiên tai, tai nạn, lý do y tế) — liên
+                    hệ hotline để được miễn phí hủy.</p>
+            </div>
+        </div>
+
+        <!-- BẢO MẬT -->
+        <div class="policy-section" id="privacy">
+            <h2><i class="fas fa-lock"></i> Chính sách bảo mật</h2>
+            <p>TravelCar cam kết bảo vệ thông tin cá nhân của khách hàng và đối tác:</p>
+            <ul>
+                <li><i class="fas fa-check"></i> <span>Thông tin SĐT, email chỉ dùng để liên lạc về dịch vụ</span></li>
+                <li><i class="fas fa-check"></i> <span>Không bán, cho thuê, hoặc chia sẻ dữ liệu cho bên thứ 3</span>
+                </li>
+                <li><i class="fas fa-check"></i> <span>Dữ liệu mã hóa SSL từ trình duyệt đến server</span></li>
+                <li><i class="fas fa-check"></i> <span>Tài xế chỉ thấy SĐT khách khi đã được match</span></li>
+                <li><i class="fas fa-check"></i> <span>Quyền xóa dữ liệu: liên hệ admin để yêu cầu xóa tài khoản</span>
+                </li>
+            </ul>
+        </div>
+
+        <!-- ĐIỀU KHOẢN -->
+        <div class="policy-section" id="terms">
+            <h2><i class="fas fa-file-contract"></i> Điều khoản sử dụng</h2>
+            <ol>
+                <li>Khách hàng phải cung cấp thông tin chính xác khi đặt xe.</li>
+                <li>TravelCar là nền tảng kết nối, không trực tiếp vận chuyển.</li>
+                <li>Giá cước là giá tạm tính. Giá cuối cùng có thể thay đổi theo thực tế (đường đi, phụ phí phát sinh).
+                </li>
+                <li>Khách hàng có quyền đánh giá tài xế sau mỗi chuyến.</li>
+                <li>TravelCar có quyền từ chối dịch vụ nếu phát hiện hành vi gian lận.</li>
+                <li>Mọi tranh chấp sẽ được giải quyết theo pháp luật Việt Nam.</li>
+            </ol>
+            <p style="margin-top:16px"><strong>Liên hệ hỗ trợ:</strong></p>
+            <ul>
+                <li><i class="fas fa-phone"></i> <span>Hotline: 1900 xxxx (24/7)</span></li>
+                <li><i class="fas fa-envelope"></i> <span>Email: support@travelcar.vn</span></li>
+            </ul>
+        </div>
+    </div>
+
+    <footer>
+        <div class="footer-grid">
+            <div>
+                <div class="footer-logo">Travel<span>Car</span></div>
+                <p>Dịch vụ đặt xe du lịch chuyên nghiệp hàng đầu Việt Nam.</p>
+            </div>
+            <div>
+                <h4>Dịch vụ</h4>
+                <a href="index.html#vehicles-section">Xe 4 chỗ</a>
+                <a href="index.html#vehicles-section">Xe 7 chỗ</a>
+                <a href="index.html#pricing-section">Bảng giá</a>
+            </div>
+            <div>
+                <h4>Công ty</h4>
+                <a href="about.html">Về chúng tôi</a>
+                <a href="policy.html">Chính sách</a>
+                <a href="driver-register.html">Đối tác tài xế</a>
+            </div>
+            <div>
+                <h4>Liên hệ</h4>
+                <a href="#"><i class="fas fa-phone"></i> 1900 xxxx</a>
+                <a href="#"><i class="fas fa-envelope"></i> info@travelcar.vn</a>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            © 2026 TravelCar. All rights reserved. · <a href="admin.html" class="footer-admin-link"><i
+                    class="fas fa-lock"></i> Admin</a>
+        </div>
+    </footer>
+
+    <script>
+        document.querySelector('.hamburger')?.addEventListener('click', () => {
+            document.querySelector('.nav-links')?.classList.toggle('open');
+        });
+    </script>
+</body>
+
+</html>

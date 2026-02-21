@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Về Chúng Tôi — TravelCar</title>
+    <meta name="description"
+        content="TravelCar — ứng dụng đầu tiên về dịch vụ xe đường dài tại Việt Nam. Biết trước xe và tài xế phục vụ bạn.">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        .page-hero {
+            padding: 120px 40px 60px;
+            text-align: center;
+            background: linear-gradient(135deg, rgba(10, 14, 26, 0.97), rgba(13, 33, 55, 0.95));
+        }
+
+        .page-hero h1 {
+            color: #fff;
+            font-size: 2.4rem;
+            margin-bottom: 12px;
+        }
+
+        .page-hero h1 span {
+            color: #ff9800;
+        }
+
+        .page-hero p {
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 1rem;
+            max-width: 600px;
+            margin: 0 auto;
+            line-height: 1.7;
+        }
+
+        .about-content {
+            max-width: 860px;
+            margin: 0 auto;
+            padding: 60px 24px;
+        }
+
+        .about-block {
+            margin-bottom: 48px;
+        }
+
+        .about-block h2 {
+            font-size: 1.4rem;
+            color: #fff;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .about-block h2 i {
+            color: #ff9800;
+            font-size: 1.1rem;
+        }
+
+        .about-block p {
+            color: rgba(255, 255, 255, 0.6);
+            line-height: 1.8;
+            font-size: .92rem;
+            margin-bottom: 12px;
+        }
+
+        .about-block strong {
+            color: #fff;
+        }
+
+        .highlight-box {
+            background: rgba(255, 152, 0, 0.08);
+            border: 1px solid rgba(255, 152, 0, 0.15);
+            border-radius: 16px;
+            padding: 24px 28px;
+            margin: 20px 0;
+        }
+
+        .highlight-box p {
+            color: rgba(255, 255, 255, 0.7);
+            font-style: italic;
+            font-size: .95rem;
+        }
+
+        .values-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 16px;
+            margin-top: 20px;
+        }
+
+        .value-card {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 14px;
+            padding: 22px 18px;
+            text-align: center;
+            transition: .2s;
+        }
+
+        .value-card:hover {
+            border-color: rgba(255, 152, 0, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .value-card i {
+            font-size: 1.5rem;
+            color: #ff9800;
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        .value-card h4 {
+            color: #fff;
+            font-size: .9rem;
+            margin-bottom: 6px;
+        }
+
+        .value-card p {
+            color: rgba(255, 255, 255, 0.4);
+            font-size: .78rem;
+            line-height: 1.5;
+        }
+
+        .stats-row {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 14px;
+            margin: 24px 0;
+        }
+
+        .about-stat {
+            text-align: center;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.04);
+            border-radius: 14px;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+        }
+
+        .about-stat .num {
+            font-size: 1.6rem;
+            font-weight: 800;
+            color: #ff9800;
+        }
+
+        .about-stat .lbl {
+            font-size: .72rem;
+            color: rgba(255, 255, 255, 0.4);
+            margin-top: 4px;
+            text-transform: uppercase;
+            letter-spacing: .5px;
+        }
+
+        .service-list {
+            list-style: none;
+            margin: 16px 0;
+        }
+
+        .service-list li {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            padding: 10px 0;
+            color: rgba(255, 255, 255, 0.6);
+            font-size: .88rem;
+            line-height: 1.5;
+        }
+
+        .service-list li i {
+            color: #ff9800;
+            margin-top: 3px;
+            flex-shrink: 0;
+        }
+
+        @media (max-width: 600px) {
+            .page-hero h1 {
+                font-size: 1.6rem;
+            }
+
+            .stats-row {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <nav>
+        <a href="index.html" class="logo" style="text-decoration:none">Travel<span>Car</span></a>
+        <button class="hamburger" aria-label="Menu"><span></span><span></span><span></span></button>
+        <div class="nav-links">
+            <a href="index.html">Trang chủ</a>
+            <a href="index.html#pricing-section">Bảng giá</a>
+            <a href="about.html" style="color:#ff9800">Về chúng tôi</a>
+            <a href="driver-register.html">Đối tác tài xế</a>
+            <a href="index.html#booking-section" class="btn-primary">Đặt xe ngay</a>
+        </div>
+    </nav>
+
+    <section class="page-hero">
+        <h1>Về <span>TravelCar</span></h1>
+        <p>Ứng dụng đầu tiên về dịch vụ xe đường dài tại Việt Nam — nơi bạn biết trước xe và tài xế sẽ phục vụ mình.</p>
+    </section>
+
+    <div class="about-content">
+
+        <div class="about-block">
+            <h2><i class="fas fa-bullseye"></i> Sứ mệnh</h2>
+            <p>TravelCar ra đời với mong muốn <strong>thay đổi cách người Việt đặt xe đường dài</strong>. Không còn phải
+                gọi điện thoại hỏi giá, không còn lo lắng về chất lượng xe và tài xế. Mọi thứ đều minh bạch ngay trên
+                nền tảng.</p>
+            <div class="highlight-box">
+                <p>"Chỉ cần bạn có nhu cầu, tôi sẽ đáp ứng hoàn toàn nhu cầu của bạn theo phương thức mới nhất và điều
+                    kiện tối ưu nhất."</p>
+            </div>
+        </div>
+
+        <div class="stats-row">
+            <div class="about-stat">
+                <div class="num">1,000+</div>
+                <div class="lbl">Xe toàn quốc</div>
+            </div>
+            <div class="about-stat">
+                <div class="num">64</div>
+                <div class="lbl">Tỉnh thành</div>
+            </div>
+            <div class="about-stat">
+                <div class="num">4.9</div>
+                <div class="lbl">Đánh giá</div>
+            </div>
+            <div class="about-stat">
+                <div class="num">24/7</div>
+                <div class="lbl">Hỗ trợ</div>
+            </div>
+        </div>
+
+        <div class="about-block">
+            <h2><i class="fas fa-star"></i> Giá trị cốt lõi</h2>
+            <div class="values-grid">
+                <div class="value-card">
+                    <i class="fas fa-shield-halved"></i>
+                    <h4>An toàn tuyệt đối</h4>
+                    <p>An toàn của bạn là thành công của chúng tôi. Tất cả tài xế được xác minh và đánh giá.</p>
+                </div>
+                <div class="value-card">
+                    <i class="fas fa-hand-holding-dollar"></i>
+                    <h4>Giá cước minh bạch</h4>
+                    <p>Bảng giá công khai theo km. Không phí ẩn, không ép giá. Chiều về còn được giảm thêm.</p>
+                </div>
+                <div class="value-card">
+                    <i class="fas fa-heart"></i>
+                    <h4>Dịch vụ full combo</h4>
+                    <p>Nước suối, mở cửa xe, xếp hành lý — tất cả đều tiêu chuẩn, không cần yêu cầu.</p>
+                </div>
+                <div class="value-card">
+                    <i class="fas fa-route"></i>
+                    <h4>Tài xế am hiểu</h4>
+                    <p>Kinh nghiệm lâu năm, thông thạo đường xá, rành các điểm du lịch và vui chơi giải trí.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="about-block">
+            <h2><i class="fas fa-car-side"></i> Dịch vụ</h2>
+            <ul class="service-list">
+                <li><i class="fas fa-check-circle"></i> Thuê xe có tài xế: 4 chỗ, 7 chỗ, 16 chỗ, 29 chỗ, 45 chỗ</li>
+                <li><i class="fas fa-check-circle"></i> Xe limousine 9, 16 chỗ — xe sang và siêu sang</li>
+                <li><i class="fas fa-check-circle"></i> Tour du lịch tùy chỉnh với hướng dẫn viên đa ngôn ngữ (Anh,
+                    Trung, Nhật, Hàn)</li>
+                <li><i class="fas fa-check-circle"></i> Ba mức tour: tiết kiệm, cơ bản, nâng cao</li>
+                <li><i class="fas fa-check-circle"></i> Vận chuyển hàng: trái cây, đông lạnh, hàng thông thường</li>
+                <li><i class="fas fa-check-circle"></i> Dịch vụ dọn nhà: đóng gói, tháo dỡ, sắp xếp</li>
+                <li><i class="fas fa-check-circle"></i> Sẵn sàng mua xe mới theo hợp đồng 3 năm — chọn màu phong thủy,
+                    nội thất tùy chỉnh</li>
+            </ul>
+        </div>
+
+        <div class="about-block">
+            <h2><i class="fas fa-trophy"></i> Chương trình khách hàng thân thiết</h2>
+            <p>Khách hàng thường xuyên sử dụng dịch vụ sẽ được thăng hạng và hưởng ưu đãi đặc biệt:</p>
+            <div class="values-grid" style="margin-top:16px">
+                <div class="value-card">
+                    <i class="fas fa-medal" style="color:#ffc107"></i>
+                    <h4>Hạng Vàng</h4>
+                    <p>Giảm 2% cho mỗi chuyến đi</p>
+                </div>
+                <div class="value-card">
+                    <i class="fas fa-gem" style="color:#42a5f5"></i>
+                    <h4>Hạng Kim Cương</h4>
+                    <p>Giảm 3% + ưu tiên chọn xe</p>
+                </div>
+                <div class="value-card">
+                    <i class="fas fa-crown" style="color:#ab47bc"></i>
+                    <h4>Hạng Platinum</h4>
+                    <p>Giảm 5% + tài xế VIP + quà tặng</p>
+                </div>
+            </div>
+            <p style="margin-top:16px; font-size:.84rem">Giới thiệu khách mới → chiết khấu chuyến tiếp. Chấm điểm dịch
+                vụ → giảm giá lần sau. Chia sẻ trên MXH → tích điểm thưởng.</p>
+        </div>
+
+        <div class="about-block">
+            <h2><i class="fas fa-map-location-dot"></i> Phạm vi hoạt động</h2>
+            <p><strong>Toàn quốc 64 tỉnh thành</strong> — từ Bắc tới Nam. Lào Cai, Sapa, Hà Giang, Quảng Ninh, Hải
+                Phòng, Hạ Long... không có điểm du lịch nào mà không có xe.</p>
+            <p>Kết nối với các chuyến bay quốc tế đến Việt Nam. Chỉ cần bạn có nhu cầu di chuyển, chúng tôi luôn sẵn
+                sàng phục vụ.</p>
+            <div class="stats-row" style="margin-top:20px">
+                <div class="about-stat">
+                    <div class="num">5'</div>
+                    <div class="lbl">Trung tâm</div>
+                </div>
+                <div class="about-stat">
+                    <div class="num">30'</div>
+                    <div class="lbl">Nội thành</div>
+                </div>
+                <div class="about-stat">
+                    <div class="num">1h</div>
+                    <div class="lbl">Ngoại thành</div>
+                </div>
+                <div class="about-stat">
+                    <div class="num">2h</div>
+                    <div class="lbl">Vùng xa</div>
+                </div>
+            </div>
+        </div>
+
+        <div style="text-align:center; padding: 20px 0">
+            <a href="index.html#booking-section" class="btn-book"
+                style="display:inline-flex; align-items:center; gap:8px; padding:14px 32px; border-radius:12px; text-decoration:none; font-size:.95rem">
+                <i class="fas fa-car-side"></i> Đặt xe ngay
+            </a>
+        </div>
+    </div>
+
+    <footer>
+        <div class="footer-grid">
+            <div>
+                <div class="footer-logo">Travel<span>Car</span></div>
+                <p>Dịch vụ đặt xe du lịch chuyên nghiệp hàng đầu Việt Nam.</p>
+            </div>
+            <div>
+                <h4>Dịch vụ</h4>
+                <a href="index.html#vehicles-section">Xe 4 chỗ</a>
+                <a href="index.html#vehicles-section">Xe 7 chỗ</a>
+                <a href="index.html#pricing-section">Bảng giá</a>
+            </div>
+            <div>
+                <h4>Công ty</h4>
+                <a href="about.html">Về chúng tôi</a>
+                <a href="policy.html">Chính sách</a>
+                <a href="driver-register.html">Đối tác tài xế</a>
+            </div>
+            <div>
+                <h4>Liên hệ</h4>
+                <a href="#"><i class="fas fa-phone"></i> 1900 xxxx</a>
+                <a href="#"><i class="fas fa-envelope"></i> info@travelcar.vn</a>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            © 2026 TravelCar. All rights reserved. · <a href="admin.html" class="footer-admin-link"><i
+                    class="fas fa-lock"></i> Admin</a>
+        </div>
+    </footer>
+
+    <script>
+        document.querySelector('.hamburger')?.addEventListener('click', () => {
+            document.querySelector('.nav-links')?.classList.toggle('open');
+        });
+    </script>
+</body>
+
+</html>
