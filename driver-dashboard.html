@@ -666,13 +666,29 @@
                     <span id="login-error-msg">Số điện thoại không tìm thấy hoặc chưa được duyệt</span>
                 </div>
 
+                <!-- Step 1: Nhập số điện thoại -->
                 <form id="login-form">
                     <div class="form-group">
                         <label for="login-phone">Số điện thoại</label>
                         <input type="tel" id="login-phone" placeholder="VD: 0901 234 567" required>
                     </div>
-                    <button type="submit" class="btn-book" style="width:100%">
-                        <i class="fas fa-sign-in-alt"></i> Đăng nhập
+                    <button type="submit" id="btn-send-otp" class="btn-book" style="width:100%">
+                        <i class="fas fa-paper-plane"></i> Gửi mã xác thực
+                    </button>
+                </form>
+
+                <!-- Step 2: Nhập OTP (ẩn ban đầu) -->
+                <form id="otp-form" style="display:none">
+                    <div class="form-group">
+                        <label for="otp-code">Mã xác thực OTP</label>
+                        <input type="text" id="otp-code" placeholder="Nhập mã 6 số" maxlength="6" pattern="[0-9]{6}" inputmode="numeric" autocomplete="one-time-code" required>
+                    </div>
+                    <p id="otp-timer" style="color:rgba(255,255,255,0.5);font-size:.82rem;margin-bottom:12px;text-align:left"></p>
+                    <button type="submit" id="btn-verify-otp" class="btn-book" style="width:100%">
+                        <i class="fas fa-sign-in-alt"></i> Xác nhận đăng nhập
+                    </button>
+                    <button type="button" onclick="backToPhone()" style="width:100%;margin-top:8px;background:transparent;border:1px solid rgba(255,255,255,0.15);color:rgba(255,255,255,0.6);padding:12px;border-radius:12px;cursor:pointer;font-size:.9rem">
+                        <i class="fas fa-arrow-left"></i> Đổi số điện thoại
                     </button>
                 </form>
             </div>
@@ -809,21 +825,27 @@
         let currentTab = 'pending';
         let realtimeSubscription = null;
 
+        let pendingLoginPhone = null;
+        let otpCountdownTimer = null;
+
         document.addEventListener('DOMContentLoaded', () => {
             initSupabase();
             initNavigation();
 
-            // Auto-login nếu có lưu SĐT
-            const savedPhone = localStorage.getItem('driver_phone');
-            if (savedPhone) {
-                loginWithPhone(savedPhone);
-            }
+            // SECURITY: Không auto-login. Yêu cầu OTP mỗi phiên.
 
-            // Login form
+            // Step 1: Gửi OTP
             document.getElementById('login-form').addEventListener('submit', async (e) => {
                 e.preventDefault();
                 const phone = document.getElementById('login-phone').value.replace(/\s/g, '');
-                await loginWithPhone(phone);
+                await requestOtp(phone);
+            });
+
+            // Step 2: Xác nhận OTP
+            document.getElementById('otp-form').addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const code = document.getElementById('otp-code').value.trim();
+                await verifyOtpAndLogin(code);
             });
 
             // Feedback form submit
@@ -870,22 +892,161 @@
             }
         }
 
-        // ===== LOGIN =====
-        async function loginWithPhone(phone) {
+        // ===== OTP LOGIN FLOW =====
+
+        // Step 1: Kiểm tra tài xế tồn tại + gửi OTP
+        async function requestOtp(phone) {
             const errorEl = document.getElementById('login-error');
+            const btn = document.getElementById('btn-send-otp');
             errorEl.classList.remove('show');
 
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Đang kiểm tra...';
+            btn.disabled = true;
+
+            // Kiểm tra tài xế có tồn tại và active không
             const result = await driverLogin(phone);
             if (result.error || !result.data) {
                 errorEl.classList.add('show');
                 document.getElementById('login-error-msg').textContent =
                     'Không tìm thấy tài xế hoặc tài khoản chưa được duyệt';
+                btn.innerHTML = '<i class="fas fa-paper-plane"></i> Gửi mã xác thực';
+                btn.disabled = false;
                 return;
             }
 
-            currentDriver = result.data;
-            localStorage.setItem('driver_phone', phone);
-            showDashboard();
+            // Gửi OTP qua Edge Function
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Đang gửi OTP...';
+            try {
+                const resp = await fetch(SUPABASE_URL + '/functions/v1/send-otp', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'apikey': SUPABASE_ANON_KEY
+                    },
+                    body: JSON.stringify({ phone: phone, action: 'driver_login' })
+                });
+                const data = await resp.json();
+
+                if (!data.success) {
+                    errorEl.classList.add('show');
+                    document.getElementById('login-error-msg').textContent = data.error || 'Không thể gửi OTP';
+                    btn.innerHTML = '<i class="fas fa-paper-plane"></i> Gửi mã xác thực';
+                    btn.disabled = false;
+                    return;
+                }
+
+                // Lưu phone tạm để verify
+                pendingLoginPhone = phone;
+
+                // Chuyển sang step 2
+                document.getElementById('login-form').style.display = 'none';
+                document.getElementById('otp-form').style.display = 'block';
+                document.getElementById('otp-code').focus();
+
+                // Countdown timer
+                startOtpCountdown(data.expires_in || 300);
+
+            } catch (err) {
+                errorEl.classList.add('show');
+                document.getElementById('login-error-msg').textContent = 'Lỗi kết nối. Vui lòng thử lại.';
+            }
+
+            btn.innerHTML = '<i class="fas fa-paper-plane"></i> Gửi mã xác thực';
+            btn.disabled = false;
+        }
+
+        // Step 2: Xác nhận OTP + đăng nhập
+        async function verifyOtpAndLogin(code) {
+            const errorEl = document.getElementById('login-error');
+            const btn = document.getElementById('btn-verify-otp');
+            errorEl.classList.remove('show');
+
+            if (!pendingLoginPhone) {
+                backToPhone();
+                return;
+            }
+
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Đang xác thực...';
+            btn.disabled = true;
+
+            try {
+                const resp = await fetch(SUPABASE_URL + '/functions/v1/verify-otp', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'apikey': SUPABASE_ANON_KEY
+                    },
+                    body: JSON.stringify({
+                        phone: pendingLoginPhone,
+                        code: code,
+                        action: 'driver_login'
+                    })
+                });
+                const data = await resp.json();
+
+                if (!data.success) {
+                    errorEl.classList.add('show');
+                    document.getElementById('login-error-msg').textContent = data.error || 'Mã OTP không đúng';
+                    btn.innerHTML = '<i class="fas fa-sign-in-alt"></i> Xác nhận đăng nhập';
+                    btn.disabled = false;
+                    return;
+                }
+
+                // OTP verified — load driver data
+                const driverResult = await driverLogin(pendingLoginPhone);
+                if (driverResult.error || !driverResult.data) {
+                    errorEl.classList.add('show');
+                    document.getElementById('login-error-msg').textContent = 'Lỗi tải dữ liệu tài xế';
+                    btn.innerHTML = '<i class="fas fa-sign-in-alt"></i> Xác nhận đăng nhập';
+                    btn.disabled = false;
+                    return;
+                }
+
+                currentDriver = driverResult.data;
+                clearInterval(otpCountdownTimer);
+                showDashboard();
+
+            } catch (err) {
+                errorEl.classList.add('show');
+                document.getElementById('login-error-msg').textContent = 'Lỗi kết nối. Vui lòng thử lại.';
+            }
+
+            btn.innerHTML = '<i class="fas fa-sign-in-alt"></i> Xác nhận đăng nhập';
+            btn.disabled = false;
+        }
+
+        function backToPhone() {
+            pendingLoginPhone = null;
+            clearInterval(otpCountdownTimer);
+            document.getElementById('otp-form').style.display = 'none';
+            document.getElementById('login-form').style.display = 'block';
+            document.getElementById('otp-code').value = '';
+            document.getElementById('login-error').classList.remove('show');
+        }
+
+        function startOtpCountdown(seconds) {
+            let remaining = seconds;
+            const timerEl = document.getElementById('otp-timer');
+            timerEl.textContent = 'Mã hết hạn sau ' + formatTime(remaining);
+
+            clearInterval(otpCountdownTimer);
+            otpCountdownTimer = setInterval(() => {
+                remaining--;
+                if (remaining <= 0) {
+                    clearInterval(otpCountdownTimer);
+                    timerEl.textContent = 'Mã OTP đã hết hạn. Vui lòng gửi lại.';
+                    timerEl.style.color = '#ef5350';
+                } else {
+                    timerEl.textContent = 'Mã hết hạn sau ' + formatTime(remaining);
+                    timerEl.style.color = remaining <= 60 ? '#ff9800' : 'rgba(255,255,255,0.5)';
+                }
+            }, 1000);
+        }
+
+        function formatTime(s) {
+            const m = Math.floor(s / 60);
+            const sec = s % 60;
+            return m + ':' + (sec < 10 ? '0' : '') + sec;
         }
 
         // ===== SHOW DASHBOARD =====
@@ -1179,10 +1340,14 @@
         // ===== LOGOUT =====
         function logout() {
             currentDriver = null;
-            localStorage.removeItem('driver_phone');
+            pendingLoginPhone = null;
             if (realtimeSubscription) {
                 realtimeSubscription.unsubscribe();
             }
+            // Reset login UI về step 1
+            document.getElementById('login-form').style.display = 'block';
+            document.getElementById('otp-form').style.display = 'none';
+            document.getElementById('otp-code').value = '';
             document.getElementById('login-section').style.display = 'block';
             document.getElementById('dashboard-section').style.display = 'none';
         }

@@ -38,7 +38,7 @@ Deno.serve(async (req) => {
 
     if (error) throw error
 
-    console.log(`[verify-otp] Phone: ${phone} | Result: ${result?.success}`)
+    console.log(`[verify-otp] Phone: ${phone.slice(0, 4)}*** | Result: ${result?.success}`)
 
     const status = result?.success ? 200 : 400
     return new Response(
@@ -48,7 +48,7 @@ Deno.serve(async (req) => {
   } catch (error) {
     console.error("[verify-otp] Error:", error)
     return new Response(
-      JSON.stringify({ success: false, error: error.message }),
+      JSON.stringify({ success: false, error: "Internal server error" }),
       { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
     )
   }

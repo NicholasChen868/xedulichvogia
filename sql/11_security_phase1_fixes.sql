@@ -45,8 +45,9 @@ GRANT EXECUTE ON FUNCTION save_daily_stats_snapshot() TO service_role;
 GRANT EXECUTE ON FUNCTION auto_suspend_inactive_drivers() TO service_role;
 GRANT EXECUTE ON FUNCTION cleanup_old_audit_logs() TO service_role;
 
--- Trigger functions: These are invoked by triggers, not by users directly
--- No explicit GRANT needed for trigger functions (they run as trigger owner)
+-- Trigger functions: Invoked by triggers, not by users directly.
+-- They run as the trigger owner (postgres) so no explicit GRANT needed.
+-- log_audit_event, check_payment_anomaly, check_booking_anomaly are all trigger functions.
 
 -- system_health_check: Only authenticated admin
 REVOKE EXECUTE ON FUNCTION system_health_check() FROM anon, public;
