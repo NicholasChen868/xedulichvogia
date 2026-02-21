@@ -297,6 +297,84 @@
                 padding: 20px
             }
         }
+
+        /* Upload Zone */
+        .upload-dropzone {
+            border: 2px dashed rgba(255, 255, 255, 0.12);
+            border-radius: 14px;
+            padding: 24px;
+            text-align: center;
+            cursor: pointer;
+            transition: .2s;
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .upload-dropzone:hover {
+            border-color: rgba(255, 152, 0, 0.4);
+            background: rgba(255, 152, 0, 0.04);
+        }
+
+        .upload-dropzone i {
+            font-size: 1.6rem;
+            color: rgba(255, 255, 255, 0.25);
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        .upload-dropzone:hover i {
+            color: #ff9800;
+        }
+
+        .upload-dropzone p {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: .88rem;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .upload-dropzone span {
+            color: rgba(255, 255, 255, 0.25);
+            font-size: .72rem;
+        }
+
+        .upload-preview {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, 80px);
+            gap: 8px;
+            margin-top: 10px;
+        }
+
+        .upload-thumb {
+            width: 80px;
+            height: 80px;
+            border-radius: 10px;
+            overflow: hidden;
+            position: relative;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .upload-thumb img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .upload-thumb .remove-thumb {
+            position: absolute;
+            top: 4px;
+            right: 4px;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: rgba(0, 0, 0, 0.7);
+            border: none;
+            color: #ef5350;
+            font-size: .6rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
     </style>
 </head>
 
@@ -385,10 +463,66 @@
                         <!-- Populated by JS -->
                     </div>
 
+                    <div class="form-section-label">Hình ảnh xe & giấy tờ</div>
+
+                    <div class="upload-zone" id="upload-vehicle">
+                        <div class="upload-dropzone" onclick="document.getElementById('file-vehicle').click()">
+                            <i class="fas fa-camera"></i>
+                            <p>Chụp hoặc tải ảnh xe</p>
+                            <span>Hình xe thật, rõ biển số (tối đa 3 ảnh)</span>
+                        </div>
+                        <input type="file" id="file-vehicle" accept="image/*" multiple capture="environment"
+                            style="display:none" onchange="previewFiles(this, 'preview-vehicle', 3)">
+                        <div class="upload-preview" id="preview-vehicle"></div>
+                    </div>
+
+                    <div class="upload-zone" id="upload-license" style="margin-top:12px">
+                        <div class="upload-dropzone" onclick="document.getElementById('file-license').click()">
+                            <i class="fas fa-id-card"></i>
+                            <p>GPLX & Giấy đăng ký xe</p>
+                            <span>Chụp 2 mặt (tối đa 4 ảnh)</span>
+                        </div>
+                        <input type="file" id="file-license" accept="image/*" multiple capture="environment"
+                            style="display:none" onchange="previewFiles(this, 'preview-license', 4)">
+                        <div class="upload-preview" id="preview-license"></div>
+                    </div>
+
+                    <div class="form-section-label">Tài khoản ngân hàng (chính chủ)</div>
+
+                    <div class="form-group">
+                        <label for="bank-name">Ngân hàng</label>
+                        <select id="bank-name" name="bank_name">
+                            <option value="">— Chọn ngân hàng —</option>
+                            <option value="Vietcombank">Vietcombank</option>
+                            <option value="BIDV">BIDV</option>
+                            <option value="Techcombank">Techcombank</option>
+                            <option value="VPBank">VPBank</option>
+                            <option value="Agribank">Agribank</option>
+                            <option value="MBBank">MB Bank</option>
+                            <option value="ACB">ACB</option>
+                            <option value="Sacombank">Sacombank</option>
+                            <option value="TPBank">TP Bank</option>
+                            <option value="VietinBank">VietinBank</option>
+                            <option value="SHB">SHB</option>
+                            <option value="other">Khác</option>
+                        </select>
+                    </div>
+
+                    <div class="form-row" style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+                        <div class="form-group">
+                            <label for="bank-account">Số tài khoản</label>
+                            <input type="text" id="bank-account" name="bank_account" placeholder="VD: 0123456789">
+                        </div>
+                        <div class="form-group">
+                            <label for="bank-holder">Chủ tài khoản</label>
+                            <input type="text" id="bank-holder" name="bank_holder" placeholder="NGUYEN VAN A">
+                        </div>
+                    </div>
+
                     <div class="terms-check">
                         <input type="checkbox" id="terms" required>
                         <label for="terms">Tôi đồng ý với <a href="#">Điều khoản dịch vụ</a> và <a href="#">Chính sách
-                                bảo mật</a> của TravelCar</label>
+                                bảo mật</a> của TravelCar. Tôi cam kết thông tin cung cấp là chính xác.</label>
                     </div>
 
                     <button type="submit" class="btn-book"><i class="fas fa-check-circle"></i> Đăng ký ngay</button>
@@ -567,6 +701,28 @@
                 notif.classList.remove('show');
                 setTimeout(() => notif.remove(), 300);
             }, 4000);
+        }
+
+        // File upload preview
+        function previewFiles(input, previewId, maxFiles) {
+            const preview = document.getElementById(previewId);
+            if (!preview) return;
+            const files = Array.from(input.files).slice(0, maxFiles);
+            preview.innerHTML = '';
+            files.forEach((file, i) => {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    const thumb = document.createElement('div');
+                    thumb.className = 'upload-thumb';
+                    thumb.innerHTML = `
+                        <img src="${e.target.result}" alt="Ảnh ${i + 1}">
+                        <button type="button" class="remove-thumb" onclick="this.closest('.upload-thumb').remove()">
+                            <i class="fas fa-times"></i>
+                        </button>`;
+                    preview.appendChild(thumb);
+                };
+                reader.readAsDataURL(file);
+            });
         }
     </script>
 

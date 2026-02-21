@@ -452,6 +452,96 @@
             color: #ef5350;
         }
 
+        /* Earnings Panel */
+        .earnings-panel {
+            display: none;
+        }
+
+        .earnings-panel.active {
+            display: block;
+        }
+
+        .earnings-cards {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .earn-card {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 14px;
+            padding: 18px;
+            text-align: center;
+        }
+
+        .earn-card .earn-amount {
+            font-size: 1.3rem;
+            font-weight: 800;
+            color: #ff9800;
+            margin-bottom: 4px;
+        }
+
+        .earn-card .earn-label {
+            font-size: .72rem;
+            color: rgba(255, 255, 255, 0.4);
+            text-transform: uppercase;
+            letter-spacing: .5px;
+        }
+
+        .earn-card.total {
+            grid-column: 1 / -1;
+            background: rgba(255, 152, 0, 0.08);
+            border-color: rgba(255, 152, 0, 0.15);
+        }
+
+        .earn-card.total .earn-amount {
+            font-size: 1.6rem;
+        }
+
+        .earn-history-title {
+            font-size: .82rem;
+            font-weight: 700;
+            color: rgba(255, 255, 255, 0.5);
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: .5px;
+        }
+
+        /* Report buttons */
+        .ride-btn.pickup {
+            background: linear-gradient(135deg, #2196f3, #1565c0);
+            color: #fff;
+        }
+
+        .ride-btn.pickup:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 15px rgba(33, 150, 243, 0.3);
+        }
+
+        .ride-btn.dropoff {
+            background: linear-gradient(135deg, #4caf50, #2e7d32);
+            color: #fff;
+        }
+
+        .ride-btn.dropoff:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 15px rgba(76, 175, 80, 0.3);
+        }
+
+        .ride-customer-name {
+            color: #fff;
+            font-weight: 600;
+            font-size: .85rem;
+            margin-bottom: 8px;
+        }
+
+        .ride-customer-name i {
+            color: #ff9800;
+            margin-right: 5px;
+        }
+
         /* Mobile */
         @media (max-width: 600px) {
             .dash-header {
@@ -479,6 +569,10 @@
 
             .ride-actions {
                 flex-direction: column;
+            }
+
+            .earnings-cards {
+                grid-template-columns: 1fr 1fr;
             }
         }
     </style>
@@ -572,6 +666,9 @@
                 <button class="dash-tab" data-tab="history" onclick="switchTab('history')">
                     <i class="fas fa-history"></i> Lịch sử
                 </button>
+                <button class="dash-tab" data-tab="earnings" onclick="switchTab('earnings')">
+                    <i class="fas fa-wallet"></i> Thu nhập
+                </button>
             </div>
 
             <!-- Rides List -->
@@ -580,6 +677,34 @@
                     <i class="fas fa-inbox"></i>
                     <p>Chưa có cuốc xe nào</p>
                 </div>
+            </div>
+
+            <!-- Earnings Panel -->
+            <div class="earnings-panel" id="earnings-panel">
+                <div class="earnings-cards">
+                    <div class="earn-card">
+                        <div class="earn-amount" id="earn-today">0 ₫</div>
+                        <div class="earn-label">Hôm nay</div>
+                    </div>
+                    <div class="earn-card">
+                        <div class="earn-amount" id="earn-week">0 ₫</div>
+                        <div class="earn-label">Tuần này</div>
+                    </div>
+                    <div class="earn-card">
+                        <div class="earn-amount" id="earn-month">0 ₫</div>
+                        <div class="earn-label">Tháng này</div>
+                    </div>
+                    <div class="earn-card">
+                        <div class="earn-amount" id="earn-trips">0</div>
+                        <div class="earn-label">Chuyến hoàn thành</div>
+                    </div>
+                    <div class="earn-card total">
+                        <div class="earn-amount" id="earn-total">0 ₫</div>
+                        <div class="earn-label">Tổng thu nhập (90% phần tài xế)</div>
+                    </div>
+                </div>
+                <div class="earn-history-title">Lịch sử gần đây</div>
+                <div class="rides-list" id="earn-history-list"></div>
             </div>
         </div>
     </div>
@@ -695,7 +820,19 @@
             currentTab = tab;
             document.querySelectorAll('.dash-tab').forEach(t => t.classList.remove('active'));
             document.querySelector(`[data-tab="${tab}"]`).classList.add('active');
-            loadRides();
+
+            // Toggle panels
+            document.getElementById('rides-list').style.display = tab === 'earnings' ? 'none' : 'flex';
+            const earningsPanel = document.getElementById('earnings-panel');
+            if (earningsPanel) {
+                earningsPanel.classList.toggle('active', tab === 'earnings');
+            }
+
+            if (tab === 'earnings') {
+                loadEarnings();
+            } else {
+                loadRides();
+            }
         }
 
         // ===== LOAD RIDES =====
@@ -746,6 +883,8 @@
                 const fare = ride.estimated_fare ? formatVND(ride.estimated_fare) : '—';
                 const time = ride.created_at ? new Date(ride.created_at).toLocaleString('vi-VN') : '';
 
+                const customerName = ride.customer_name ? `<div class="ride-customer-name"><i class="fas fa-user"></i> ${ride.customer_name}</div>` : '';
+
                 let actions = '';
                 if (ride.status === 'matched') {
                     actions = `
@@ -760,8 +899,15 @@
                 } else if (ride.status === 'confirmed') {
                     actions = `
                         <div class="ride-actions">
-                            <button class="ride-btn complete" onclick="finishRide('${ride.id}')">
-                                <i class="fas fa-flag-checkered"></i> Hoàn thành
+                            <button class="ride-btn pickup" onclick="reportPickup('${ride.id}')">
+                                <i class="fas fa-map-marker-alt"></i> Đã đón khách
+                            </button>
+                        </div>`;
+                } else if (ride.status === 'in_progress') {
+                    actions = `
+                        <div class="ride-actions">
+                            <button class="ride-btn dropoff" onclick="reportDropoff('${ride.id}')">
+                                <i class="fas fa-flag-checkered"></i> Đã trả khách
                             </button>
                         </div>`;
                 }
@@ -772,6 +918,7 @@
                             <span class="ride-status ${ride.status}">${getStatusText(ride.status)}</span>
                             <span class="ride-time">${time}</span>
                         </div>
+                        ${customerName}
                         <div class="ride-route">
                             <div class="ride-route-icon"><i class="fas fa-route"></i></div>
                             <div class="ride-route-text">
@@ -820,14 +967,84 @@
             }
         }
 
-        async function finishRide(bookingId) {
+        async function reportPickup(bookingId) {
+            if (!currentDriver) return;
+            const { error } = await db.from('bookings').update({ status: 'in_progress' }).eq('id', bookingId);
+            if (!error) {
+                showNotification('Đã báo đón khách thành công!');
+                loadRides();
+            }
+        }
+
+        async function reportDropoff(bookingId) {
             if (!currentDriver) return;
             const result = await completeRide(bookingId, currentDriver.id);
             if (!result.error) {
                 currentDriver.total_trips = (currentDriver.total_trips || 0) + 1;
                 document.getElementById('stat-total').textContent = currentDriver.total_trips;
-                showNotification('Cuốc xe hoàn thành! Cảm ơn bạn.');
+                showNotification('Cuốc xe hoàn thành! Cảm ơn bạn. 🎉');
                 loadRides();
+            }
+        }
+
+        // Backward compat
+        async function finishRide(bookingId) { await reportDropoff(bookingId); }
+
+        // ===== EARNINGS =====
+        async function loadEarnings() {
+            if (!currentDriver) return;
+            const allRides = await getDriverRides(currentDriver.id);
+            const completed = (allRides.data || []).filter(r => r.status === 'completed');
+
+            const now = new Date();
+            const today = now.toISOString().split('T')[0];
+            const weekAgo = new Date(now - 7 * 86400000).toISOString().split('T')[0];
+            const monthStart = new Date(now.getFullYear(), now.getMonth(), 1).toISOString().split('T')[0];
+
+            const driverShare = 0.9; // 90% cho tài xế
+            let earnToday = 0, earnWeek = 0, earnMonth = 0, earnTotal = 0;
+
+            completed.forEach(r => {
+                const fare = (r.estimated_fare || 0) * driverShare;
+                const date = (r.updated_at || r.created_at || '').split('T')[0];
+                earnTotal += fare;
+                if (date >= today) earnToday += fare;
+                if (date >= weekAgo) earnWeek += fare;
+                if (date >= monthStart) earnMonth += fare;
+            });
+
+            document.getElementById('earn-today').textContent = formatVND(earnToday);
+            document.getElementById('earn-week').textContent = formatVND(earnWeek);
+            document.getElementById('earn-month').textContent = formatVND(earnMonth);
+            document.getElementById('earn-total').textContent = formatVND(earnTotal);
+            document.getElementById('earn-trips').textContent = completed.length;
+
+            // Render recent history
+            const recent = completed.slice(0, 10);
+            const historyList = document.getElementById('earn-history-list');
+            if (historyList) {
+                renderRides({ innerHTML: '' }, []);  // clear
+                historyList.innerHTML = recent.map(r => {
+                    const fare = formatVND((r.estimated_fare || 0) * driverShare);
+                    const date = r.updated_at ? new Date(r.updated_at).toLocaleDateString('vi-VN') : '';
+                    return `
+                        <div class="ride-card">
+                            <div class="ride-card-header">
+                                <span class="ride-status completed">Hoàn thành</span>
+                                <span class="ride-time">${date}</span>
+                            </div>
+                            <div class="ride-route">
+                                <div class="ride-route-icon"><i class="fas fa-route"></i></div>
+                                <div class="ride-route-text">
+                                    <h4>${r.pickup_location} → ${r.dropoff_location}</h4>
+                                    <span>${r.distance_km ? r.distance_km + ' km' : ''}</span>
+                                </div>
+                            </div>
+                            <div class="ride-details">
+                                <div class="ride-fare">${fare}</div>
+                            </div>
+                        </div>`;
+                }).join('') || '<div class="empty-state"><i class="fas fa-inbox"></i><p>Chưa có chuyến hoàn thành</p></div>';
             }
         }
 
