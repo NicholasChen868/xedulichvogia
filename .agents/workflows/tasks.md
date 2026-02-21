@@ -50,12 +50,23 @@ description: Danh sách tasks và phân công cho dự án TravelCar
 
 ### Sau demo:
 - [ ] **Cho khách chọn tài xế** — dựa trên bài viết và đánh giá
-- [ ] **Chương trình khách hàng thân thiết** — Vàng, Kim Cương, Platinum
-- [ ] **Điểm thưởng** — share MXH → giảm giá 2-5%
-- [ ] **Giới thiệu khách mới** — chiết khấu chuyến tiếp
+- [x] **Chương trình khách hàng thân thiết** — TravelCar Miles 5 hạng theo km ✅ 21/02
+- [x] **Điểm thưởng** — share MXH → tích km, 8 chiến lược kích cầu ✅ 21/02
+- [x] **Giới thiệu khách mới** — referral bonus +200km thiết kế sẵn ✅ 21/02
 - [ ] **Thu thập video phản hồi** — khách quay clip ngắn
 - [ ] **Bắt buộc viết bài/Facebook** sau mỗi chuyến
 - [ ] **Hỗ trợ giọng nói → văn bản**
+
+### UX/Marketing đã làm (21/02):
+- [x] **Floating CTA sidebar** — Đặt xe, Tài xế, Zalo, Gọi ngay (auto-collapse khi scroll)
+- [x] **Customer testimonials** — 3 câu chuyện cảm xúc + share FB/X/Zalo/Copy
+- [x] **TravelCar Miles showcase** — 5 tier cards trên trang chủ
+- [x] **Travel Inspirations** — 3 destination cards + inline booking CTA
+- [x] **Never-ending CTA flow** — mọi section kết thúc bằng CTA
+- [x] **Social Proof FOMO** — 12 fake notifications xoay vòng (kích cầu)
+- [x] **Photo showcase gallery** — 3 ảnh AI-generated cho hero
+- [x] **Fix nav mobile** — avatar + hamburger không chồng nhau
+- [x] **Admin chỉ ở footer** — bỏ khỏi dropdown nav
 
 ### Admin nâng cao:
 - [ ] **Trạng thái đơn chi tiết** — đã nhận / đang chạy / đã trả

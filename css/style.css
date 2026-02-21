@@ -1288,7 +1288,11 @@ html {
     }
 
     .hero-text h1 {
-        font-size: 2.2rem
+        font-size: 2.4rem
+    }
+
+    .hero-text p {
+        font-size: 1.1rem;
     }
 
     .photo-showcase {
@@ -1362,54 +1366,113 @@ html {
     }
 }
 
+/* ===== MOBILE: GPU Performance ===== */
+@media (max-width: 480px) {
+    nav {
+        -webkit-backdrop-filter: blur(8px);
+        backdrop-filter: blur(8px);
+    }
+
+    .booking-card {
+        -webkit-backdrop-filter: none;
+        backdrop-filter: none;
+    }
+
+    .vehicle-card:hover,
+    .route-card:hover,
+    .step-card:hover,
+    .pricing-tier:hover,
+    .story-card:hover,
+    .tier-card:hover,
+    .travel-card:hover {
+        transform: none;
+    }
+}
+
 /* ===== MOBILE ===== */
 @media (max-width: 480px) {
     nav {
-        padding: 12px 16px
+        padding: 12px 20px
     }
 
     .logo {
-        font-size: 1.25rem
+        font-size: 1.4rem
     }
 
     .hero {
-        padding: 80px 16px 40px
+        padding: 85px 20px 44px
     }
 
     .hero-text h1 {
-        font-size: 1.75rem
+        font-size: 2rem;
+        line-height: 1.25;
     }
 
     .hero-text p {
-        font-size: .92rem
+        font-size: 1.05rem;
+        line-height: 1.6;
     }
 
     .hero-stats {
         flex-direction: column;
-        gap: 8px
+        gap: 10px;
+        font-size: 1rem;
     }
 
     .booking-card {
-        padding: 20px;
+        padding: 24px;
         border-radius: 18px
+    }
+
+    .booking-card h3 {
+        font-size: 1.2rem;
     }
 
     .form-row {
         grid-template-columns: 1fr
     }
 
+    .form-group label {
+        font-size: 0.85rem;
+    }
+
+    .form-group input,
+    .form-group select {
+        font-size: 1rem;
+        padding: 14px 16px;
+    }
+
+    .btn-book {
+        font-size: 1.05rem;
+        padding: 16px;
+    }
+
     .trust-bar {
-        padding: 24px 16px;
-        gap: 16px;
+        padding: 30px 20px;
+        gap: 20px;
         flex-direction: column
     }
 
+    .trust-item {
+        font-size: 1.05rem;
+    }
+
     .section {
-        padding: 48px 16px
+        padding: 56px 20px
     }
 
     .section-header h2 {
-        font-size: 1.45rem
+        font-size: 1.8rem;
+        line-height: 1.3;
+    }
+
+    .section-header p {
+        font-size: 1rem;
+    }
+
+    .pill {
+        font-size: 0.85rem;
+        padding: 6px 16px;
     }
 
     .pricing-tiers-grid {
@@ -1418,23 +1481,27 @@ html {
     }
 
     .pricing-tier {
-        padding: 16px
+        padding: 18px
     }
 
     .tier-price {
-        font-size: 1.2rem
+        font-size: 1.35rem
     }
 
     .calc-body {
-        padding: 20px
+        padding: 24px
     }
 
     .calc-total {
-        font-size: 1.6rem
+        font-size: 1.8rem
     }
 
     .vehicle-grid {
         grid-template-columns: 1fr
+    }
+
+    .vehicle-name {
+        font-size: 1.05rem;
     }
 
     .routes-grid {
@@ -1442,20 +1509,46 @@ html {
     }
 
     .route-card {
-        padding: 14px 16px
+        padding: 16px 20px;
+        font-size: 0.95rem;
+    }
+
+    .route-name {
+        font-size: 1rem;
     }
 
     .steps-grid {
         grid-template-columns: 1fr;
-        gap: 14px
+        gap: 16px
     }
 
     .step-card {
-        padding: 24px 16px
+        padding: 28px 20px
+    }
+
+    .step-card h3 {
+        font-size: 1.1rem;
+    }
+
+    .step-card p {
+        font-size: 0.95rem;
     }
 
     .cta-section {
-        padding: 16px 16px 48px
+        padding: 20px 20px 48px
+    }
+
+    .cta-box h2 {
+        font-size: 1.6rem;
+    }
+
+    .cta-box p {
+        font-size: 1rem;
+    }
+
+    .btn-cta {
+        font-size: 1rem;
+        padding: 14px 28px;
     }
 
     .cta-box {
@@ -1464,21 +1557,29 @@ html {
     }
 
     .cta-box h2 {
-        font-size: 1.4rem
+        font-size: 1.6rem
     }
 
     .btn-cta {
-        padding: 12px 24px;
-        font-size: .9rem
+        padding: 14px 28px;
+        font-size: 1rem
     }
 
     footer {
-        padding: 32px 16px
+        padding: 40px 20px
     }
 
     .footer-grid {
         grid-template-columns: 1fr;
-        gap: 24px
+        gap: 28px
+    }
+
+    .footer-col h4 {
+        font-size: 1.05rem;
+    }
+
+    .footer-col a {
+        font-size: 0.95rem;
     }
 
     .notification {
