@@ -38,6 +38,60 @@ function initNavigation() {
             a.addEventListener('click', () => navLinks.classList.remove('open'));
         });
     }
+    initUserMenu();
+}
+
+/* ======= USER AVATAR MENU ======= */
+function initUserMenu() {
+    checkAdminAuth();
+    // Click outside to close
+    document.addEventListener('click', (e) => {
+        const dropdown = document.getElementById('user-dropdown');
+        const btn = document.getElementById('user-avatar-btn');
+        if (dropdown && btn && !dropdown.contains(e.target) && !btn.contains(e.target)) {
+            dropdown.classList.remove('show');
+        }
+    });
+}
+
+function toggleUserMenu() {
+    const dropdown = document.getElementById('user-dropdown');
+    if (dropdown) dropdown.classList.toggle('show');
+}
+
+function checkAdminAuth() {
+    const isAdmin = localStorage.getItem('admin_auth') === 'true';
+    const avatarBtn = document.getElementById('user-avatar-btn');
+    const loggedOut = document.getElementById('dropdown-logged-out');
+    const loggedIn = document.getElementById('dropdown-logged-in');
+    const nameEl = document.querySelector('.user-dropdown-name');
+    const roleEl = document.querySelector('.user-dropdown-role');
+
+    if (!avatarBtn) return;
+
+    if (isAdmin) {
+        avatarBtn.classList.add('logged-in');
+        avatarBtn.innerHTML = '<i class="fas fa-user-shield"></i>';
+        if (loggedOut) loggedOut.style.display = 'none';
+        if (loggedIn) loggedIn.style.display = 'block';
+        if (nameEl) nameEl.textContent = 'Admin';
+        if (roleEl) roleEl.textContent = 'Quản trị viên';
+    } else {
+        avatarBtn.classList.remove('logged-in');
+        avatarBtn.innerHTML = '<i class="fas fa-user"></i>';
+        if (loggedOut) loggedOut.style.display = 'block';
+        if (loggedIn) loggedIn.style.display = 'none';
+        if (nameEl) nameEl.textContent = 'Đăng nhập';
+        if (roleEl) roleEl.textContent = 'Khách';
+    }
+}
+
+function doAdminLogout() {
+    localStorage.removeItem('admin_auth');
+    checkAdminAuth();
+    const dropdown = document.getElementById('user-dropdown');
+    if (dropdown) dropdown.classList.remove('show');
+    showNotification('Đã đăng xuất');
 }
 
 /* ======= TRUST BAR ======= */

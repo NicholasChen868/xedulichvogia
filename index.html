@@ -29,6 +29,34 @@
             <a href="driver-register.html">Đối tác tài xế</a>
             <a href="#booking-section" class="btn-primary">Đặt xe ngay</a>
         </div>
+        <!-- User Avatar -->
+        <div class="nav-user" id="nav-user">
+            <button class="user-avatar" id="user-avatar-btn" title="Menu tài khoản" onclick="toggleUserMenu()">
+                <i class="fas fa-user"></i>
+            </button>
+            <div class="user-dropdown" id="user-dropdown">
+                <div class="user-dropdown-header" id="dropdown-header">
+                    <div class="user-dropdown-name">Đăng nhập</div>
+                    <div class="user-dropdown-role">Khách</div>
+                </div>
+                <div class="user-dropdown-body" id="dropdown-logged-out">
+                    <a href="admin.html"><i class="fas fa-sign-in-alt"></i> Đăng nhập Admin</a>
+                    <a href="driver-dashboard.html"><i class="fas fa-steering-wheel"></i> Tài xế Dashboard</a>
+                </div>
+                <div class="user-dropdown-body" id="dropdown-logged-in" style="display:none">
+                    <a href="admin.html"><i class="fas fa-gauge-high"></i> Dashboard</a>
+                    <a href="admin.html#bookings"><i class="fas fa-calendar-check"></i> Quản lý đơn</a>
+                    <a href="admin.html#drivers"><i class="fas fa-id-card"></i> Quản lý tài xế</a>
+                    <div class="user-dropdown-divider"></div>
+                    <a href="#"><i class="fas fa-user-circle"></i> Tài khoản</a>
+                    <a href="#"><i class="fas fa-gift"></i> Điểm thưởng <span class="points-badge">120 pts</span></a>
+                    <a href="#"><i class="fas fa-gear"></i> Cài đặt</a>
+                    <div class="user-dropdown-divider"></div>
+                    <a href="#" onclick="doAdminLogout()" class="logout-link"><i class="fas fa-sign-out-alt"></i> Đăng
+                        xuất</a>
+                </div>
+            </div>
+        </div>
     </nav>
 
     <!-- HERO -->
@@ -204,6 +232,7 @@
             <div>
                 <h4>Đối tác</h4>
                 <a href="driver-register.html">Đăng ký tài xế</a>
+                <a href="driver-dashboard.html">Dashboard tài xế</a>
                 <a href="#">Quy chế hợp tác</a>
                 <a href="#">Chính sách</a>
             </div>
@@ -215,7 +244,8 @@
             </div>
         </div>
         <div class="footer-bottom">
-            © 2026 TravelCar. All rights reserved.
+            © 2026 TravelCar. All rights reserved. · <a href="admin.html" class="footer-admin-link"><i
+                    class="fas fa-lock"></i> Admin</a>
         </div>
     </footer>
 
