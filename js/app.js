@@ -449,9 +449,18 @@ function renderLookupResults(bookings) {
                     <div class="brc-driver-avatar"><i class="fas fa-user"></i></div>
                     <div class="brc-driver-info">
                         <strong>${b._driver.full_name}</strong>
-                        <small>${b._driver.license_plate || ''} · ⭐ ${b._driver.rating || '5.0'}</small>
+                        <small>${b._driver.license_plate || ''} · ⭐ ${b._driver.average_rating || '5.0'}</small>
                     </div>
                 </div>`;
+        }
+
+        let ratingInfo = '';
+        if (b.status === 'completed') {
+            if (!b.rating) {
+                ratingInfo = `<button class="btn-rate-driver" onclick="openRatingModal('${b.id}', '${b.pickup_location}', '${b.dropoff_location}')"><i class="fas fa-star"></i> Đánh giá chuyến đi</button>`;
+            } else {
+                ratingInfo = `<div class="btn-rated"><i class="fas fa-check-circle"></i> Đã đánh giá ${b.rating} sao</div>`;
+            }
         }
 
         return `
@@ -466,8 +475,80 @@ function renderLookupResults(bookings) {
                     <div class="brc-detail">Giá<span>${fare}</span></div>
                 </div>
                 ${driverInfo}
+                ${ratingInfo}
             </div>`;
     }).join('');
+}
+
+/* ======= RATING MODAL (INDEX) ======= */
+let currentRatingVal = 5;
+
+function openRatingModal(bookingId, pickup, dropoff) {
+    document.getElementById('rating-booking-id').value = bookingId;
+    document.getElementById('rating-route').innerText = `${pickup} ➝ ${dropoff}`;
+
+    // reset styling
+    document.getElementById('rating-review').value = '';
+    const stars = document.querySelectorAll('#rating-stars i');
+
+    // Default 5 stars
+    setRatingStars(5);
+
+    // Add listeners
+    stars.forEach(s => {
+        s.onclick = function () {
+            setRatingStars(this.getAttribute('data-val'));
+        };
+    });
+
+    document.getElementById('rating-modal').classList.add('show');
+}
+
+function setRatingStars(val) {
+    currentRatingVal = parseInt(val);
+    const stars = document.querySelectorAll('#rating-stars i');
+    stars.forEach(s => {
+        const sVal = parseInt(s.getAttribute('data-val'));
+        if (sVal <= currentRatingVal) {
+            s.className = 'fas fa-star active';
+        } else {
+            s.className = 'far fa-star';
+        }
+    });
+}
+
+function closeRatingModal() {
+    document.getElementById('rating-modal').classList.remove('show');
+}
+
+async function submitRating() {
+    const bookingId = document.getElementById('rating-booking-id').value;
+    const review = document.getElementById('rating-review').value.trim();
+    const btn = document.getElementById('btn-submit-rating');
+
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Đang gửi...';
+    btn.classList.add('btn-loading');
+
+    const { error } = await supabase.from('bookings').update({
+        rating: currentRatingVal,
+        review_text: review
+    }).eq('id', bookingId);
+
+    btn.innerHTML = 'Gửi Đánh Giá';
+    btn.classList.remove('btn-loading');
+
+    if (error) {
+        showNotification('Lỗi khi gửi đánh giá: ' + error.message, 'error');
+    } else {
+        showNotification('Cảm ơn bạn đã đánh giá chuyến đi! 💛', 'success');
+        closeRatingModal();
+
+        // Refresh lookup results to show "Đã đánh giá"
+        const phone = document.getElementById('lookup-phone').value;
+        if (phone) {
+            document.getElementById('lookup-form').dispatchEvent(new Event('submit'));
+        }
+    }
 }
 
 /* ======= PRICING CALCULATOR (interactive section) ======= */

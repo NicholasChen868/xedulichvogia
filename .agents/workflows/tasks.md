@@ -18,6 +18,15 @@ description: Danh sách tasks và phân công cho dự án TravelCar
 - [x] Link Admin trong footer
 - [x] Dark theme premium + responsive
 - [x] Bảng giá calculator theo km
+- [x] **Tra cứu đơn bằng SĐT** — lookup section + kết quả card ✅ 21/02
+- [x] **Trang xác nhận booking** — modal hiện chi tiết + tài xế ✅ 21/02
+- [x] **Upload hình xe + giấy tờ** — chụp/tải, preview thumbnails ✅ 21/02
+- [x] **Báo điểm đón/trả khách** — 3 bước: nhận → đón → trả ✅ 21/02
+- [x] **Tổng hợp thu nhập** — tab earnings ngày/tuần/tháng/tổng ✅ 21/02
+- [x] **Trang "Về chúng tôi"** — sứ mệnh, giá trị, dịch vụ, B2B ✅ 21/02
+- [x] **Trang "Chính sách"** — giá cước, thanh toán, quy chế, hủy đơn ✅ 21/02
+- [x] **Section cho thuê xe doanh nghiệp** — B2B enterprise premium ✅ 21/02
+- [x] **Thông tin ngân hàng tài xế** — select bank + STK + chủ TK ✅ 21/02
 
 ### Database (Antigravity)
 - [x] 5 bảng: bookings, drivers, pricing_tiers, vehicle_types, popular_routes
@@ -29,48 +38,36 @@ description: Danh sách tasks và phân công cho dự án TravelCar
 
 ---
 
-## 🔴 CẦN LÀM — Antigravity (Frontend + DB) — Ưu tiên cao
+## 🔴 CẦN LÀM — Antigravity (Frontend) — Ưu tiên cao
 
-### Trang khách hàng
-- [ ] **Tra cứu đơn bằng SĐT** — khách nhập SĐT để xem trạng thái booking
-- [ ] **Trang xác nhận booking** — sau đặt xe, hiện confirm + info tài xế
-- [ ] **Hệ thống đặt cọc 10%** — tích hợp thanh toán (Momo/VNPay/ZaloPay)
-- [ ] **Cho khách chọn tài xế** — dựa trên bài viết và đánh giá trên website
+### Batch tiếp: Đánh giá + Blog + Admin charts
 - [ ] **Hệ thống đánh giá tài xế** — sao + review sau mỗi chuyến
-- [ ] **Thu thập video phản hồi** — khách quay clip ngắn sau chuyến đi
-- [ ] **Chương trình khách hàng thân thiết** — hạng Vàng, Kim Cương, Platinum
-- [ ] **Điểm thưởng** — share/tương tác MXH → tích điểm → giảm giá 2-5%
-- [ ] **Giới thiệu khách mới** — chiết khấu cho chuyến đi tiếp theo
-
-### Trang tài xế
-- [ ] **Upload hình xe + giấy tờ** — chụp trực tiếp hoặc tải ảnh lên app
-- [ ] **Báo điểm đón/trả khách** — tài xế bấm khi đón + khi trả
-- [ ] **Tổng hợp thu nhập** — xem doanh thu theo ngày/tuần/tháng
-- [ ] **Biểu mẫu góp ý** — tài xế góp ý giá cả, chất lượng dịch vụ
-- [ ] **Bắt buộc viết bài/đăng Facebook** sau mỗi chuyến (tăng lực tương tác)
-- [ ] **Hỗ trợ chuyển giọng nói → văn bản** — giúp tài xế viết bài dễ hơn
-
-### Trang Admin
-- [ ] **Biểu đồ thống kê** — chart doanh thu, số đơn theo ngày
-- [ ] **Bản đồ realtime** — xem vị trí xe đang chạy trên Google Maps
-- [ ] **Trạng thái đơn chi tiết** — đã nhận khách / đang chạy / đã trả khách
-- [ ] **Báo giá trực tiếp** — admin deal giá cho cuốc >150km, xe lớn
-- [ ] **Quản lý hoa hồng 10%** — theo dõi tiền đặt cọc = doanh thu platform
-- [ ] **Phát hiện "lốc khách"** — alert khi tài xế lấy khách riêng
-
-### Mở rộng loại xe
-- [ ] **Xe 16 chỗ, 29 chỗ, 45 chỗ**
-- [ ] **Limousine 9 chỗ, 16 chỗ**
-- [ ] **Xe sang và siêu sang**
-- [ ] **Xe tải vận chuyển hàng** — trái cây, đông lạnh, hàng thông thường
-- [ ] **Dịch vụ dọn nhà** — đóng gói, tháo dỡ, sắp xếp
-
-### Content & Marketing
-- [ ] **Trang "Về chúng tôi"** + "Chính sách"
-- [ ] **Content du lịch theo mùa** — timeline bài viết theo tháng, địa điểm
-- [ ] **Bài quảng cáo + CTA đặt xe** — link vào booking form
+- [ ] **Biểu đồ thống kê Admin** — chart doanh thu, số đơn theo ngày
 - [ ] **Trang blog/tin tức** — đăng bài tài xế, review khách hàng
+- [ ] **Content du lịch theo mùa** — timeline bài viết theo tháng
+- [ ] **Biểu mẫu góp ý tài xế** — tài xế góp ý dịch vụ
 - [ ] **SEO meta tags** — OG tags, structured data
+
+### Sau demo:
+- [ ] **Cho khách chọn tài xế** — dựa trên bài viết và đánh giá
+- [ ] **Chương trình khách hàng thân thiết** — Vàng, Kim Cương, Platinum
+- [ ] **Điểm thưởng** — share MXH → giảm giá 2-5%
+- [ ] **Giới thiệu khách mới** — chiết khấu chuyến tiếp
+- [ ] **Thu thập video phản hồi** — khách quay clip ngắn
+- [ ] **Bắt buộc viết bài/Facebook** sau mỗi chuyến
+- [ ] **Hỗ trợ giọng nói → văn bản**
+
+### Admin nâng cao:
+- [ ] **Trạng thái đơn chi tiết** — đã nhận / đang chạy / đã trả
+- [ ] **Báo giá trực tiếp** — admin deal giá cuốc lớn
+- [ ] **Quản lý hoa hồng 10%** — theo dõi doanh thu platform
+- [ ] **Phát hiện "lốc khách"** — alert tài xế lấy khách riêng
+
+### Mở rộng loại xe:
+- [ ] **Xe 16, 29, 45 chỗ** + **Limousine 9, 16 chỗ**
+- [ ] **Xe sang và siêu sang**
+- [ ] **Xe tải vận chuyển hàng** — trái cây, đông lạnh
+- [ ] **Dịch vụ dọn nhà** — đóng gói, tháo dỡ
 
 ---
 

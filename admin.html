@@ -621,6 +621,19 @@
                         <div class="sb-label">Chờ duyệt</div>
                     </div>
                 </div>
+
+                <!-- CHART -->
+                <div class="stats-row" style="margin-bottom:28px;">
+                    <div
+                        style="background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.06); border-radius:16px; padding:20px; width:100%; grid-column:span 4">
+                        <h4 style="color:#fff; margin-bottom:16px; font-weight:600; font-size:1rem"><i
+                                class="fas fa-chart-line" style="color:#ff9800; margin-right:8px"></i> Thống kê Doanh
+                            thu 7 Ngày Qua</h4>
+                        <div style="height:300px; width:100%">
+                            <canvas id="revenueChart"></canvas>
+                        </div>
+                    </div>
+                </div>
             </div>
 
             <!-- ===== BOOKINGS PANEL ===== -->
@@ -711,6 +724,7 @@
     </div>
 
     <!-- SCRIPTS -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="js/config.js"></script>
     <script src="js/pricing.js"></script>
@@ -751,6 +765,7 @@
             document.getElementById('admin-login').style.display = 'none';
             document.getElementById('admin-dashboard').style.display = 'flex';
             loadOverview();
+            loadChartData();
             loadBookings();
             loadDrivers();
         }
@@ -767,7 +782,10 @@
             document.querySelectorAll('.sidebar-nav a').forEach(a => a.classList.remove('active'));
             document.querySelector(`[data-panel="${name}"]`).classList.add('active');
 
-            if (name === 'overview') loadOverview();
+            if (name === 'overview') {
+                loadOverview();
+                loadChartData();
+            }
             else if (name === 'bookings') loadBookings();
             else if (name === 'drivers') loadDrivers();
         }
@@ -785,6 +803,67 @@
             document.getElementById('ov-pending-drivers').textContent = s.pendingDrivers || 0;
             document.getElementById('sb-booking-count').textContent = s.totalBookings || 0;
             document.getElementById('sb-driver-count').textContent = s.totalDrivers || 0;
+        }
+
+        async function loadChartData() {
+            if (!window.db) return;
+            const { data: bookings, error } = await db.from('bookings').select('created_at, estimated_fare').eq('status', 'completed');
+            if (error) console.error("Chart data error:", error);
+            const days = 7;
+            const labels = [];
+            const revenueData = [];
+
+            for (let i = days - 1; i >= 0; i--) {
+                const d = new Date();
+                d.setDate(d.getDate() - i);
+                labels.push(d.toLocaleDateString('vi-VN', { day: '2-digit', month: '2-digit' }));
+
+                const start = new Date(d);
+                start.setHours(0, 0, 0, 0);
+                const end = new Date(d);
+                end.setHours(23, 59, 59, 999);
+
+                let sum = 0;
+                if (bookings) {
+                    bookings.forEach(b => {
+                        const bDate = new Date(b.created_at);
+                        if (bDate >= start && bDate <= end) {
+                            sum += (b.estimated_fare || 0);
+                        }
+                    });
+                }
+                revenueData.push(sum);
+            }
+
+            const ctx = document.getElementById('revenueChart').getContext('2d');
+            if (window.revenueChartInstance) {
+                window.revenueChartInstance.destroy();
+            }
+            window.revenueChartInstance = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Doanh thu (VNĐ)',
+                        data: revenueData,
+                        borderColor: '#ff9800',
+                        backgroundColor: 'rgba(255,152,0,0.1)',
+                        fill: true,
+                        tension: 0.4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: { beginAtZero: true, grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: 'rgba(255,255,255,0.5)' } },
+                        x: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: 'rgba(255,255,255,0.5)' } }
+                    },
+                    plugins: {
+                        legend: { display: false }
+                    }
+                }
+            });
         }
 
         // ===== BOOKINGS =====

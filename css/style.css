@@ -1908,6 +1908,14 @@ html {
 .modal-btn-primary {
     background: linear-gradient(135deg, #ff9800, #ff6f00);
     color: #fff;
+    padding: 12px;
+    border-radius: 10px;
+    border: none;
+    font-size: .85rem;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: 'Inter', sans-serif;
+    transition: .2s;
 }
 
 .modal-btn-primary:hover {
@@ -1919,11 +1927,73 @@ html {
     background: rgba(255, 255, 255, 0.06);
     border: 1px solid rgba(255, 255, 255, 0.1) !important;
     color: rgba(255, 255, 255, 0.6);
+    padding: 12px;
+    /* Added from .modal-actions button */
+    border-radius: 10px;
+    /* Added from .modal-actions button */
+    font-size: .85rem;
+    /* Added from .modal-actions button */
+    font-weight: 600;
+    /* Added from .modal-actions button */
 }
 
 .modal-btn-secondary:hover {
     background: rgba(255, 255, 255, 0.1);
     color: #fff;
+}
+
+/* ===== RATING MODAL ===== */
+.rating-stars {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    margin: 16px 0;
+}
+
+.rating-stars i {
+    font-size: 2rem;
+    color: rgba(255, 255, 255, 0.2);
+    cursor: pointer;
+    transition: .2s;
+}
+
+.rating-stars i.active,
+.rating-stars i:hover {
+    color: #ffc107;
+    transform: scale(1.1);
+}
+
+.btn-rate-driver {
+    display: block;
+    width: 100%;
+    margin-top: 10px;
+    padding: 10px;
+    background: rgba(255, 152, 0, 0.15);
+    border: 1px solid rgba(255, 152, 0, 0.3);
+    color: #ff9800;
+    border-radius: 10px;
+    font-weight: 600;
+    font-size: .85rem;
+    cursor: pointer;
+    transition: .2s;
+}
+
+.btn-rate-driver:hover {
+    background: rgba(255, 152, 0, 0.25);
+}
+
+.btn-rated {
+    display: block;
+    width: 100%;
+    margin-top: 10px;
+    padding: 10px;
+    background: rgba(76, 175, 80, 0.1);
+    color: #4caf50;
+    border: 1px solid rgba(76, 175, 80, 0.2);
+    border-radius: 10px;
+    font-weight: 600;
+    font-size: .85rem;
+    text-align: center;
 }
 
 /* ===== FORM VALIDATION ===== */
